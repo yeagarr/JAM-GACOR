@@ -2,13 +2,14 @@
 <html lang="id">
 <head>
   <!-- =========================================================
-    BLOK 1 — META / SEO / VIEWPORT
+    BLOK 1 — META / SEO / PWA-LITE
   ========================================================== -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="color-scheme" content="dark" />
+  <meta name="color-scheme" content="dark light" />
   <meta name="theme-color" content="#070612" />
-  <title>Jam Highlight 4 Game — Rotasi 1 Jam</title>
+  <meta name="description" content="Demo event promosi modern: Weekly Boost Pass + Prime Drop Windows" />
+  <title>Weekly Boost Pass — Demo</title>
 
   <!-- =========================================================
     BLOK 2 — FONTS
@@ -19,749 +20,1297 @@
 
   <style>
     /* =========================================================
-      BLOK 3 — THEME TOKENS (VISION / GLASS)
+      BLOK 3 — THEME TOKENS
     ========================================================== */
     :root{
-      --bg0:#060510;
-      --bg1:#0b0620;
-      --glass: rgba(255,255,255,.08);
-      --stroke: rgba(255,255,255,.14);
-      --text: rgba(255,255,255,.88);
-      --muted: rgba(255,255,255,.62);
+      --bg0:#060512;
+      --bg1:#0b0820;
+      --bg2:#120a2d;
 
-      --gold:#ffcf6e;
-      --violet:#7c5cff;
-      --cyan:#48d6ff;
-      --good:#57ffb6;
+      --glass: rgba(255,255,255,.08);
+      --glass2: rgba(255,255,255,.12);
+      --stroke: rgba(255,255,255,.14);
+      --stroke2: rgba(255,255,255,.20);
+
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --dim: rgba(255,255,255,.55);
+
+      --gold:#ffd66b;
+      --gold2:#ffb84a;
+
+      --violet:#8f6bff;
+      --violet2:#5d3bff;
+
+      --cyan:#59f0ff;
+      --green:#57ff9a;
+      --red:#ff5c7a;
+
+      --shadow: 0 22px 70px rgba(0,0,0,.55);
+      --shadow2: 0 10px 35px rgba(0,0,0,.40);
 
       --r: 22px;
-      --shadow: 0 14px 50px rgba(0,0,0,.55);
+      --r2: 16px;
 
-      --easeOut: cubic-bezier(.2,.9,.2,1);
-      --easeSmall: cubic-bezier(.2,.8,.2,1);
+      --easeOut: cubic-bezier(.20,.90,.20,1);
+      --easeSoft: cubic-bezier(.16,1,.30,1);
+      --easeSnappy: cubic-bezier(.2,.9,.1,1);
+
+      --maxw: 1120px;
     }
 
     /* =========================================================
-      BLOK 4 — RESET / BASE
+      BLOK 4 — BASE / RESET
     ========================================================== */
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
     body{
       margin:0;
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(1200px 520px at 20% 10%, rgba(124,92,255,.30), transparent 55%),
-        radial-gradient(900px 520px at 80% 25%, rgba(72,214,255,.18), transparent 55%),
-        radial-gradient(900px 660px at 50% 90%, rgba(255,207,110,.14), transparent 60%),
-        linear-gradient(180deg, var(--bg0), var(--bg1));
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:var(--text);
+      background: radial-gradient(1200px 700px at 18% 10%, rgba(143,107,255,.22), transparent 55%),
+                  radial-gradient(900px 550px at 78% 14%, rgba(255,214,107,.18), transparent 60%),
+                  radial-gradient(1000px 700px at 50% 100%, rgba(89,240,255,.12), transparent 60%),
+                  linear-gradient(180deg, var(--bg0), var(--bg2));
       overflow-x:hidden;
     }
-    a{ color:inherit; text-decoration:none; }
-    .wrap{
-      width:min(1120px, calc(100% - 32px));
-      margin: 28px auto 48px;
+    a{ color:inherit; }
+    button, input, select{
+      font:inherit;
+      color:inherit;
     }
+    .wrap{
+      max-width:var(--maxw);
+      margin:0 auto;
+      padding: 26px 16px 60px;
+      position:relative;
+    }
+    .sr{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
 
     /* =========================================================
-      BLOK 5 — BACKDROP (NOISE + PARTICLES CANVAS)
+      BLOK 5 — BACKDROP / NOISE / SPARKS
     ========================================================== */
     .noise{
       pointer-events:none;
       position:fixed; inset:0;
-      opacity:.16;
-      mix-blend-mode:soft-light;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
-      background-size:180px 180px;
+      opacity:.06;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E");
+      mix-blend-mode:overlay;
     }
-    canvas#fx{
-      position:fixed; inset:0;
-      width:100%; height:100%;
+    .aurora{
       pointer-events:none;
+      position:fixed; inset:-12%;
+      filter: blur(40px) saturate(150%);
       opacity:.9;
+      background:
+        radial-gradient(800px 520px at 15% 20%, rgba(143,107,255,.30), transparent 62%),
+        radial-gradient(760px 520px at 78% 24%, rgba(255,214,107,.22), transparent 62%),
+        radial-gradient(900px 680px at 50% 105%, rgba(89,240,255,.18), transparent 62%);
+      animation: floaty 12s var(--easeSoft) infinite alternate;
+      transform: translateZ(0);
+    }
+    @keyframes floaty{
+      0%{ transform: translate3d(-1.5%, -1.2%, 0) scale(1.02); }
+      100%{ transform: translate3d(1.8%, 1.4%, 0) scale(1.04); }
+    }
+    .sparkField{
+      pointer-events:none;
+      position:fixed; inset:0;
+      mask-image: radial-gradient(closest-side at 50% 30%, #000 68%, transparent 100%);
+      opacity:.7;
+    }
+    .spark{
+      position:absolute;
+      width:2px; height:2px;
+      border-radius:999px;
+      background: rgba(255,255,255,.9);
+      box-shadow: 0 0 10px rgba(255,255,255,.25);
+      animation: drift linear infinite;
+      opacity:.0;
+    }
+    @keyframes drift{
+      0%{ transform: translate3d(0, 20px, 0) scale(.9); opacity:0; }
+      20%{ opacity:.55; }
+      80%{ opacity:.22; }
+      100%{ transform: translate3d(0, -240px, 0) scale(1.25); opacity:0; }
     }
 
     /* =========================================================
-      BLOK 6 — HEADER
+      BLOK 6 — LAYOUT / TYPO
     ========================================================== */
-    .top{
+    .topbar{
       display:flex;
-      align-items:flex-start;
+      gap:14px;
+      align-items:stretch;
       justify-content:space-between;
-      gap:16px;
-      margin-bottom: 18px;
+      margin-bottom:16px;
     }
     .brand{
-      display:flex; flex-direction:column; gap:8px;
-    }
-    .title{
-      font-size: clamp(22px, 3.2vw, 34px);
-      line-height:1.05;
-      letter-spacing:-.02em;
-      font-weight: 900;
-      margin:0;
-      display:flex; align-items:center; gap:10px;
-    }
-    .pill{
-      font-size:12px;
-      padding:6px 10px;
-      border-radius:999px;
-      background: rgba(255,207,110,.12);
-      border:1px solid rgba(255,207,110,.28);
-      color: rgba(255,235,195,.92);
-      font-weight:800;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-    }
-    .sub{
-      margin:0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height:1.45;
-      max-width: 62ch;
-    }
-
-    .hud{
-      min-width: 320px;
+      flex: 1;
+      padding: 16px 16px 14px;
       border-radius: var(--r);
       background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
       border: 1px solid var(--stroke);
-      box-shadow: var(--shadow);
-      padding: 14px 14px 12px;
-      backdrop-filter: blur(16px) saturate(170%);
-      -webkit-backdrop-filter: blur(16px) saturate(170%);
+      box-shadow: var(--shadow2);
+      position:relative;
+      overflow:hidden;
     }
-    .hudRow{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      margin-bottom: 10px;
+    .brand:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(600px 240px at 12% 20%, rgba(255,214,107,.18), transparent 60%),
+                  radial-gradient(560px 240px at 80% 20%, rgba(143,107,255,.22), transparent 60%);
+      opacity:.9;
+      transform: translateZ(0);
     }
-    .k{
-      font-size: 12px;
-      color: var(--muted);
-      font-weight:700;
+    .brandInner{ position:relative; z-index:1; display:flex; gap:14px; align-items:center; }
+    .logo{
+      width:44px; height:44px;
+      border-radius:14px;
+      background:
+        radial-gradient(16px 16px at 30% 30%, rgba(255,255,255,.55), transparent 70%),
+        linear-gradient(135deg, rgba(255,214,107,.35), rgba(143,107,255,.35));
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow: 0 16px 40px rgba(0,0,0,.35);
+      display:grid; place-items:center;
+      font-weight:900;
       letter-spacing:.02em;
     }
-    .v{
-      font-size: 13px;
-      font-weight: 800;
-      color: rgba(255,255,255,.92);
+    .brand h1{
+      margin:0;
+      font-size: 16px;
+      line-height:1.25;
+      letter-spacing:.01em;
+    }
+    .brand p{
+      margin:4px 0 0;
+      font-size:12.5px;
+      color:var(--muted);
+    }
+    .pills{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:flex-end;
+      min-width: 330px;
+    }
+    .pill{
+      padding:10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.07);
+      border:1px solid var(--stroke);
+      backdrop-filter: blur(12px) saturate(150%);
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .pill b{ font-size:12px; }
+    .pill span{ font-size:12px; color:var(--muted); }
+    .dot{
+      width:8px; height:8px; border-radius:999px;
+      background: var(--green);
+      box-shadow: 0 0 0 6px rgba(87,255,154,.10);
+    }
+    .dot.off{ background: rgba(255,255,255,.30); box-shadow:none; }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:14px;
+      margin-top:14px;
+    }
+    @media (max-width: 920px){
+      .topbar{ flex-direction:column; }
+      .pills{ min-width: initial; justify-content:flex-start; }
+      .grid{ grid-template-columns:1fr; }
+    }
+
+    /* =========================================================
+      BLOK 7 — CARDS / COMPONENTS
+    ========================================================== */
+    .card{
+      border-radius: var(--r);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+      position:relative;
+    }
+    .cardHeader{
+      padding:14px 16px 10px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), transparent);
+    }
+    .cardHeader h2{
+      margin:0;
+      font-size:14px;
+      letter-spacing:.01em;
+    }
+    .cardHeader p{
+      margin:4px 0 0;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .cardBody{ padding:14px 16px 16px; }
+    .row{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    .spacer{ flex:1; }
+
+    .btn{
+      appearance:none;
+      border:1px solid rgba(255,255,255,.16);
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      padding:10px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+      transition: transform .12s var(--easeOut), border-color .2s var(--easeOut), background .2s var(--easeOut), opacity .2s var(--easeOut);
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+      user-select:none;
+    }
+    .btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.26); }
+    .btn:active{ transform: translateY(0px) scale(.99); }
+    .btn.primary{
+      border-color: rgba(255,214,107,.40);
+      background: linear-gradient(180deg, rgba(255,214,107,.26), rgba(143,107,255,.16));
+    }
+    .btn.ghost{
+      background: rgba(255,255,255,.06);
+      box-shadow:none;
+    }
+    .btn.danger{
+      border-color: rgba(255,92,122,.35);
+      background: linear-gradient(180deg, rgba(255,92,122,.18), rgba(255,255,255,.06));
+    }
+    .btn:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+      transform:none !important;
+    }
+
+    .input{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding:10px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      min-width: 210px;
+      backdrop-filter: blur(10px) saturate(150%);
+    }
+    .input input, .input select{
+      width:100%;
+      border:0;
+      outline:0;
+      background:transparent;
+      color:var(--text);
+    }
+    .input small{ color:var(--dim); white-space:nowrap; }
+
+    .kpi{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap:10px;
+      margin-top:10px;
+    }
+    @media (max-width: 520px){
+      .kpi{ grid-template-columns:1fr; }
+    }
+    .kpiBox{
+      padding:12px 12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+    }
+    .kpiBox b{ display:block; font-size:12px; color:var(--muted); font-weight:700; }
+    .kpiBox span{ display:block; font-size:18px; margin-top:6px; font-weight:900; letter-spacing:.01em; }
+
+    .progressWrap{
+      margin-top:14px;
+      padding:12px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
     }
     .bar{
-      height: 10px;
+      height: 12px;
       border-radius: 999px;
-      background: rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.08);
       overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
       position:relative;
     }
     .bar > i{
       display:block;
       height:100%;
       width:0%;
-      background: linear-gradient(90deg, rgba(72,214,255,.0), rgba(72,214,255,.55), rgba(255,207,110,.55));
-      border-radius:999px;
-      transition: width 600ms var(--easeSmall);
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(255,214,107,.85), rgba(143,107,255,.85));
+      box-shadow: 0 0 0 10px rgba(255,214,107,.08);
+      transition: width .6s var(--easeSoft);
     }
-    .hint{
-      margin-top:10px;
-      font-size:12px;
-      color: rgba(255,255,255,.58);
-      line-height:1.35;
-    }
-
-    /* =========================================================
-      BLOK 7 — GRID CARDS (4 GAME)
-    ========================================================== */
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 14px;
-      margin-top: 16px;
-    }
-    .card{
-      grid-column: span 6;
-      border-radius: calc(var(--r) + 6px);
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.14);
-      box-shadow: 0 18px 60px rgba(0,0,0,.55);
-      overflow:hidden;
-      position:relative;
-      transform: translateZ(0);
-      backdrop-filter: blur(12px) saturate(160%);
-      -webkit-backdrop-filter: blur(12px) saturate(160%);
-    }
-    .card::before{
+    .bar:after{
       content:"";
       position:absolute; inset:-2px;
-      background:
-        radial-gradient(600px 240px at 20% 10%, rgba(124,92,255,.22), transparent 60%),
-        radial-gradient(520px 260px at 80% 20%, rgba(72,214,255,.18), transparent 60%),
-        radial-gradient(520px 320px at 50% 110%, rgba(255,207,110,.14), transparent 62%);
-      opacity:.9;
-      pointer-events:none;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.20), transparent);
+      transform: translateX(-120%);
+      animation: sheen 2.8s var(--easeOut) infinite;
+      opacity:.35;
     }
-    .media{
-      position:relative;
-      height: 180px;
-      overflow:hidden;
+    @keyframes sheen{
+      0%{ transform: translateX(-120%); }
+      60%{ transform: translateX(120%); }
+      100%{ transform: translateX(120%); }
     }
-    .media img{
-      width:100%; height:100%;
-      object-fit:cover;
-      transform: scale(1.03);
-      filter: saturate(1.05) contrast(1.03);
-    }
-    .media::after{
-      content:"";
-      position:absolute; inset:0;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.0), rgba(0,0,0,.55)),
-        radial-gradient(420px 260px at 20% 10%, rgba(255,255,255,.16), transparent 60%);
-      pointer-events:none;
-    }
-    .content{
-      position:relative;
-      padding: 14px 14px 14px;
+    .progressMeta{
       display:flex;
-      flex-direction:column;
-      gap: 10px;
-    }
-    .badgeRow{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-    }
-    .status{
-      display:inline-flex; align-items:center; gap:8px;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:10px;
       font-size:12px;
-      font-weight: 900;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.25);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      letter-spacing:.02em;
+      color:var(--muted);
+      flex-wrap:wrap;
     }
-    .dot{
-      width:8px; height:8px; border-radius:99px;
-      background: rgba(255,255,255,.36);
-      box-shadow: 0 0 0 4px rgba(255,255,255,.08);
-    }
-    .status.now .dot{
-      background: var(--good);
-      box-shadow: 0 0 0 4px rgba(87,255,182,.16), 0 0 22px rgba(87,255,182,.38);
-    }
-    .status.next .dot{
-      background: rgba(255,207,110,.9);
-      box-shadow: 0 0 0 4px rgba(255,207,110,.14), 0 0 18px rgba(255,207,110,.22);
-    }
-    .score{
-      font-size:12px;
-      font-weight: 900;
-      padding: 8px 10px;
-      border-radius: 999px;
-      color: rgba(255,255,255,.88);
-      background: rgba(255,255,255,.07);
-      border:1px solid rgba(255,255,255,.14);
-    }
-    .name{
-      margin:0;
-      font-size: 16px;
-      font-weight: 900;
-      letter-spacing:-.01em;
-    }
-    .meta{
-      display:flex; flex-wrap:wrap; gap:10px;
-      color: rgba(255,255,255,.70);
-      font-size:12px;
-      font-weight:700;
-    }
-    .chip{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-    }
-    .cta{
-      display:flex; gap:10px; align-items:center; justify-content:space-between;
-      margin-top: 4px;
-    }
-    button{
-      font: inherit;
-      cursor:pointer;
-      border:none;
-      color: rgba(255,255,255,.92);
-      font-weight: 900;
-      letter-spacing:.01em;
-      padding: 10px 12px;
-      border-radius: 14px;
-      background: linear-gradient(180deg, rgba(124,92,255,.68), rgba(124,92,255,.34));
-      box-shadow: 0 10px 28px rgba(124,92,255,.22);
-      border:1px solid rgba(255,255,255,.14);
-      transition: transform 160ms var(--easeOut), filter 160ms var(--easeOut);
-    }
-    button:hover{ transform: translateY(-1px); filter: brightness(1.06); }
-    button:active{ transform: translateY(0px) scale(.99); }
-    .ghost{
-      background: rgba(255,255,255,.06);
-      box-shadow:none;
-    }
-    .ghost:hover{ filter: brightness(1.02); }
 
-    /* =========================================================
-      BLOK 8 — SCHEDULE TABLE (NEXT HOURS)
-    ========================================================== */
-    .panel{
-      margin-top: 14px;
-      border-radius: calc(var(--r) + 6px);
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.14);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      backdrop-filter: blur(14px) saturate(160%);
-      -webkit-backdrop-filter: blur(14px) saturate(160%);
-    }
-    .panelHead{
-      padding: 14px 14px 10px;
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-    }
-    .panelHead h2{
-      margin:0;
-      font-size: 14px;
-      font-weight: 900;
-      letter-spacing:.01em;
-    }
-    .panelHead p{
-      margin:0;
-      font-size: 12px;
-      color: rgba(255,255,255,.62);
-      font-weight:700;
-    }
-    .rows{ padding: 8px 10px 10px; }
-    .row{
+    .tiers{
+      margin-top:12px;
       display:grid;
-      grid-template-columns: 120px 1fr 140px;
-      gap: 10px;
+      gap:10px;
+    }
+    .tier{
+      display:flex;
+      gap:12px;
       align-items:center;
-      padding: 10px 10px;
-      border-radius: 14px;
-      border:1px solid transparent;
+      padding:12px 12px;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
     }
-    .row + .row{ margin-top: 8px; }
-    .row.isNow{
-      border-color: rgba(87,255,182,.22);
-      background: rgba(87,255,182,.06);
-    }
-    .t{
-      font-size: 12px;
-      color: rgba(255,255,255,.70);
+    .badge{
+      width:42px; height:42px;
+      border-radius: 16px;
+      display:grid; place-items:center;
       font-weight:900;
       letter-spacing:.02em;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(14px 14px at 30% 30%, rgba(255,255,255,.48), transparent 70%),
+        linear-gradient(135deg, rgba(255,214,107,.22), rgba(143,107,255,.22));
     }
-    .g{
-      font-size: 13px;
-      font-weight: 900;
-    }
+    .tier .meta{ flex:1; min-width: 210px; }
+    .tier .meta b{ display:block; font-size:13px; }
+    .tier .meta span{ display:block; font-size:12px; color:var(--muted); margin-top:4px; }
     .tag{
-      justify-self:end;
-      font-size: 12px;
-      font-weight: 900;
-      padding: 7px 10px;
+      font-size:11px;
+      padding:6px 10px;
       border-radius: 999px;
       border:1px solid rgba(255,255,255,.14);
       background: rgba(0,0,0,.18);
-      color: rgba(255,255,255,.74);
+      color:var(--muted);
+      white-space:nowrap;
     }
-    .tag.now{
-      border-color: rgba(87,255,182,.20);
-      color: rgba(210,255,236,.92);
-      background: rgba(87,255,182,.08);
+    .tag.on{ color: rgba(10,10,10,.92); background: rgba(87,255,154,.85); border-color: rgba(87,255,154,.55); }
+    .tag.claim{ color: rgba(10,10,10,.92); background: rgba(255,214,107,.90); border-color: rgba(255,214,107,.55); }
+    .tag.off{ opacity:.75; }
+
+    .timeline{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    .win{
+      padding:10px 12px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+    .win i{
+      width:8px; height:8px;
+      border-radius:999px;
+      background: rgba(255,255,255,.30);
+      display:inline-block;
+    }
+    .win.active i{ background: var(--green); box-shadow: 0 0 0 6px rgba(87,255,154,.10); }
+    .win.next i{ background: var(--gold); box-shadow: 0 0 0 6px rgba(255,214,107,.10); }
+    .win.done i{ background: rgba(255,255,255,.20); }
+    .win b{ font-size:12px; }
+    .win span{ font-size:12px; color:var(--muted); }
+
+    .list{
+      margin-top:10px;
+      display:grid;
+      gap:10px;
+    }
+    .item{
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
+      padding:12px 12px;
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+    }
+    .item .ic{
+      width:38px; height:38px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      display:grid; place-items:center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+      flex:0 0 auto;
+    }
+    .item .info{ flex:1; }
+    .item .info b{ display:block; font-size:13px; }
+    .item .info span{ display:block; margin-top:4px; font-size:12px; color:var(--muted); }
+    .item .right{ text-align:right; font-size:12px; color:var(--muted); white-space:nowrap; }
+
+    .footnote{
+      margin-top:12px;
+      font-size:12px;
+      color:var(--dim);
+      line-height:1.45;
     }
 
     /* =========================================================
-      BLOK 9 — RESPONSIVE
+      BLOK 8 — TOAST
     ========================================================== */
-    @media (max-width: 980px){
-      .top{ flex-direction:column; }
-      .hud{ width:100%; min-width: unset; }
-      .card{ grid-column: span 12; }
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform: translateX(-50%) translateY(20px);
+      opacity:0;
+      pointer-events:none;
+      padding:12px 14px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(12px) saturate(150%);
+      box-shadow: var(--shadow2);
+      color: var(--text);
+      font-size:12.5px;
+      transition: opacity .22s var(--easeOut), transform .22s var(--easeOut);
+      max-width: min(92vw, 640px);
+      text-align:center;
+      z-index: 50;
     }
-    @media (max-width: 560px){
-      .row{ grid-template-columns: 96px 1fr; }
-      .tag{ grid-column: 1 / -1; justify-self:start; }
-      .media{ height: 170px; }
-    }
+    .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 
 <body>
-  <canvas id="fx"></canvas>
-  <div class="noise" aria-hidden="true"></div>
+  <div class="aurora"></div>
+  <div class="noise"></div>
+  <div class="sparkField" id="sparkField" aria-hidden="true"></div>
 
-  <div class="wrap">
+  <main class="wrap">
     <!-- =========================================================
-      BLOK 10 — HEADER / HUD
+      BLOK 9 — TOPBAR
     ========================================================== -->
-    <div class="top">
+    <section class="topbar">
       <div class="brand">
-        <h1 class="title">
-          Jam Highlight 4 Game
-          <span class="pill">ROTASI 1 JAM</span>
-        </h1>
-        <p class="sub">
-          Ini <b>event “highlight”</b> yang kamu kontrol: setiap pergantian jam, rekomendasi game otomatis berpindah.
-          Tidak ada klaim “bocoran” — ini murni jadwal rotasi biar pemain fokus & rapi.
-        </p>
-      </div>
-
-      <div class="hud" role="status" aria-live="polite">
-        <div class="hudRow">
-          <div class="k">Waktu saat ini</div>
-          <div class="v" id="nowText">—</div>
-        </div>
-        <div class="hudRow">
-          <div class="k">Ganti dalam</div>
-          <div class="v" id="countdown">—</div>
-        </div>
-        <div class="bar" aria-hidden="true"><i id="progress"></i></div>
-        <div class="hint">
-          Tip: urutan rotasi bisa kamu ubah dari array <b>GAMES</b> di bawah (1 file saja).
+        <div class="brandInner">
+          <div class="logo" id="logo">WB</div>
+          <div>
+            <h1 id="eventTitle">Weekly Boost Pass</h1>
+            <p id="eventSubtitle">Demo: progress mingguan + drop kecil harian (terkontrol & transparan)</p>
+          </div>
+          <div class="spacer"></div>
         </div>
       </div>
-    </div>
 
-    <!-- =========================================================
-      BLOK 11 — 4 GAME GRID
-    ========================================================== -->
-    <div class="grid" id="grid"></div>
-
-    <!-- =========================================================
-      BLOK 12 — SCHEDULE
-    ========================================================== -->
-    <div class="panel">
-      <div class="panelHead">
-        <div>
-          <h2>Jadwal 12 Jam Ke Depan</h2>
-          <p>Rotasi berulang: Game 1 → Game 2 → Game 3 → Game 4</p>
+      <div class="pills">
+        <div class="pill">
+          <div class="dot" id="dotDrop"></div>
+          <div>
+            <b id="dropState">Drop: mencari jendela…</b><br>
+            <span id="dropHint">—</span>
+          </div>
         </div>
-        <div style="display:flex; gap:10px;">
-          <button class="ghost" id="copyBtn" title="Copy jadwal ke clipboard">Copy Jadwal</button>
-          <button id="shuffleBtn" title="Acak urutan 4 game (lokal)">Acak 4 Game</button>
+        <div class="pill">
+          <div class="dot off" id="dotWeek"></div>
+          <div>
+            <b id="weekState">Minggu: —</b><br>
+            <span id="weekHint">—</span>
+          </div>
         </div>
       </div>
-      <div class="rows" id="rows"></div>
-    </div>
-  </div>
+    </section>
+
+    <section class="grid">
+      <!-- =========================================================
+        BLOK 10 — WEEKLY BOOST PASS
+      ========================================================== -->
+      <article class="card">
+        <header class="cardHeader">
+          <div>
+            <h2>Weekly Boost Pass</h2>
+            <p>Naikkan TO mingguan → unlock tier → klaim booster.</p>
+          </div>
+          <div class="row">
+            <button class="btn ghost" id="btnJoin">Join</button>
+            <button class="btn danger" id="btnReset">Reset Demo</button>
+          </div>
+        </header>
+
+        <div class="cardBody">
+          <div class="kpi">
+            <div class="kpiBox">
+              <b>TO Minggu Ini</b>
+              <span id="kpiWeekly">Rp0</span>
+            </div>
+            <div class="kpiBox">
+              <b>TO 60 Menit Terakhir</b>
+              <span id="kpiRecent">Rp0</span>
+            </div>
+            <div class="kpiBox">
+              <b>Booster Aktif</b>
+              <span id="kpiBoost">0</span>
+            </div>
+          </div>
+
+          <div class="progressWrap">
+            <div class="bar" aria-label="Progress TO mingguan">
+              <i id="barFill"></i>
+            </div>
+            <div class="progressMeta">
+              <div><b id="progressLeft" style="color:var(--text)">—</b> <span style="color:var(--muted)">ke target tier berikutnya</span></div>
+              <div><span id="progressPct">0%</span> • <span id="weekEnds">Week ends —</span></div>
+            </div>
+          </div>
+
+          <div class="tiers" id="tiers"></div>
+
+          <div class="footnote">
+            Catatan: ini demo frontend (pakai <b>localStorage</b>). Untuk produksi, status TO/claim seharusnya dari backend agar anti-manipulasi.
+          </div>
+        </div>
+      </article>
+
+      <!-- =========================================================
+        BLOK 11 — PRIME DROP WINDOWS + ACTIVITY
+      ========================================================== -->
+      <aside class="card">
+        <header class="cardHeader">
+          <div>
+            <h2>Prime Drop Windows</h2>
+            <p>Bonus kecil pada jam tertentu (bukan “bocoran”).</p>
+          </div>
+          <button class="btn primary" id="btnClaimDrop">Claim Drop</button>
+        </header>
+
+        <div class="cardBody">
+          <div class="timeline" id="timeline"></div>
+
+          <div class="progressWrap" style="margin-top:12px">
+            <div class="row" style="justify-content:space-between">
+              <div style="min-width: 230px">
+                <div style="font-size:12px;color:var(--muted)">Syarat klaim (demo)</div>
+                <div style="margin-top:6px;font-weight:900" id="claimRule">—</div>
+              </div>
+              <div class="tag" id="claimStatus">—</div>
+            </div>
+          </div>
+
+          <div style="margin-top:14px; font-size:12px; color:var(--muted); font-weight:800; letter-spacing:.02em;">
+            Simulasi Aktivitas (untuk naikin TO)
+          </div>
+
+          <div class="row" style="margin-top:10px">
+            <label class="sr" for="toInput">Nominal TO</label>
+            <div class="input">
+              <small>TO</small>
+              <input id="toInput" inputmode="numeric" placeholder="50000" />
+            </div>
+
+            <label class="sr" for="providerInput">Provider</label>
+            <div class="input" style="min-width: 180px">
+              <small>Game</small>
+              <select id="providerInput">
+                <option value="SLOT">SLOT</option>
+                <option value="PG">PG</option>
+                <option value="PRAGMATIC">PRAGMATIC</option>
+                <option value="HABANERO">HABANERO</option>
+                <option value="MICROGAMING">MICROGAMING</option>
+              </select>
+            </div>
+
+            <button class="btn" id="btnAddTo">Tambah</button>
+          </div>
+
+          <div class="list" id="activityList"></div>
+
+          <div style="margin-top:14px; font-size:12px; color:var(--muted); font-weight:800; letter-spacing:.02em;">
+            Booster Aktif / Reward
+          </div>
+          <div class="list" id="boostList"></div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script>
     /* =========================================================
-      BLOK 13 — DATA (4 GAME)
-      Ganti list ini sesuai 4 game yang kamu mau.
+      BLOK 12 — CONFIG (EDIT DI SINI)
     ========================================================== */
-    const DEFAULT_GAMES = [
-      {
-        id: "gates-olympus-1000",
-        name: "Gates of Olympus 1000",
-        provider: "Pragmatic Play",
-        image: "https://pyw.maxrtpnew.com/assets/pragmatic/pragmatic_391.webp"
+    const CONFIG = {
+      brand: {
+        short: "WB",
+        title: "Weekly Boost Pass",
+        subtitle: "Demo: progress mingguan + drop kecil harian (terkontrol & transparan)"
       },
-      {
-        id: "starlight-princess-1000",
-        name: "Starlight Princess 1000",
-        provider: "Pragmatic Play",
-        image: "https://pyw.maxrtpnew.com/assets/pragmatic/pragmatic_345.webp"
-      },
-      {
-        id: "pyramid-bonanza",
-        name: "Pyramid Bonanza",
-        provider: "Pragmatic Play",
-        image: "https://pyw.maxrtpnew.com/assets/pragmatic/pragmatic_12.webp"
-      },
-      {
-        id: "north-guardians",
-        name: "North Guardians",
-        provider: "Pragmatic Play",
-        image: "https://pyw.maxrtpnew.com/assets/pragmatic/pragmatic_84.webp"
-      }
-    ];
 
-    const LS_KEY = "fourGamesRotation_v1";
-    let GAMES = loadGames() ?? DEFAULT_GAMES.slice();
+      weekly: {
+        // start day: 1 = Monday (paling umum buat reset mingguan)
+        weekStartsOn: 1,
+        // target untuk skala progress bar (bukan batas TO; hanya acuan visual)
+        progressTarget: 5000000,
+        tiers: [
+          { id:"t1", name:"Tier 1 — Rolling Aktif", reqTo: 500000, reward: { type:"boost", label:"Rolling +0.5% (7 hari)", value:"+0.5%", hours: 24*7 } },
+          { id:"t2", name:"Tier 2 — Cap Upgrade", reqTo: 1000000, reward: { type:"perk", label:"Cap rolling naik (demo)" } },
+          { id:"t3", name:"Tier 3 — Booster 24 Jam", reqTo: 2000000, reward: { type:"boost", label:"Rolling +0.2% (24 jam)", value:"+0.2%", hours: 24 } },
+          { id:"t4", name:"Tier 4 — Priority Claim", reqTo: 5000000, reward: { type:"perk", label:"Priority claim (demo)" } }
+        ]
+      },
+
+      drop: {
+        // jendela jam “Drop” per hari (local time)
+        windows: [
+          { label:"Lunch Drop", start:"12:00", end:"13:00", reward: { type:"boost", label:"Rolling +0.1% (6 jam)", value:"+0.1%", hours: 6 } },
+          { label:"Prime Night", start:"19:00", end:"20:00", reward: { type:"boost", label:"Rolling +0.1% (6 jam)", value:"+0.1%", hours: 6 } }
+        ],
+        // syarat klaim: minimal TO di trailing window menit (demo dari log aktivitas)
+        minToLastMinutes: 50_000,
+        trailingMinutes: 60,
+        // maksimal claim per window per hari (1 itu aman)
+        claimPerWindowPerDay: 1
+      }
+    };
 
     /* =========================================================
-      BLOK 14 — TIME / ROTATION LOGIC
+      BLOK 13 — STATE (localStorage)
     ========================================================== */
-    const $ = (q)=>document.querySelector(q);
-    const grid = $("#grid");
-    const rows = $("#rows");
-    const nowText = $("#nowText");
-    const countdownEl = $("#countdown");
-    const progressEl = $("#progress");
+    const LS_KEY = "weekly_boost_pass_demo_v1";
+    const now = () => Date.now();
 
-    function pad2(n){ return String(n).padStart(2,"0"); }
-
-    function fmtTime(d){
-      return `${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
-    }
-    function fmtRange(h){
-      const s = `${pad2(h)}:00`;
-      const e = `${pad2(h)}:59`;
-      return `${s} — ${e}`;
-    }
-
-    function getSlotIndex(date){
-      // Rotasi tiap jam: index = jam % 4
-      return date.getHours() % GAMES.length;
-    }
-
-    function msToNextHour(date){
-      const next = new Date(date);
-      next.setMinutes(0,0,0);
-      next.setHours(date.getHours() + 1);
-      return next.getTime() - date.getTime();
-    }
-
-    function hourProgressPct(date){
-      const seconds = date.getMinutes()*60 + date.getSeconds() + (date.getMilliseconds()/1000);
-      return Math.min(100, Math.max(0, (seconds / 3600) * 100));
-    }
-
-    function render(){
-      const now = new Date();
-      nowText.textContent = fmtTime(now);
-
-      const idxNow = getSlotIndex(now);
-      const idxNext = (idxNow + 1) % GAMES.length;
-
-      // Countdown
-      const ms = msToNextHour(now);
-      const totalSec = Math.ceil(ms/1000);
-      const mm = Math.floor(totalSec / 60);
-      const ss = totalSec % 60;
-      countdownEl.textContent = `${pad2(mm)}:${pad2(ss)}`;
-      progressEl.style.width = `${hourProgressPct(now)}%`;
-
-      // Grid cards (4 games)
-      grid.innerHTML = "";
-      for(let i=0;i<GAMES.length;i++){
-        const g = GAMES[i];
-        const status =
-          (i === idxNow) ? { cls:"now", label:"SEDANG BERLANGSUNG" } :
-          (i === idxNext) ? { cls:"next", label:"SELANJUTNYA" } :
-          { cls:"", label:"ANTRIAN" };
-
-        // "Highlight score" purely visual (bukan klaim)
-        const score = 88 + ((i*3 + now.getDate()) % 10); // 88–97
-
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-          <div class="media">
-            <img src="${g.image}" alt="${g.name}" loading="lazy" />
-          </div>
-          <div class="content">
-            <div class="badgeRow">
-              <div class="status ${status.cls}">
-                <span class="dot"></span>
-                ${status.label}
-              </div>
-              <div class="score">HIGHLIGHT ${score}%</div>
-            </div>
-            <h3 class="name">${g.name}</h3>
-            <div class="meta">
-              <span class="chip">Provider: <b>${g.provider}</b></span>
-              <span class="chip">Slot jam: <b>${pad2(i)} / (jam % 4)</b></span>
-            </div>
-            <div class="cta">
-              <button class="ghost" data-act="setNow" data-i="${i}" title="Jadikan game ini aktif (untuk demo)">
-                Set Aktif
-              </button>
-              <button data-act="swap" data-i="${i}" title="Tukar urutan dengan game aktif (untuk demo)">
-                Tukar ke Posisi Aktif
-              </button>
-            </div>
-          </div>
-        `;
-        grid.appendChild(card);
-      }
-
-      // Schedule 12 jam ke depan
-      const startHour = now.getHours();
-      rows.innerHTML = "";
-      for(let k=0;k<12;k++){
-        const h = (startHour + k) % 24;
-        const slot = h % GAMES.length;
-        const g = GAMES[slot];
-
-        const r = document.createElement("div");
-        r.className = "row" + ((h === startHour) ? " isNow" : "");
-        r.innerHTML = `
-          <div class="t">${fmtRange(h)}</div>
-          <div class="g">${g.name}</div>
-          <div class="tag ${h === startHour ? "now" : ""}">
-            ${h === startHour ? "NOW" : "NEXT"}
-          </div>
-        `;
-        rows.appendChild(r);
-      }
-    }
-
-    /* =========================================================
-      BLOK 15 — UI ACTIONS
-    ========================================================== */
-    document.addEventListener("click", (e)=>{
-      const btn = e.target.closest("button[data-act]");
-      if(!btn) return;
-      const act = btn.getAttribute("data-act");
-      const i = Number(btn.getAttribute("data-i"));
-      if(Number.isNaN(i)) return;
-
-      if(act === "setNow"){
-        // Menggeser game dipilih menjadi indeks sesuai jam saat ini (demo)
-        const now = new Date();
-        const idxNow = getSlotIndex(now);
-        moveItem(i, idxNow);
-        saveGames();
-        render();
-      }
-
-      if(act === "swap"){
-        const now = new Date();
-        const idxNow = getSlotIndex(now);
-        const tmp = GAMES[idxNow];
-        GAMES[idxNow] = GAMES[i];
-        GAMES[i] = tmp;
-        saveGames();
-        render();
-      }
-    });
-
-    $("#shuffleBtn").addEventListener("click", ()=>{
-      // Shuffle lokal untuk variasi cepat (tidak klaim apa-apa)
-      GAMES = shuffle(GAMES.slice());
-      saveGames();
-      render();
-    });
-
-    $("#copyBtn").addEventListener("click", async ()=>{
-      const now = new Date();
-      const startHour = now.getHours();
-      let out = `Jadwal Rotasi 4 Game (${pad2(startHour)}:00 mulai)\n\n`;
-      for(let k=0;k<12;k++){
-        const h = (startHour + k) % 24;
-        const g = GAMES[h % GAMES.length];
-        out += `${fmtRange(h)}  —  ${g.name}\n`;
-      }
-      try{
-        await navigator.clipboard.writeText(out);
-        $("#copyBtn").textContent = "Tercopy ✓";
-        setTimeout(()=>$("#copyBtn").textContent="Copy Jadwal", 1200);
-      }catch(err){
-        alert("Clipboard gagal. Browser memblokir. Copy manual dari layar ya.");
-      }
-    });
-
-    function moveItem(from, to){
-      if(from === to) return;
-      const item = GAMES.splice(from, 1)[0];
-      GAMES.splice(to, 0, item);
-    }
-
-    function shuffle(arr){
-      for(let i=arr.length-1;i>0;i--){
-        const j = Math.floor(Math.random()*(i+1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
-
-    function saveGames(){
-      try{ localStorage.setItem(LS_KEY, JSON.stringify(GAMES)); }catch(_){}
-    }
-    function loadGames(){
+    function loadState(){
       try{
         const raw = localStorage.getItem(LS_KEY);
-        if(!raw) return null;
-        const arr = JSON.parse(raw);
-        return (Array.isArray(arr) && arr.length === 4) ? arr : null;
-      }catch(_){ return null; }
+        if(!raw) return freshState();
+        const st = JSON.parse(raw);
+        return normalizeState(st);
+      }catch(e){
+        return freshState();
+      }
+    }
+    function saveState(){
+      localStorage.setItem(LS_KEY, JSON.stringify(STATE));
+    }
+    function freshState(){
+      return normalizeState({
+        joined: false,
+        activity: [],      // {id, ts, amount, provider}
+        tierClaims: {},    // { [weekKey]: { [tierId]: true } }
+        dropClaims: {},    // { [dateKey]: { [windowIndex]: count } }
+        boosters: []       // {id, label, value, expiresAt, source}
+      });
+    }
+    function normalizeState(st){
+      st = st || {};
+      st.joined = !!st.joined;
+      st.activity = Array.isArray(st.activity) ? st.activity : [];
+      st.tierClaims = st.tierClaims && typeof st.tierClaims==="object" ? st.tierClaims : {};
+      st.dropClaims = st.dropClaims && typeof st.dropClaims==="object" ? st.dropClaims : {};
+      st.boosters = Array.isArray(st.boosters) ? st.boosters : [];
+      return st;
+    }
+
+    let STATE = loadState();
+
+    /* =========================================================
+      BLOK 14 — TIME / WEEK HELPERS
+    ========================================================== */
+    function pad2(n){ return String(n).padStart(2,"0"); }
+    function fmtTime(d){
+      return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+    }
+    function fmtDateKey(d){
+      return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+    }
+    function fmtMoney(n){
+      const v = Math.max(0, Math.floor(Number(n||0)));
+      return new Intl.NumberFormat("id-ID",{ style:"currency", currency:"IDR", maximumFractionDigits:0 }).format(v);
+    }
+    function getWeekStart(ts){
+      const d = new Date(ts);
+      d.setHours(0,0,0,0);
+      const weekStartsOn = CONFIG.weekly.weekStartsOn; // 1 = Monday
+      const day = d.getDay(); // 0 Sun .. 6 Sat
+      const diff = (day - weekStartsOn + 7) % 7;
+      d.setDate(d.getDate() - diff);
+      return d.getTime();
+    }
+    function getWeekEnd(ts){
+      const start = getWeekStart(ts);
+      const end = start + 7*24*60*60*1000 - 1;
+      return end;
+    }
+    function weekKey(ts){
+      const ws = new Date(getWeekStart(ts));
+      return `W_${ws.getFullYear()}${pad2(ws.getMonth()+1)}${pad2(ws.getDate())}`;
+    }
+    function msToHMS(ms){
+      ms = Math.max(0, ms);
+      const s = Math.floor(ms/1000);
+      const hh = Math.floor(s/3600);
+      const mm = Math.floor((s%3600)/60);
+      const ss = s%60;
+      if(hh>0) return `${hh}j ${mm}m`;
+      if(mm>0) return `${mm}m ${ss}d`;
+      return `${ss}d`;
     }
 
     /* =========================================================
-      BLOK 16 — BACKGROUND PARTICLES (LIGHTWEIGHT)
+      BLOK 15 — DROP WINDOWS HELPERS
     ========================================================== */
-    const cvs = document.getElementById("fx");
-    const ctx = cvs.getContext("2d");
-    let W=0,H=0, DPR=1;
-    const P = [];
-    const N = 42;
-
-    function resize(){
-      DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-      W = Math.floor(innerWidth * DPR);
-      H = Math.floor(innerHeight * DPR);
-      cvs.width = W; cvs.height = H;
-      cvs.style.width = innerWidth+"px";
-      cvs.style.height = innerHeight+"px";
+    function parseHHMM(str){
+      const [h,m] = String(str).split(":").map(x=>parseInt(x,10));
+      return {h: isFinite(h)?h:0, m: isFinite(m)?m:0};
     }
-    function rand(a,b){ return a + Math.random()*(b-a); }
-    function initParticles(){
-      P.length = 0;
-      for(let i=0;i<N;i++){
-        P.push({
-          x: rand(0,W),
-          y: rand(0,H),
-          r: rand(18*DPR, 70*DPR),
-          vx: rand(-.10,.10)*DPR,
-          vy: rand(-.06,.14)*DPR,
-          a: rand(.05,.22),
-          t: Math.random()*Math.PI*2
-        });
-      }
+    function windowTimesForToday(win, baseTs){
+      const d = new Date(baseTs);
+      d.setHours(0,0,0,0);
+      const {h:sh, m:sm} = parseHHMM(win.start);
+      const {h:eh, m:em} = parseHHMM(win.end);
+      const start = new Date(d); start.setHours(sh, sm, 0, 0);
+      const end = new Date(d); end.setHours(eh, em, 0, 0);
+
+      // support cross-midnight windows
+      let startTs = start.getTime();
+      let endTs = end.getTime();
+      if(endTs <= startTs) endTs += 24*60*60*1000;
+      return { startTs, endTs };
     }
-    function step(){
-      ctx.clearRect(0,0,W,H);
-      ctx.globalCompositeOperation = "lighter";
 
-      for(const p of P){
-        p.t += 0.006;
-        p.x += p.vx + Math.sin(p.t)*0.06*DPR;
-        p.y += p.vy + Math.cos(p.t*1.2)*0.05*DPR;
+    function getDropStatus(baseTs){
+      const dateKey = fmtDateKey(new Date(baseTs));
+      const wins = CONFIG.drop.windows.map((w, idx) => {
+        const {startTs, endTs} = windowTimesForToday(w, baseTs);
+        const isActive = baseTs >= startTs && baseTs < endTs;
+        const isDone = baseTs >= endTs;
+        const isNext = !isActive && !isDone && startTs > baseTs;
+        return { idx, ...w, startTs, endTs, isActive, isDone, isNext };
+      });
 
-        if(p.x < -120*DPR) p.x = W + 120*DPR;
-        if(p.x > W + 120*DPR) p.x = -120*DPR;
-        if(p.y < -120*DPR) p.y = H + 120*DPR;
-        if(p.y > H + 120*DPR) p.y = -120*DPR;
+      const active = wins.find(w=>w.isActive) || null;
+      const next = wins.filter(w=>w.isNext).sort((a,b)=>a.startTs-b.startTs)[0] || null;
 
-        const g = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
-        g.addColorStop(0, `rgba(124,92,255,${p.a})`);
-        g.addColorStop(.6, `rgba(72,214,255,${p.a*0.55})`);
-        g.addColorStop(1, `rgba(255,207,110,0)`);
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-        ctx.fill();
-      }
+      return { dateKey, wins, active, next };
+    }
 
-      ctx.globalCompositeOperation = "source-over";
-      requestAnimationFrame(step);
+    function recentToSum(baseTs){
+      const trailingMs = CONFIG.drop.trailingMinutes * 60 * 1000;
+      const cut = baseTs - trailingMs;
+      return STATE.activity
+        .filter(a => a.ts >= cut && a.ts <= baseTs)
+        .reduce((acc,a)=> acc + (Number(a.amount)||0), 0);
     }
 
     /* =========================================================
-      BLOK 17 — BOOT
+      BLOK 16 — UI HOOKS
     ========================================================== */
-    resize();
-    initParticles();
-    step();
+    const $ = (q)=>document.querySelector(q);
 
-    window.addEventListener("resize", ()=>{
-      resize();
-      initParticles();
+    const eventTitle = $("#eventTitle");
+    const eventSubtitle = $("#eventSubtitle");
+    const logo = $("#logo");
+
+    const dotDrop = $("#dotDrop");
+    const dropState = $("#dropState");
+    const dropHint = $("#dropHint");
+
+    const dotWeek = $("#dotWeek");
+    const weekState = $("#weekState");
+    const weekHint = $("#weekHint");
+
+    const kpiWeekly = $("#kpiWeekly");
+    const kpiRecent = $("#kpiRecent");
+    const kpiBoost = $("#kpiBoost");
+
+    const barFill = $("#barFill");
+    const progressLeft = $("#progressLeft");
+    const progressPct = $("#progressPct");
+    const weekEnds = $("#weekEnds");
+
+    const tiersEl = $("#tiers");
+    const timelineEl = $("#timeline");
+
+    const btnJoin = $("#btnJoin");
+    const btnReset = $("#btnReset");
+    const btnClaimDrop = $("#btnClaimDrop");
+
+    const claimRule = $("#claimRule");
+    const claimStatus = $("#claimStatus");
+
+    const toInput = $("#toInput");
+    const providerInput = $("#providerInput");
+    const btnAddTo = $("#btnAddTo");
+
+    const activityList = $("#activityList");
+    const boostList = $("#boostList");
+
+    const toast = $("#toast");
+
+    /* =========================================================
+      BLOK 17 — TOAST
+    ========================================================== */
+    let toastT = null;
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add("show");
+      clearTimeout(toastT);
+      toastT = setTimeout(()=> toast.classList.remove("show"), 2200);
+    }
+
+    /* =========================================================
+      BLOK 18 — ACTIONS
+    ========================================================== */
+    function addActivity(amount, provider){
+      const n = Math.max(0, Math.floor(Number(amount||0)));
+      if(!n){
+        showToast("Masukkan nominal TO yang valid.");
+        return;
+      }
+      STATE.activity.unshift({
+        id: "a_" + Math.random().toString(16).slice(2),
+        ts: now(),
+        amount: n,
+        provider: String(provider||"SLOT")
+      });
+      // keep last 40 logs for demo
+      STATE.activity = STATE.activity.slice(0, 40);
+      saveState();
+      renderAll();
+      showToast(`TO ditambahkan: ${fmtMoney(n)} (${provider})`);
+    }
+
+    function cleanExpiredBoosters(baseTs){
+      const before = STATE.boosters.length;
+      STATE.boosters = STATE.boosters.filter(b => (b.expiresAt||0) > baseTs);
+      if(STATE.boosters.length !== before) saveState();
+    }
+
+    function addBooster(reward, sourceLabel){
+      if(!reward || reward.type!=="boost") return;
+      const expiresAt = now() + (Number(reward.hours||0) * 60 * 60 * 1000);
+      STATE.boosters.unshift({
+        id: "b_" + Math.random().toString(16).slice(2),
+        label: reward.label,
+        value: reward.value || "",
+        expiresAt,
+        source: sourceLabel || "Reward"
+      });
+      // keep last 12 boosters
+      STATE.boosters = STATE.boosters.slice(0, 12);
+      saveState();
+    }
+
+    function claimTier(tierId){
+      const wk = weekKey(now());
+      const claims = STATE.tierClaims[wk] || (STATE.tierClaims[wk] = {});
+      if(claims[tierId]){
+        showToast("Tier ini sudah pernah diklaim minggu ini.");
+        return;
+      }
+
+      const tier = CONFIG.weekly.tiers.find(t=>t.id===tierId);
+      if(!tier) return;
+
+      const weeklySum = getWeeklySum(now());
+      if(weeklySum < tier.reqTo){
+        showToast("Syarat TO tier belum terpenuhi.");
+        return;
+      }
+
+      claims[tierId] = true;
+      if(tier.reward?.type === "boost"){
+        addBooster(tier.reward, `Weekly Pass — ${tier.name}`);
+        showToast(`Klaim sukses: ${tier.reward.label}`);
+      }else{
+        showToast(`Klaim sukses: ${tier.reward?.label || "Perk"}`);
+      }
+
+      saveState();
+      renderAll();
+    }
+
+    function claimDrop(){
+      const baseTs = now();
+      const { dateKey, active } = getDropStatus(baseTs);
+      if(!active){
+        showToast("Tidak ada Drop Window yang aktif sekarang.");
+        return;
+      }
+
+      const recentSum = recentToSum(baseTs);
+      if(recentSum < CONFIG.drop.minToLastMinutes){
+        showToast(`Belum memenuhi syarat TO ${CONFIG.drop.trailingMinutes} menit terakhir.`);
+        return;
+      }
+
+      const dayClaims = STATE.dropClaims[dateKey] || (STATE.dropClaims[dateKey] = {});
+      const cur = Number(dayClaims[active.idx] || 0);
+      if(cur >= CONFIG.drop.claimPerWindowPerDay){
+        showToast("Drop window ini sudah diklaim hari ini.");
+        return;
+      }
+
+      dayClaims[active.idx] = cur + 1;
+
+      // grant reward
+      if(active.reward?.type === "boost"){
+        addBooster(active.reward, `Prime Drop — ${active.label}`);
+        showToast(`Drop didapat: ${active.reward.label}`);
+      }else{
+        showToast("Drop didapat.");
+      }
+
+      saveState();
+      renderAll();
+    }
+
+    function resetDemo(){
+      localStorage.removeItem(LS_KEY);
+      STATE = loadState();
+      renderAll();
+      showToast("Demo direset.");
+    }
+
+    function joinEvent(){
+      STATE.joined = true;
+      saveState();
+      renderAll();
+      showToast("Kamu sudah Join event (demo).");
+    }
+
+    /* =========================================================
+      BLOK 19 — DERIVED DATA
+    ========================================================== */
+    function getWeeklySum(baseTs){
+      const ws = getWeekStart(baseTs);
+      const we = ws + 7*24*60*60*1000;
+      return STATE.activity
+        .filter(a => a.ts >= ws && a.ts < we)
+        .reduce((acc,a)=> acc + (Number(a.amount)||0), 0);
+    }
+
+    function nextTierInfo(weeklySum){
+      const tiers = [...CONFIG.weekly.tiers].sort((a,b)=>a.reqTo-b.reqTo);
+      const next = tiers.find(t => weeklySum < t.reqTo) || null;
+      if(!next) return { next:null, left:0 };
+      return { next, left: Math.max(0, next.reqTo - weeklySum) };
+    }
+
+    function getClaimedTierMap(baseTs){
+      const wk = weekKey(baseTs);
+      return STATE.tierClaims[wk] || {};
+    }
+
+    /* =========================================================
+      BLOK 20 — RENDER
+    ========================================================== */
+    function renderHeader(baseTs){
+      eventTitle.textContent = CONFIG.brand.title;
+      eventSubtitle.textContent = CONFIG.brand.subtitle;
+      logo.textContent = CONFIG.brand.short;
+
+      const ws = new Date(getWeekStart(baseTs));
+      const we = new Date(getWeekEnd(baseTs));
+      dotWeek.classList.remove("off");
+      weekState.textContent = `Minggu: ${fmtDateKey(ws)} → ${fmtDateKey(we)}`;
+      weekHint.textContent = `Reset otomatis: ${fmtTime(ws)} (local)`;
+
+      // Drop status
+      const ds = getDropStatus(baseTs);
+      if(ds.active){
+        dotDrop.classList.remove("off");
+        dropState.textContent = `Drop: AKTIF (${ds.active.label})`;
+        dropHint.textContent = `Berakhir ${fmtTime(new Date(ds.active.endTs))}`;
+      }else if(ds.next){
+        dotDrop.classList.remove("off");
+        dotDrop.style.background = "var(--gold)";
+        dropState.textContent = `Drop: NEXT (${ds.next.label})`;
+        dropHint.textContent = `Mulai ${fmtTime(new Date(ds.next.startTs))}`;
+      }else{
+        dotDrop.classList.add("off");
+        dotDrop.style.background = "";
+        dropState.textContent = "Drop: selesai hari ini";
+        dropHint.textContent = "Cek lagi besok.";
+      }
+    }
+
+    function renderKPI(baseTs){
+      const weeklySum = getWeeklySum(baseTs);
+      const recentSum = recentToSum(baseTs);
+
+      cleanExpiredBoosters(baseTs);
+
+      kpiWeekly.textContent = fmtMoney(weeklySum);
+      kpiRecent.textContent = fmtMoney(recentSum);
+      kpiBoost.textContent = String(STATE.boosters.filter(b => b.expiresAt > baseTs).length);
+    }
+
+    function renderProgress(baseTs){
+      const weeklySum = getWeeklySum(baseTs);
+      const target = Math.max(1, Number(CONFIG.weekly.progressTarget||1));
+      const pct = Math.max(0, Math.min(1, weeklySum / target));
+
+      barFill.style.width = (pct*100).toFixed(1) + "%";
+      progressPct.textContent = `${Math.round(pct*100)}%`;
+
+      const { next, left } = nextTierInfo(weeklySum);
+      progressLeft.textContent = next ? fmtMoney(left) : "Semua tier terbuka";
+
+      const we = getWeekEnd(baseTs);
+      weekEnds.textContent = `Week ends ${fmtDateKey(new Date(we))} • ${fmtTime(new Date(we))}`;
+    }
+
+    function renderTiers(baseTs){
+      const weeklySum = getWeeklySum(baseTs);
+      const claimed = getClaimedTierMap(baseTs);
+
+      const tiers = [...CONFIG.weekly.tiers].sort((a,b)=>a.reqTo-b.reqTo);
+
+      tiersEl.innerHTML = tiers.map((t, idx) => {
+        const unlocked = weeklySum >= t.reqTo;
+        const isClaimed = !!claimed[t.id];
+        const canClaim = unlocked && !isClaimed;
+
+        const tag = isClaimed
+          ? `<span class="tag on">Claimed</span>`
+          : (canClaim ? `<span class="tag claim">Ready</span>` : `<span class="tag off">Locked</span>`);
+
+        const rewardLabel = t.reward?.label ? t.reward.label : "Reward";
+        const reqLabel = `Butuh TO: ${fmtMoney(t.reqTo)}`;
+
+        const btn = canClaim
+          ? `<button class="btn primary" data-claim="${t.id}">Claim</button>`
+          : `<button class="btn" disabled>${isClaimed ? "Sudah" : "Belum"}</button>`;
+
+        return `
+          <div class="tier">
+            <div class="badge">${idx+1}</div>
+            <div class="meta">
+              <b>${t.name}</b>
+              <span>${rewardLabel} • ${reqLabel}</span>
+            </div>
+            ${tag}
+            ${btn}
+          </div>
+        `;
+      }).join("");
+
+      tiersEl.querySelectorAll("[data-claim]").forEach(btn=>{
+        btn.addEventListener("click", () => claimTier(btn.getAttribute("data-claim")));
+      });
+    }
+
+    function renderDrop(baseTs){
+      const { dateKey, wins, active } = getDropStatus(baseTs);
+
+      // timeline pills
+      timelineEl.innerHTML = wins.map(w=>{
+        const st = fmtTime(new Date(w.startTs));
+        const en = fmtTime(new Date(w.endTs));
+        const cls = w.isActive ? "active" : (w.isNext ? "next" : (w.isDone ? "done" : ""));
+        const label = w.isActive ? "AKTIF" : (w.isNext ? "NEXT" : (w.isDone ? "DONE" : "—"));
+        return `
+          <div class="win ${cls}">
+            <i></i>
+            <div>
+              <b>${w.label}</b><br>
+              <span>${st}-${en} • ${label}</span>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // claim rule
+      claimRule.textContent = `${fmtMoney(CONFIG.drop.minToLastMinutes)} TO / ${CONFIG.drop.trailingMinutes} menit terakhir`;
+      const recentSum = recentToSum(baseTs);
+
+      const dayClaims = STATE.dropClaims[dateKey] || {};
+      const claimedCount = active ? Number(dayClaims[active.idx]||0) : 0;
+      const alreadyClaimed = active ? claimedCount >= CONFIG.drop.claimPerWindowPerDay : false;
+
+      // button logic
+      const hasActive = !!active;
+      const meetReq = recentSum >= CONFIG.drop.minToLastMinutes;
+
+      btnClaimDrop.disabled = !(STATE.joined && hasActive && meetReq && !alreadyClaimed);
+
+      if(!STATE.joined){
+        claimStatus.className = "tag off";
+        claimStatus.textContent = "Join dulu";
+      }else if(!hasActive){
+        claimStatus.className = "tag off";
+        claimStatus.textContent = "Tidak aktif";
+      }else if(alreadyClaimed){
+        claimStatus.className = "tag on";
+        claimStatus.textContent = "Sudah diklaim";
+      }else if(!meetReq){
+        claimStatus.className = "tag off";
+        claimStatus.textContent = `Kurang: ${fmtMoney(CONFIG.drop.minToLastMinutes - recentSum)}`;
+      }else{
+        claimStatus.className = "tag claim";
+        claimStatus.textContent = "Bisa klaim";
+      }
+    }
+
+    function renderActivity(){
+      const items = STATE.activity.slice(0, 8);
+      if(items.length === 0){
+        activityList.innerHTML = `
+          <div class="item">
+            <div class="ic">🧾</div>
+            <div class="info">
+              <b>Belum ada aktivitas</b>
+              <span>Tambah TO di atas untuk melihat progress mingguan & syarat drop.</span>
+            </div>
+            <div class="right">—</div>
+          </div>
+        `;
+        return;
+      }
+
+      activityList.innerHTML = items.map(a=>{
+        const d = new Date(a.ts);
+        return `
+          <div class="item">
+            <div class="ic">⚡</div>
+            <div class="info">
+              <b>${fmtMoney(a.amount)} <span style="color:var(--muted);font-weight:800">• ${a.provider}</span></b>
+              <span>${fmtDateKey(d)} ${fmtTime(d)}</span>
+            </div>
+            <div class="right">TO</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderBoosters(baseTs){
+      const active = STATE.boosters.filter(b => (b.expiresAt||0) > baseTs);
+      if(active.length === 0){
+        boostList.innerHTML = `
+          <div class="item">
+            <div class="ic">🎁</div>
+            <div class="info">
+              <b>Belum ada booster aktif</b>
+              <span>Klaim tier Weekly Pass atau claim Prime Drop saat window aktif.</span>
+            </div>
+            <div class="right">—</div>
+          </div>
+        `;
+        return;
+      }
+
+      boostList.innerHTML = active.slice(0, 8).map(b=>{
+        const left = (b.expiresAt||0) - baseTs;
+        return `
+          <div class="item">
+            <div class="ic">✨</div>
+            <div class="info">
+              <b>${b.label}</b>
+              <span>Sumber: ${b.source || "Reward"}</span>
+            </div>
+            <div class="right">Sisa ${msToHMS(left)}</div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderJoinButton(){
+      btnJoin.textContent = STATE.joined ? "Joined" : "Join";
+      btnJoin.disabled = STATE.joined;
+    }
+
+    function renderAll(){
+      const baseTs = now();
+      renderHeader(baseTs);
+      renderJoinButton();
+
+      renderKPI(baseTs);
+      renderProgress(baseTs);
+      renderTiers(baseTs);
+      renderDrop(baseTs);
+      renderActivity();
+      renderBoosters(baseTs);
+    }
+
+    /* =========================================================
+      BLOK 21 — EVENTS
+    ========================================================== */
+    btnAddTo.addEventListener("click", () => {
+      const raw = (toInput.value || "").toString().replace(/[^\d]/g, "");
+      addActivity(raw, providerInput.value);
+      toInput.value = "";
+      toInput.focus();
     });
 
-    render();
-    setInterval(render, 1000);
+    toInput.addEventListener("keydown", (e)=>{
+      if(e.key === "Enter") btnAddTo.click();
+    });
+
+    btnClaimDrop.addEventListener("click", claimDrop);
+    btnReset.addEventListener("click", resetDemo);
+    btnJoin.addEventListener("click", joinEvent);
+
+    /* =========================================================
+      BLOK 22 — SPARK GENERATOR (LIGHTWEIGHT)
+    ========================================================== */
+    (function makeSparks(){
+      const host = document.getElementById("sparkField");
+      const count = Math.min(60, Math.max(28, Math.floor(window.innerWidth / 22)));
+      const W = () => window.innerWidth;
+      const H = () => window.innerHeight;
+
+      host.innerHTML = "";
+      for(let i=0;i<count;i++){
+        const s = document.createElement("div");
+        s.className = "spark";
+        const x = Math.random() * W();
+        const y = Math.random() * H();
+        const dur = 4 + Math.random() * 7;
+        const delay = Math.random() * 5;
+        const size = 1 + Math.random() * 2;
+
+        s.style.left = x + "px";
+        s.style.top = y + "px";
+        s.style.width = size + "px";
+        s.style.height = size + "px";
+        s.style.animationDuration = dur + "s";
+        s.style.animationDelay = delay + "s";
+        s.style.opacity = 0;
+
+        host.appendChild(s);
+      }
+    })();
+
+    /* =========================================================
+      BLOK 23 — TICKER
+    ========================================================== */
+    renderAll();
+    setInterval(renderAll, 1000);
+
   </script>
 </body>
 </html>
