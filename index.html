@@ -1,1316 +1,1719 @@
 <!doctype html>
 <html lang="id">
 <head>
-  <!-- =========================================================
+  <!-- =========================
     BLOK 1 — META / SEO / PWA-LITE
-  ========================================================== -->
+  ========================== -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="color-scheme" content="dark light" />
-  <meta name="theme-color" content="#070612" />
-  <meta name="description" content="Demo event promosi modern: Weekly Boost Pass + Prime Drop Windows" />
-  <title>Weekly Boost Pass — Demo</title>
+  <meta name="theme-color" content="#05040c" />
+  <title>Mahjong Lucky Spin — Demo</title>
+  <meta name="description" content="Demo lucky spin bertema mahjong: input user ID, spin sekali per hari, hasil + bukti klaim, riwayat 50 spin." />
 
-  <!-- =========================================================
-    BLOK 2 — FONTS
-  ========================================================== -->
+  <!-- =========================
+    BLOK 2 — FONTS (ringan)
+  ========================== -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
 
   <style>
-    /* =========================================================
-      BLOK 3 — THEME TOKENS
-    ========================================================== */
+    /* =========================
+      BLOK 3 — THEME TOKENS (MAHJONG JADE)
+    ========================== */
     :root{
-      --bg0:#060512;
-      --bg1:#0b0820;
-      --bg2:#120a2d;
+      --bg0:#05040c;
+      --bg1:#0a0820;
+      --ink:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.72);
+      --faint:rgba(255,255,255,.58);
 
-      --glass: rgba(255,255,255,.08);
-      --glass2: rgba(255,255,255,.12);
-      --stroke: rgba(255,255,255,.14);
-      --stroke2: rgba(255,255,255,.20);
+      --jade:#1ff0b2;
+      --jade2:#12c891;
+      --gold:#ffd36a;
+      --gold2:#ffb74a;
+      --ruby:#ff3b6a;
+      --ice:#63d9ff;
 
-      --text: rgba(255,255,255,.92);
-      --muted: rgba(255,255,255,.70);
-      --dim: rgba(255,255,255,.55);
+      --glass:rgba(255,255,255,.08);
+      --glass2:rgba(255,255,255,.12);
+      --stroke:rgba(255,255,255,.16);
+      --stroke2:rgba(255,255,255,.24);
 
-      --gold:#ffd66b;
-      --gold2:#ffb84a;
+      --shadow: 0 22px 60px rgba(0,0,0,.55);
+      --shadow2: 0 10px 28px rgba(0,0,0,.45);
 
-      --violet:#8f6bff;
-      --violet2:#5d3bff;
+      --r16:16px;
+      --r20:20px;
+      --r24:24px;
 
-      --cyan:#59f0ff;
-      --green:#57ff9a;
-      --red:#ff5c7a;
-
-      --shadow: 0 22px 70px rgba(0,0,0,.55);
-      --shadow2: 0 10px 35px rgba(0,0,0,.40);
-
-      --r: 22px;
-      --r2: 16px;
-
-      --easeOut: cubic-bezier(.20,.90,.20,1);
-      --easeSoft: cubic-bezier(.16,1,.30,1);
-      --easeSnappy: cubic-bezier(.2,.9,.1,1);
-
-      --maxw: 1120px;
+      --easeOut:cubic-bezier(.16,1,.3,1);
+      --easeInOut:cubic-bezier(.48,0,.2,1);
     }
 
-    /* =========================================================
-      BLOK 4 — BASE / RESET
-    ========================================================== */
+    /* =========================
+      BLOK 4 — RESET / BASE
+    ========================== */
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
     body{
       margin:0;
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      color:var(--text);
-      background: radial-gradient(1200px 700px at 18% 10%, rgba(143,107,255,.22), transparent 55%),
-                  radial-gradient(900px 550px at 78% 14%, rgba(255,214,107,.18), transparent 60%),
-                  radial-gradient(1000px 700px at 50% 100%, rgba(89,240,255,.12), transparent 60%),
-                  linear-gradient(180deg, var(--bg0), var(--bg2));
+      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
       overflow-x:hidden;
+      background: radial-gradient(1200px 700px at 20% 10%, rgba(31,240,178,.18), transparent 60%),
+                  radial-gradient(900px 600px at 75% 25%, rgba(255,211,106,.14), transparent 60%),
+                  radial-gradient(900px 700px at 50% 90%, rgba(99,217,255,.10), transparent 65%),
+                  linear-gradient(180deg, var(--bg0), var(--bg1));
     }
-    a{ color:inherit; }
-    button, input, select{
-      font:inherit;
-      color:inherit;
-    }
-    .wrap{
-      max-width:var(--maxw);
-      margin:0 auto;
-      padding: 26px 16px 60px;
-      position:relative;
-    }
-    .sr{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+    a{ color:inherit; text-decoration:none; }
+    button, input{ font:inherit; }
 
-    /* =========================================================
-      BLOK 5 — BACKDROP / NOISE / SPARKS
-    ========================================================== */
-    .noise{
-      pointer-events:none;
+    /* =========================
+      BLOK 5 — BACKDROP (TILES + SPARKS)
+    ========================== */
+    .backdrop{
       position:fixed; inset:0;
-      opacity:.06;
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.65'/%3E%3C/svg%3E");
-      mix-blend-mode:overlay;
-    }
-    .aurora{
       pointer-events:none;
-      position:fixed; inset:-12%;
-      filter: blur(40px) saturate(150%);
-      opacity:.9;
+      opacity:.95;
+    }
+    .backdrop:before{
+      content:"";
+      position:absolute; inset:-30%;
       background:
-        radial-gradient(800px 520px at 15% 20%, rgba(143,107,255,.30), transparent 62%),
-        radial-gradient(760px 520px at 78% 24%, rgba(255,214,107,.22), transparent 62%),
-        radial-gradient(900px 680px at 50% 105%, rgba(89,240,255,.18), transparent 62%);
-      animation: floaty 12s var(--easeSoft) infinite alternate;
+        radial-gradient(650px 420px at 20% 30%, rgba(31,240,178,.12), transparent 70%),
+        radial-gradient(520px 360px at 75% 15%, rgba(255,211,106,.10), transparent 70%),
+        radial-gradient(700px 520px at 55% 90%, rgba(255,59,106,.08), transparent 70%);
+      filter: blur(10px);
       transform: translateZ(0);
     }
-    @keyframes floaty{
-      0%{ transform: translate3d(-1.5%, -1.2%, 0) scale(1.02); }
-      100%{ transform: translate3d(1.8%, 1.4%, 0) scale(1.04); }
-    }
-    .sparkField{
-      pointer-events:none;
-      position:fixed; inset:0;
-      mask-image: radial-gradient(closest-side at 50% 30%, #000 68%, transparent 100%);
-      opacity:.7;
-    }
-    .spark{
-      position:absolute;
-      width:2px; height:2px;
-      border-radius:999px;
-      background: rgba(255,255,255,.9);
-      box-shadow: 0 0 10px rgba(255,255,255,.25);
-      animation: drift linear infinite;
-      opacity:.0;
-    }
-    @keyframes drift{
-      0%{ transform: translate3d(0, 20px, 0) scale(.9); opacity:0; }
-      20%{ opacity:.55; }
-      80%{ opacity:.22; }
-      100%{ transform: translate3d(0, -240px, 0) scale(1.25); opacity:0; }
+    .backdrop:after{
+      content:"";
+      position:absolute; inset:0;
+      opacity:.22;
+      background:
+        repeating-linear-gradient(135deg,
+          rgba(255,255,255,.10) 0 1px,
+          transparent 1px 10px),
+        repeating-linear-gradient(45deg,
+          rgba(31,240,178,.08) 0 1px,
+          transparent 1px 14px);
+      mask-image: radial-gradient(circle at 50% 40%, rgba(0,0,0,1), rgba(0,0,0,.2) 62%, transparent 75%);
+      filter: blur(.2px);
     }
 
-    /* =========================================================
-      BLOK 6 — LAYOUT / TYPO
-    ========================================================== */
-    .topbar{
-      display:flex;
-      gap:14px;
+    /* =========================
+      BLOK 6 — LAYOUT
+    ========================== */
+    .wrap{
+      position:relative;
+      min-height:100%;
+      padding:28px 18px 40px;
+      display:grid;
+      place-items:center;
+    }
+
+    .shell{
+      width:min(1180px, 100%);
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap:18px;
       align-items:stretch;
+    }
+
+    @media (max-width: 980px){
+      .shell{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      border:1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      border-radius: var(--r24);
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+      position:relative;
+    }
+    .card:before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(800px 280px at 20% 0%, rgba(255,211,106,.22), transparent 55%),
+                  radial-gradient(700px 240px at 90% 15%, rgba(31,240,178,.18), transparent 55%);
+      opacity:.65;
+      pointer-events:none;
+    }
+    .card > *{ position:relative; }
+
+    /* =========================
+      BLOK 7 — HEADER
+    ========================== */
+    .topbar{
+      grid-column: 1 / -1;
+      display:flex;
+      align-items:center;
       justify-content:space-between;
-      margin-bottom:16px;
+      padding:14px 18px;
+      border-radius: var(--r24);
+      border:1px solid rgba(255,255,255,.12);
+      background: linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.12));
+      backdrop-filter: blur(14px) saturate(140%);
+      -webkit-backdrop-filter: blur(14px) saturate(140%);
+      box-shadow: var(--shadow2);
     }
     .brand{
-      flex: 1;
-      padding: 16px 16px 14px;
-      border-radius: var(--r);
-      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-      border: 1px solid var(--stroke);
-      box-shadow: var(--shadow2);
+      display:flex; gap:12px; align-items:center;
+      min-width: 0;
+    }
+    .logo{
+      width:44px; height:44px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.18);
+      background:
+        radial-gradient(circle at 30% 30%, rgba(31,240,178,.55), transparent 55%),
+        radial-gradient(circle at 70% 55%, rgba(255,211,106,.45), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      box-shadow: 0 10px 25px rgba(0,0,0,.35);
+      display:grid; place-items:center;
       position:relative;
       overflow:hidden;
     }
-    .brand:before{
+    .logo:after{
       content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(600px 240px at 12% 20%, rgba(255,214,107,.18), transparent 60%),
-                  radial-gradient(560px 240px at 80% 20%, rgba(143,107,255,.22), transparent 60%);
-      opacity:.9;
-      transform: translateZ(0);
-    }
-    .brandInner{ position:relative; z-index:1; display:flex; gap:14px; align-items:center; }
-    .logo{
-      width:44px; height:44px;
-      border-radius:14px;
-      background:
-        radial-gradient(16px 16px at 30% 30%, rgba(255,255,255,.55), transparent 70%),
-        linear-gradient(135deg, rgba(255,214,107,.35), rgba(143,107,255,.35));
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow: 0 16px 40px rgba(0,0,0,.35);
-      display:grid; place-items:center;
-      font-weight:900;
-      letter-spacing:.02em;
+      position:absolute; inset:-30%;
+      background: repeating-linear-gradient(45deg, rgba(255,255,255,.14) 0 1px, transparent 1px 10px);
+      opacity:.22;
+      transform: rotate(10deg);
     }
     .brand h1{
       margin:0;
-      font-size: 16px;
-      line-height:1.25;
-      letter-spacing:.01em;
+      font-size:16px;
+      line-height:1.15;
+      letter-spacing:.2px;
+      font-weight:900;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
     .brand p{
-      margin:4px 0 0;
-      font-size:12.5px;
-      color:var(--muted);
-    }
-    .pills{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:flex-end;
-      min-width: 330px;
-    }
-    .pill{
-      padding:10px 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.07);
-      border:1px solid var(--stroke);
-      backdrop-filter: blur(12px) saturate(150%);
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
-    .pill b{ font-size:12px; }
-    .pill span{ font-size:12px; color:var(--muted); }
-    .dot{
-      width:8px; height:8px; border-radius:999px;
-      background: var(--green);
-      box-shadow: 0 0 0 6px rgba(87,255,154,.10);
-    }
-    .dot.off{ background: rgba(255,255,255,.30); box-shadow:none; }
-    .grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:14px;
-      margin-top:14px;
-    }
-    @media (max-width: 920px){
-      .topbar{ flex-direction:column; }
-      .pills{ min-width: initial; justify-content:flex-start; }
-      .grid{ grid-template-columns:1fr; }
-    }
-
-    /* =========================================================
-      BLOK 7 — CARDS / COMPONENTS
-    ========================================================== */
-    .card{
-      border-radius: var(--r);
-      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-      border: 1px solid var(--stroke);
-      box-shadow: var(--shadow2);
-      overflow:hidden;
-      position:relative;
-    }
-    .cardHeader{
-      padding:14px 16px 10px;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      background: linear-gradient(180deg, rgba(255,255,255,.08), transparent);
-    }
-    .cardHeader h2{
-      margin:0;
-      font-size:14px;
-      letter-spacing:.01em;
-    }
-    .cardHeader p{
-      margin:4px 0 0;
+      margin:2px 0 0;
       font-size:12px;
-      color:var(--muted);
-    }
-    .cardBody{ padding:14px 16px 16px; }
-    .row{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
-    .spacer{ flex:1; }
-
-    .btn{
-      appearance:none;
-      border:1px solid rgba(255,255,255,.16);
-      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
-      padding:10px 12px;
-      border-radius: 14px;
-      cursor:pointer;
-      transition: transform .12s var(--easeOut), border-color .2s var(--easeOut), background .2s var(--easeOut), opacity .2s var(--easeOut);
-      box-shadow: 0 12px 30px rgba(0,0,0,.25);
-      user-select:none;
-    }
-    .btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.26); }
-    .btn:active{ transform: translateY(0px) scale(.99); }
-    .btn.primary{
-      border-color: rgba(255,214,107,.40);
-      background: linear-gradient(180deg, rgba(255,214,107,.26), rgba(143,107,255,.16));
-    }
-    .btn.ghost{
-      background: rgba(255,255,255,.06);
-      box-shadow:none;
-    }
-    .btn.danger{
-      border-color: rgba(255,92,122,.35);
-      background: linear-gradient(180deg, rgba(255,92,122,.18), rgba(255,255,255,.06));
-    }
-    .btn:disabled{
-      opacity:.45;
-      cursor:not-allowed;
-      transform:none !important;
-    }
-
-    .input{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      padding:10px 12px;
-      border-radius: 14px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      min-width: 210px;
-      backdrop-filter: blur(10px) saturate(150%);
-    }
-    .input input, .input select{
-      width:100%;
-      border:0;
-      outline:0;
-      background:transparent;
-      color:var(--text);
-    }
-    .input small{ color:var(--dim); white-space:nowrap; }
-
-    .kpi{
-      display:grid;
-      grid-template-columns: repeat(3, minmax(0,1fr));
-      gap:10px;
-      margin-top:10px;
-    }
-    @media (max-width: 520px){
-      .kpi{ grid-template-columns:1fr; }
-    }
-    .kpiBox{
-      padding:12px 12px;
-      border-radius: 16px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-    }
-    .kpiBox b{ display:block; font-size:12px; color:var(--muted); font-weight:700; }
-    .kpiBox span{ display:block; font-size:18px; margin-top:6px; font-weight:900; letter-spacing:.01em; }
-
-    .progressWrap{
-      margin-top:14px;
-      padding:12px;
-      border-radius: 18px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.16);
-    }
-    .bar{
-      height: 12px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.08);
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.10);
-      position:relative;
-    }
-    .bar > i{
-      display:block;
-      height:100%;
-      width:0%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(255,214,107,.85), rgba(143,107,255,.85));
-      box-shadow: 0 0 0 10px rgba(255,214,107,.08);
-      transition: width .6s var(--easeSoft);
-    }
-    .bar:after{
-      content:"";
-      position:absolute; inset:-2px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.20), transparent);
-      transform: translateX(-120%);
-      animation: sheen 2.8s var(--easeOut) infinite;
-      opacity:.35;
-    }
-    @keyframes sheen{
-      0%{ transform: translateX(-120%); }
-      60%{ transform: translateX(120%); }
-      100%{ transform: translateX(120%); }
-    }
-    .progressMeta{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      margin-top:10px;
-      font-size:12px;
-      color:var(--muted);
-      flex-wrap:wrap;
-    }
-
-    .tiers{
-      margin-top:12px;
-      display:grid;
-      gap:10px;
-    }
-    .tier{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      padding:12px 12px;
-      border-radius: 18px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-    }
-    .badge{
-      width:42px; height:42px;
-      border-radius: 16px;
-      display:grid; place-items:center;
-      font-weight:900;
-      letter-spacing:.02em;
-      border:1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(14px 14px at 30% 30%, rgba(255,255,255,.48), transparent 70%),
-        linear-gradient(135deg, rgba(255,214,107,.22), rgba(143,107,255,.22));
-    }
-    .tier .meta{ flex:1; min-width: 210px; }
-    .tier .meta b{ display:block; font-size:13px; }
-    .tier .meta span{ display:block; font-size:12px; color:var(--muted); margin-top:4px; }
-    .tag{
-      font-size:11px;
-      padding:6px 10px;
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
       color:var(--muted);
       white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
-    .tag.on{ color: rgba(10,10,10,.92); background: rgba(87,255,154,.85); border-color: rgba(87,255,154,.55); }
-    .tag.claim{ color: rgba(10,10,10,.92); background: rgba(255,214,107,.90); border-color: rgba(255,214,107,.55); }
-    .tag.off{ opacity:.75; }
 
-    .timeline{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-    .win{
-      padding:10px 12px;
+    .pill{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:9px 12px;
       border-radius: 999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.18);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      font-size:12px;
+      color:var(--muted);
+      user-select:none;
+    }
+    .dot{
+      width:8px; height:8px; border-radius:999px;
+      background: var(--jade);
+      box-shadow: 0 0 0 3px rgba(31,240,178,.18), 0 0 20px rgba(31,240,178,.55);
+    }
+
+    /* =========================
+      BLOK 8 — MAIN (WHEEL STAGE)
+    ========================== */
+    .stage{
+      padding:18px;
+      display:grid;
+      grid-template-rows: auto 1fr auto;
+      gap:14px;
+      min-height: 620px;
+    }
+
+    .headline{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+    }
+    .headline .txt h2{
+      margin:0;
+      font-family:Kanit, Inter, system-ui, sans-serif;
+      letter-spacing:.4px;
+      font-size:22px;
+      line-height:1.15;
+    }
+    .headline .txt p{
+      margin:6px 0 0;
+      color:var(--muted);
+      font-size:13px;
+      max-width: 520px;
+    }
+    .badge{
+      display:flex; flex-direction:column; gap:4px; align-items:flex-end;
+      text-align:right;
+      padding:10px 12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      min-width: 200px;
+    }
+    .badge span{ font-size:11px; color:var(--muted); }
+    .badge strong{
+      font-size:16px;
+      letter-spacing:.6px;
+      font-weight:900;
+      background: linear-gradient(90deg, var(--gold), var(--jade));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    .wheelWrap{
+      display:grid;
+      place-items:center;
+      position:relative;
+      padding: 12px;
+    }
+
+    .wheelShell{
+      width:min(520px, 95%);
+      aspect-ratio: 1 / 1;
+      border-radius:999px;
+      position:relative;
+      display:grid;
+      place-items:center;
+      filter: drop-shadow(0 25px 60px rgba(0,0,0,.5));
+    }
+
+    .wheelShell:before{
+      content:"";
+      position:absolute; inset:-14px;
+      border-radius:999px;
+      background: radial-gradient(circle at 50% 35%, rgba(255,211,106,.22), transparent 58%),
+                  radial-gradient(circle at 50% 75%, rgba(31,240,178,.20), transparent 62%),
+                  conic-gradient(from 180deg, rgba(255,255,255,.10), rgba(255,255,255,.02), rgba(255,255,255,.10));
       border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
+      box-shadow: 0 25px 80px rgba(0,0,0,.55);
+    }
+
+    canvas#wheel{
+      width:100%;
+      height:100%;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.25);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .pointer{
+      position:absolute;
+      top:-4px;
+      left:50%;
+      transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 16px solid transparent;
+      border-right: 16px solid transparent;
+      border-bottom: 32px solid rgba(255,211,106,.95);
+      filter: drop-shadow(0 10px 16px rgba(0,0,0,.4));
+    }
+    .pointer:after{
+      content:"";
+      position:absolute;
+      left:-8px;
+      top:8px;
+      width:16px;
+      height:16px;
+      border-radius: 4px;
+      background: rgba(0,0,0,.28);
+      border:1px solid rgba(255,255,255,.18);
+      transform: rotate(45deg);
+    }
+
+    .centerBtn{
+      position:absolute;
+      inset: 50%;
+      transform: translate(-50%,-50%);
+      width: 140px; height: 140px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.20);
+      background:
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,.18), transparent 55%),
+        radial-gradient(circle at 60% 65%, rgba(31,240,178,.18), transparent 60%),
+        linear-gradient(180deg, rgba(0,0,0,.30), rgba(0,0,0,.18));
+      box-shadow: var(--shadow);
+      display:grid;
+      place-items:center;
+      padding: 14px;
+      user-select:none;
+      cursor:pointer;
+      transition: transform .25s var(--easeOut), box-shadow .25s var(--easeOut);
+    }
+    .centerBtn:hover{ transform: translate(-50%,-50%) scale(1.02); }
+    .centerBtn:active{ transform: translate(-50%,-50%) scale(.98); }
+    .centerBtn .inner{
+      width: 100%;
+      height: 100%;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(circle at 40% 30%, rgba(255,211,106,.55), transparent 60%),
+        radial-gradient(circle at 70% 65%, rgba(31,240,178,.45), transparent 62%),
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      display:grid;
+      place-items:center;
+      text-align:center;
+      padding: 12px;
+    }
+    .centerBtn .inner strong{
+      display:block;
+      font-size: 18px;
+      letter-spacing: .8px;
+      font-weight: 900;
+      background: linear-gradient(90deg, var(--gold), var(--jade));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .centerBtn .inner span{
+      display:block;
+      margin-top:4px;
+      font-size: 11px;
+      color:rgba(255,255,255,.70);
+      letter-spacing:.2px;
+    }
+
+    .stageFooter{
       display:flex;
       gap:10px;
       align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,.10);
     }
-    .win i{
-      width:8px; height:8px;
-      border-radius:999px;
-      background: rgba(255,255,255,.30);
-      display:inline-block;
+    .status{
+      display:flex; gap:10px; align-items:center;
+      font-size:12px;
+      color:var(--muted);
     }
-    .win.active i{ background: var(--green); box-shadow: 0 0 0 6px rgba(87,255,154,.10); }
-    .win.next i{ background: var(--gold); box-shadow: 0 0 0 6px rgba(255,214,107,.10); }
-    .win.done i{ background: rgba(255,255,255,.20); }
-    .win b{ font-size:12px; }
-    .win span{ font-size:12px; color:var(--muted); }
+    .status b{ color: var(--ink); }
+    .miniBtn{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      color:var(--ink);
+      padding: 9px 10px;
+      border-radius: 12px;
+      cursor:pointer;
+      transition: transform .18s var(--easeOut), background .18s var(--easeOut);
+    }
+    .miniBtn:hover{ transform: translateY(-1px); background: rgba(0,0,0,.26); }
+    .miniBtn:active{ transform: translateY(0px) scale(.98); }
 
-    .list{
-      margin-top:10px;
+    /* =========================
+      BLOK 9 — SIDE PANEL (INPUT + HISTORY)
+    ========================== */
+    .side{
+      padding:18px;
+      display:grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap:12px;
+      min-height: 620px;
+    }
+    .sectionTitle{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      padding-bottom:8px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+    }
+    .sectionTitle h3{
+      margin:0;
+      font-size:13px;
+      letter-spacing:.4px;
+      color: rgba(255,255,255,.86);
+    }
+    .hint{
+      font-size:11px;
+      color: var(--muted);
+    }
+
+    .formRow{
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap:10px;
+      align-items:center;
+    }
+    .input{
+      width:100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+      color: var(--ink);
+      outline:none;
+      transition: border-color .2s var(--easeOut), background .2s var(--easeOut);
+    }
+    .input:focus{
+      border-color: rgba(31,240,178,.55);
+      background: rgba(0,0,0,.28);
+    }
+
+    .btn{
+      border:1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(255,211,106,.22), rgba(31,240,178,.12));
+      color: var(--ink);
+      padding: 12px 14px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-weight: 900;
+      letter-spacing:.4px;
+      box-shadow: 0 14px 28px rgba(0,0,0,.35);
+      transition: transform .18s var(--easeOut), filter .18s var(--easeOut), opacity .18s var(--easeOut);
+      user-select:none;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+    .btn:active{ transform: translateY(0px) scale(.99); }
+    .btn[disabled]{ opacity:.45; cursor:not-allowed; filter:none; transform:none; }
+
+    .note{
+      font-size:12px;
+      color: var(--muted);
+      line-height:1.45;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+    }
+    .note b{ color: var(--ink); }
+
+    .tableWrap{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
+      border-radius: 16px;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      min-height: 0;
+    }
+    .tableHead{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding: 10px 12px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      font-size:12px;
+      color: var(--muted);
+    }
+    .tbl{
+      width:100%;
+      border-collapse: collapse;
+      font-size:12px;
+    }
+    .tbl th, .tbl td{
+      padding: 10px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      vertical-align:top;
+    }
+    .tbl th{
+      text-align:left;
+      color: rgba(255,255,255,.74);
+      font-weight: 800;
+      position: sticky;
+      top: 0;
+      background: rgba(0,0,0,.26);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 1;
+    }
+    .tbl td{
+      color: rgba(255,255,255,.82);
+    }
+    .scroll{
+      overflow:auto;
+      max-height: 100%;
+    }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+
+    .sideFooter{
+      display:flex;
+      gap:10px;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255,255,255,.10);
+    }
+
+    /* =========================
+      BLOK 10 — MODAL (RESULT)
+    ========================== */
+    .modal{
+      position:fixed; inset:0;
+      display:none;
+      place-items:center;
+      z-index: 50;
+      padding: 18px;
+    }
+    .modal.is-open{ display:grid; }
+    .modal .overlay{
+      position:absolute; inset:0;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .modalCard{
+      width:min(720px, 100%);
+      border-radius: var(--r24);
+      border:1px solid rgba(255,255,255,.18);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+      transform: translateY(8px);
+      animation: pop .25s var(--easeOut) forwards;
+    }
+    @keyframes pop{
+      to{ transform: translateY(0); }
+    }
+    .modalHead{
+      padding: 16px 18px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .modalHead h3{
+      margin:0;
+      font-family:Kanit, Inter, system-ui, sans-serif;
+      font-size: 22px;
+      letter-spacing:.6px;
+    }
+    .closeX{
+      width:40px; height:40px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      cursor:pointer;
+      color: var(--ink);
+    }
+    .modalBody{
+      padding: 14px 18px 18px;
+      display:grid;
+      grid-template-columns: 1fr 280px;
+      gap:14px;
+    }
+    @media (max-width: 820px){
+      .modalBody{ grid-template-columns: 1fr; }
+    }
+    .bigWin{
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
+      border-radius: 18px;
+      padding: 14px;
+      position:relative;
+      overflow:hidden;
+    }
+    .bigWin:before{
+      content:"";
+      position:absolute; inset:-60%;
+      background:
+        radial-gradient(circle at 35% 35%, rgba(255,211,106,.25), transparent 55%),
+        radial-gradient(circle at 65% 60%, rgba(31,240,178,.22), transparent 60%),
+        repeating-linear-gradient(45deg, rgba(255,255,255,.12) 0 1px, transparent 1px 12px);
+      opacity:.35;
+      transform: rotate(8deg);
+      pointer-events:none;
+    }
+    .bigWin > *{ position:relative; }
+
+    .winAmount{
+      font-size: 32px;
+      font-weight: 950;
+      letter-spacing: .4px;
+      margin: 8px 0 10px;
+      background: linear-gradient(90deg, var(--gold), var(--jade));
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+    .winMeta{
+      margin:0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height:1.5;
+    }
+
+    .proof{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.18);
+      border-radius: 18px;
+      padding: 12px;
+      display:grid;
+      gap:10px;
+      align-content:start;
+    }
+    .proof .box{
+      border-radius: 16px;
+      border:1px dashed rgba(255,255,255,.22);
+      padding: 10px;
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.82);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .proof .actions{
       display:grid;
       gap:10px;
     }
-    .item{
-      border-radius: 16px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.16);
-      padding:12px 12px;
-      display:flex;
-      align-items:flex-start;
-      gap:12px;
-    }
-    .item .ic{
-      width:38px; height:38px;
-      border-radius: 14px;
+    .btnAlt{
       border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      display:grid; place-items:center;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
-      flex:0 0 auto;
+      background: rgba(0,0,0,.18);
+      color: var(--ink);
+      padding: 12px 14px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-weight: 900;
+      letter-spacing:.3px;
+      transition: transform .18s var(--easeOut), background .18s var(--easeOut), opacity .18s var(--easeOut);
     }
-    .item .info{ flex:1; }
-    .item .info b{ display:block; font-size:13px; }
-    .item .info span{ display:block; margin-top:4px; font-size:12px; color:var(--muted); }
-    .item .right{ text-align:right; font-size:12px; color:var(--muted); white-space:nowrap; }
+    .btnAlt:hover{ transform: translateY(-1px); background: rgba(0,0,0,.26); }
+    .btnAlt:active{ transform: translateY(0px) scale(.99); }
 
-    .footnote{
-      margin-top:12px;
-      font-size:12px;
-      color:var(--dim);
-      line-height:1.45;
-    }
-
-    /* =========================================================
-      BLOK 8 — TOAST
-    ========================================================== */
-    .toast{
+    /* =========================
+      BLOK 11 — CONFETTI CANVAS
+    ========================== */
+    #fx{
       position:fixed;
-      left:50%;
-      bottom:18px;
-      transform: translateX(-50%) translateY(20px);
-      opacity:0;
+      inset:0;
       pointer-events:none;
-      padding:12px 14px;
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.55);
-      backdrop-filter: blur(12px) saturate(150%);
-      box-shadow: var(--shadow2);
-      color: var(--text);
-      font-size:12.5px;
-      transition: opacity .22s var(--easeOut), transform .22s var(--easeOut);
-      max-width: min(92vw, 640px);
-      text-align:center;
-      z-index: 50;
+      z-index: 60;
     }
-    .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+
+    /* =========================
+      BLOK 12 — REDUCED MOTION
+    ========================== */
+    @media (prefers-reduced-motion: reduce){
+      .centerBtn, .btn, .btnAlt, .miniBtn{ transition:none !important; }
+      .modalCard{ animation:none !important; transform:none !important; }
+    }
   </style>
 </head>
 
 <body>
-  <div class="aurora"></div>
-  <div class="noise"></div>
-  <div class="sparkField" id="sparkField" aria-hidden="true"></div>
+  <div class="backdrop" aria-hidden="true"></div>
+  <canvas id="fx" aria-hidden="true"></canvas>
 
-  <main class="wrap">
-    <!-- =========================================================
-      BLOK 9 — TOPBAR
-    ========================================================== -->
-    <section class="topbar">
-      <div class="brand">
-        <div class="brandInner">
-          <div class="logo" id="logo">WB</div>
-          <div>
-            <h1 id="eventTitle">Weekly Boost Pass</h1>
-            <p id="eventSubtitle">Demo: progress mingguan + drop kecil harian (terkontrol & transparan)</p>
+  <div class="wrap">
+    <div class="shell">
+      <!-- TOPBAR -->
+      <div class="topbar" role="banner">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="position:relative; z-index:1">
+              <path d="M12 2l2.2 4.7 5.1.7-3.8 3.7.9 5.2L12 14.9 7.6 16.3l.9-5.2L4.7 7.4l5.1-.7L12 2z" stroke="rgba(255,255,255,.85)" stroke-width="1.6" />
+            </svg>
           </div>
-          <div class="spacer"></div>
+          <div style="min-width:0">
+            <h1>Mahjong Lucky Spin</h1>
+            <p>Demo promo — input User ID, spin, hasil + bukti klaim, riwayat 50</p>
+          </div>
+        </div>
+
+        <div class="pill" title="Status sistem">
+          <span class="dot"></span>
+          <span id="sysText">Siap diputar</span>
         </div>
       </div>
 
-      <div class="pills">
-        <div class="pill">
-          <div class="dot" id="dotDrop"></div>
-          <div>
-            <b id="dropState">Drop: mencari jendela…</b><br>
-            <span id="dropHint">—</span>
+      <!-- MAIN STAGE -->
+      <section class="card stage" aria-label="Lucky Spin">
+        <div class="headline">
+          <div class="txt">
+            <h2>Putar rodanya & dapatkan hadiah hingga <span style="color:var(--gold); font-weight:950">IDR 200.000</span></h2>
+            <p>Masukkan <b>User ID</b> di panel kanan. Kamu bisa spin <b>1x per hari</b> (demo). Setelah itu, tombol klaim akan muncul beserta kartu bukti untuk screenshot / unduh PNG.</p>
+          </div>
+
+          <div class="badge" aria-label="Total jackpot">
+            <span>Total Jackpot</span>
+            <strong id="jackpotText">IDR 888.888.888</strong>
           </div>
         </div>
-        <div class="pill">
-          <div class="dot off" id="dotWeek"></div>
-          <div>
-            <b id="weekState">Minggu: —</b><br>
-            <span id="weekHint">—</span>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <section class="grid">
-      <!-- =========================================================
-        BLOK 10 — WEEKLY BOOST PASS
-      ========================================================== -->
-      <article class="card">
-        <header class="cardHeader">
-          <div>
-            <h2>Weekly Boost Pass</h2>
-            <p>Naikkan TO mingguan → unlock tier → klaim booster.</p>
-          </div>
-          <div class="row">
-            <button class="btn ghost" id="btnJoin">Join</button>
-            <button class="btn danger" id="btnReset">Reset Demo</button>
-          </div>
-        </header>
+        <div class="wheelWrap">
+          <div class="wheelShell" aria-label="Roda keberuntungan">
+            <div class="pointer" aria-hidden="true"></div>
+            <canvas id="wheel" width="600" height="600"></canvas>
 
-        <div class="cardBody">
-          <div class="kpi">
-            <div class="kpiBox">
-              <b>TO Minggu Ini</b>
-              <span id="kpiWeekly">Rp0</span>
-            </div>
-            <div class="kpiBox">
-              <b>TO 60 Menit Terakhir</b>
-              <span id="kpiRecent">Rp0</span>
-            </div>
-            <div class="kpiBox">
-              <b>Booster Aktif</b>
-              <span id="kpiBoost">0</span>
-            </div>
-          </div>
-
-          <div class="progressWrap">
-            <div class="bar" aria-label="Progress TO mingguan">
-              <i id="barFill"></i>
-            </div>
-            <div class="progressMeta">
-              <div><b id="progressLeft" style="color:var(--text)">—</b> <span style="color:var(--muted)">ke target tier berikutnya</span></div>
-              <div><span id="progressPct">0%</span> • <span id="weekEnds">Week ends —</span></div>
-            </div>
-          </div>
-
-          <div class="tiers" id="tiers"></div>
-
-          <div class="footnote">
-            Catatan: ini demo frontend (pakai <b>localStorage</b>). Untuk produksi, status TO/claim seharusnya dari backend agar anti-manipulasi.
-          </div>
-        </div>
-      </article>
-
-      <!-- =========================================================
-        BLOK 11 — PRIME DROP WINDOWS + ACTIVITY
-      ========================================================== -->
-      <aside class="card">
-        <header class="cardHeader">
-          <div>
-            <h2>Prime Drop Windows</h2>
-            <p>Bonus kecil pada jam tertentu (bukan “bocoran”).</p>
-          </div>
-          <button class="btn primary" id="btnClaimDrop">Claim Drop</button>
-        </header>
-
-        <div class="cardBody">
-          <div class="timeline" id="timeline"></div>
-
-          <div class="progressWrap" style="margin-top:12px">
-            <div class="row" style="justify-content:space-between">
-              <div style="min-width: 230px">
-                <div style="font-size:12px;color:var(--muted)">Syarat klaim (demo)</div>
-                <div style="margin-top:6px;font-weight:900" id="claimRule">—</div>
+            <button id="centerBtn" class="centerBtn" type="button" aria-label="Spin sekarang">
+              <div class="inner">
+                <strong>SPIN</strong>
+                <span id="spinSub">Masukkan User ID</span>
               </div>
-              <div class="tag" id="claimStatus">—</div>
-            </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="stageFooter">
+          <div class="status">
+            <span>User:</span>
+            <b id="userLabel" class="mono">-</b>
+            <span>•</span>
+            <span>Status:</span>
+            <b id="spinStatus">Menunggu User ID</b>
           </div>
 
-          <div style="margin-top:14px; font-size:12px; color:var(--muted); font-weight:800; letter-spacing:.02em;">
-            Simulasi Aktivitas (untuk naikin TO)
+          <div style="display:flex; gap:10px; align-items:center;">
+            <button id="btnClaim" class="miniBtn" type="button" disabled>KLAIM SEKARANG</button>
+            <button id="btnResetDemo" class="miniBtn" type="button" title="Hapus data demo localStorage">Reset Demo</button>
           </div>
+        </div>
+      </section>
 
-          <div class="row" style="margin-top:10px">
-            <label class="sr" for="toInput">Nominal TO</label>
-            <div class="input">
-              <small>TO</small>
-              <input id="toInput" inputmode="numeric" placeholder="50000" />
-            </div>
+      <!-- SIDE PANEL -->
+      <aside class="card side" aria-label="Panel user & riwayat">
+        <div class="sectionTitle">
+          <h3>MASUKAN USER ID</h3>
+          <div class="hint">Wajib diisi untuk spin</div>
+        </div>
 
-            <label class="sr" for="providerInput">Provider</label>
-            <div class="input" style="min-width: 180px">
-              <small>Game</small>
-              <select id="providerInput">
-                <option value="SLOT">SLOT</option>
-                <option value="PG">PG</option>
-                <option value="PRAGMATIC">PRAGMATIC</option>
-                <option value="HABANERO">HABANERO</option>
-                <option value="MICROGAMING">MICROGAMING</option>
-              </select>
-            </div>
+        <div class="formRow">
+          <input id="userId" class="input" placeholder="Contoh: AJAIB12345" autocomplete="off" inputmode="text" />
+          <button id="btnSetUser" class="btn" type="button">SIMPAN</button>
+        </div>
 
-            <button class="btn" id="btnAddTo">Tambah</button>
+        <div class="note" id="noteBox">
+          <b>Info:</b> Kesempatan spin kamu akan dihitung per User ID. Setelah berhasil spin, status akan berubah jadi <b>“Kesempatan spin habis”</b> sampai besok.
+        </div>
+
+        <div class="tableWrap">
+          <div class="tableHead">
+            <div><b>50</b> Daftar Riwayat Spin Terakhir</div>
+            <div class="mono" id="histCount">0</div>
           </div>
-
-          <div class="list" id="activityList"></div>
-
-          <div style="margin-top:14px; font-size:12px; color:var(--muted); font-weight:800; letter-spacing:.02em;">
-            Booster Aktif / Reward
+          <div class="scroll">
+            <table class="tbl" aria-label="Riwayat spin">
+              <thead>
+                <tr>
+                  <th style="width:48px">NO</th>
+                  <th>USER ID</th>
+                  <th style="width:140px">HADIAH</th>
+                </tr>
+              </thead>
+              <tbody id="histBody">
+                <tr><td colspan="3" style="color:rgba(255,255,255,.65); padding:14px 10px;">Belum ada riwayat.</td></tr>
+              </tbody>
+            </table>
           </div>
-          <div class="list" id="boostList"></div>
+        </div>
+
+        <div class="sideFooter">
+          <span class="hint">Tip: kalau mau ganti tema pakai asset sendiri, taruh di <span class="mono">/public/assets</span>.</span>
         </div>
       </aside>
-    </section>
-  </main>
+    </div>
+  </div>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <!-- =========================
+    BLOK 13 — MODAL RESULT
+  ========================== -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="overlay" id="modalOverlay"></div>
+
+    <div class="modalCard">
+      <div class="modalHead">
+        <div>
+          <h3 id="modalTitle">SELAMAT!</h3>
+          <div class="hint" id="modalSub">Anda memenangkan hadiah sebesar</div>
+        </div>
+        <button class="closeX" type="button" id="modalClose" aria-label="Tutup">✕</button>
+      </div>
+
+      <div class="modalBody">
+        <div class="bigWin" id="proofArea">
+          <div class="hint">Hasil</div>
+          <div class="winAmount" id="winAmount">IDR 0</div>
+          <p class="winMeta" id="winMeta">
+            Silahkan hubungi CS untuk klaim hadiah anda dengan screenshot ini.
+          </p>
+          <p class="winMeta">
+            <span class="mono" id="ticketCode">CODE-XXXX</span> • <span class="mono" id="ticketTime">YYYY-MM-DD HH:mm</span>
+          </p>
+        </div>
+
+        <div class="proof">
+          <div class="box">
+            <b>Bukti Klaim (Demo)</b><br/>
+            User ID: <span class="mono" id="proofUser">-</span><br/>
+            Hadiah: <span class="mono" id="proofPrize">-</span><br/>
+            Kode: <span class="mono" id="proofCode">-</span><br/>
+            <span style="color:rgba(255,255,255,.65)">Gunakan tombol unduh untuk buat PNG atau cukup screenshot.</span>
+          </div>
+
+          <div class="actions">
+            <button class="btnAlt" id="btnDownloadProof" type="button">UNDUH BUKTI (PNG)</button>
+            <button class="btnAlt" id="btnClaimNow" type="button">KLAIM SEKARANG</button>
+          </div>
+
+          <div class="hint">
+            Tombol klaim ini hanya demo. Ganti link CS-mu di kode JS.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
-    /* =========================================================
-      BLOK 12 — CONFIG (EDIT DI SINI)
-    ========================================================== */
-    const CONFIG = {
-      brand: {
-        short: "WB",
-        title: "Weekly Boost Pass",
-        subtitle: "Demo: progress mingguan + drop kecil harian (terkontrol & transparan)"
-      },
-
-      weekly: {
-        // start day: 1 = Monday (paling umum buat reset mingguan)
-        weekStartsOn: 1,
-        // target untuk skala progress bar (bukan batas TO; hanya acuan visual)
-        progressTarget: 5000000,
-        tiers: [
-          { id:"t1", name:"Tier 1 — Rolling Aktif", reqTo: 500000, reward: { type:"boost", label:"Rolling +0.5% (7 hari)", value:"+0.5%", hours: 24*7 } },
-          { id:"t2", name:"Tier 2 — Cap Upgrade", reqTo: 1000000, reward: { type:"perk", label:"Cap rolling naik (demo)" } },
-          { id:"t3", name:"Tier 3 — Booster 24 Jam", reqTo: 2000000, reward: { type:"boost", label:"Rolling +0.2% (24 jam)", value:"+0.2%", hours: 24 } },
-          { id:"t4", name:"Tier 4 — Priority Claim", reqTo: 5000000, reward: { type:"perk", label:"Priority claim (demo)" } }
-        ]
-      },
-
-      drop: {
-        // jendela jam “Drop” per hari (local time)
-        windows: [
-          { label:"Lunch Drop", start:"12:00", end:"13:00", reward: { type:"boost", label:"Rolling +0.1% (6 jam)", value:"+0.1%", hours: 6 } },
-          { label:"Prime Night", start:"19:00", end:"20:00", reward: { type:"boost", label:"Rolling +0.1% (6 jam)", value:"+0.1%", hours: 6 } }
-        ],
-        // syarat klaim: minimal TO di trailing window menit (demo dari log aktivitas)
-        minToLastMinutes: 50_000,
-        trailingMinutes: 60,
-        // maksimal claim per window per hari (1 itu aman)
-        claimPerWindowPerDay: 1
-      }
+    /* =========================
+      BLOK 14 — DATA + STORAGE KEYS
+    ========================== */
+    const STORAGE = {
+      USER: "mw2_user_v1",
+      USERS: "mw2_userspin_v1",
+      HISTORY: "mw2_history_v1",
+      JACKPOT: "mw2_jackpot_v1"
     };
 
-    /* =========================================================
-      BLOK 13 — STATE (localStorage)
-    ========================================================== */
-    const LS_KEY = "weekly_boost_pass_demo_v1";
-    const now = () => Date.now();
+    const JACKPOT_SEED = 888_888_888;
 
-    function loadState(){
+    // Hadiah max IDR 200.000 (ngikutin headline di referensi)
+    const PRIZES = [
+      { label: "IDR 1.000",   amount: 1000,   weight: 24 },
+      { label: "IDR 2.000",   amount: 2000,   weight: 22 },
+      { label: "IDR 5.000",   amount: 5000,   weight: 18 },
+      { label: "IDR 10.000",  amount: 10000,  weight: 14 },
+      { label: "IDR 20.000",  amount: 20000,  weight: 10 },
+      { label: "IDR 50.000",  amount: 50000,  weight: 7  },
+      { label: "IDR 100.000", amount: 100000, weight: 4  },
+      { label: "IDR 200.000", amount: 200000, weight: 1  },
+    ];
+
+    const SEG_COLORS = [
+      { a:"rgba(31,240,178,.95)", b:"rgba(18,200,145,.72)" }, // jade
+      { a:"rgba(255,211,106,.95)", b:"rgba(255,183,74,.72)" }, // gold
+      { a:"rgba(99,217,255,.92)", b:"rgba(99,217,255,.55)" }, // ice
+      { a:"rgba(255,59,106,.92)", b:"rgba(255,59,106,.55)" }, // ruby
+    ];
+
+    const SPIN_COOLDOWN_DAYS = 1; // 1x per hari (demo)
+    const EXTRA_TURNS_MIN = 7;
+    const EXTRA_TURNS_MAX = 9;
+
+    /* =========================
+      BLOK 15 — HELPERS
+    ========================== */
+    const $ = (q, el=document) => el.querySelector(q);
+
+    function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+    function lerp(a,b,t){ return a + (b-a)*t; }
+    function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+    function easeOutBack(t){
+      const c1 = 1.70158, c3 = c1 + 1;
+      return 1 + c3*Math.pow(t-1,3) + c1*Math.pow(t-1,2);
+    }
+
+    function fmtIDR(n){
+      return "IDR " + (n|0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    function todayKey(){
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,"0");
+      const day = String(d.getDate()).padStart(2,"0");
+      return `${y}-${m}-${day}`;
+    }
+
+    function nowStamp(){
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,"0");
+      const day = String(d.getDate()).padStart(2,"0");
+      const hh = String(d.getHours()).padStart(2,"0");
+      const mm = String(d.getMinutes()).padStart(2,"0");
+      return `${y}-${m}-${day} ${hh}:${mm}`;
+    }
+
+    function safeParse(json, fallback){
+      try{ return JSON.parse(json); }catch(e){ return fallback; }
+    }
+
+    function getLS(key, fallback){
+      const raw = localStorage.getItem(key);
+      if (!raw) return fallback;
+      return safeParse(raw, fallback);
+    }
+    function setLS(key, val){
+      localStorage.setItem(key, JSON.stringify(val));
+    }
+
+    function weightedPick(items){
+      let total = 0;
+      for (const x of items) total += x.weight;
+      let r = Math.random() * total;
+      for (let i=0;i<items.length;i++){
+        r -= items[i].weight;
+        if (r <= 0) return i;
+      }
+      return items.length-1;
+    }
+
+    function randInt(a,b){
+      return Math.floor(Math.random()*(b-a+1))+a;
+    }
+
+    function uidCode(){
+      return "CODE-" + Math.random().toString(16).slice(2,6).toUpperCase() + "-" + Math.random().toString(16).slice(2,6).toUpperCase();
+    }
+
+    /* =========================
+      BLOK 16 — STATE
+    ========================== */
+    const state = {
+      userId: "",
+      spinning: false,
+      rotation: 0,
+      jackpot: JACKPOT_SEED,
+      lastWin: null,
+    };
+
+    /* =========================
+      BLOK 17 — DOM REFS
+    ========================== */
+    const wheel = $("#wheel");
+    const wctx = wheel.getContext("2d");
+
+    const fx = $("#fx");
+    const fctx = fx.getContext("2d");
+
+    const userIdInput = $("#userId");
+    const btnSetUser = $("#btnSetUser");
+    const centerBtn = $("#centerBtn");
+    const spinSub = $("#spinSub");
+
+    const sysText = $("#sysText");
+    const userLabel = $("#userLabel");
+    const spinStatus = $("#spinStatus");
+
+    const jackpotText = $("#jackpotText");
+
+    const histBody = $("#histBody");
+    const histCount = $("#histCount");
+
+    const btnClaim = $("#btnClaim");
+    const btnResetDemo = $("#btnResetDemo");
+
+    const modal = $("#modal");
+    const modalOverlay = $("#modalOverlay");
+    const modalClose = $("#modalClose");
+    const winAmount = $("#winAmount");
+    const ticketCode = $("#ticketCode");
+    const ticketTime = $("#ticketTime");
+    const proofUser = $("#proofUser");
+    const proofPrize = $("#proofPrize");
+    const proofCode = $("#proofCode");
+    const btnDownloadProof = $("#btnDownloadProof");
+    const btnClaimNow = $("#btnClaimNow");
+
+    /* =========================
+      BLOK 18 — CANVAS RESIZE
+    ========================== */
+    function resizeFx(){
+      const dpr = window.devicePixelRatio || 1;
+      fx.width = Math.floor(window.innerWidth * dpr);
+      fx.height = Math.floor(window.innerHeight * dpr);
+      fctx.setTransform(dpr,0,0,dpr,0,0);
+    }
+
+    function resizeWheel(){
+      const rect = wheel.getBoundingClientRect();
+      const size = Math.min(rect.width, rect.height);
+      const dpr = window.devicePixelRatio || 1;
+
+      wheel.width = Math.floor(size * dpr);
+      wheel.height = Math.floor(size * dpr);
+      wheel.style.width = size + "px";
+      wheel.style.height = size + "px";
+      wctx.setTransform(dpr,0,0,dpr,0,0);
+
+      drawWheel();
+    }
+
+    window.addEventListener("resize", () => {
+      resizeFx();
+      resizeWheel();
+    });
+
+    /* =========================
+      BLOK 19 — WHEEL DRAW
+    ========================== */
+    function drawWheel(){
+      const size = parseFloat(getComputedStyle(wheel).width);
+      const cx = size/2, cy = size/2;
+      const r = size * 0.46;
+
+      wctx.clearRect(0,0,size,size);
+
+      // base glow
+      const glow = wctx.createRadialGradient(cx, cy, r*0.1, cx, cy, r*1.1);
+      glow.addColorStop(0, "rgba(255,255,255,.06)");
+      glow.addColorStop(.45, "rgba(31,240,178,.10)");
+      glow.addColorStop(1, "rgba(0,0,0,0)");
+      wctx.fillStyle = glow;
+      wctx.beginPath();
+      wctx.arc(cx, cy, r*1.08, 0, Math.PI*2);
+      wctx.fill();
+
+      const arc = (Math.PI*2) / PRIZES.length;
+      const rot = state.rotation;
+
+      // rim
+      wctx.save();
+      wctx.translate(cx, cy);
+      wctx.rotate(rot);
+      wctx.translate(-cx, -cy);
+
+      for (let i=0;i<PRIZES.length;i++){
+        const a0 = i*arc;
+        const a1 = a0 + arc;
+
+        const col = SEG_COLORS[i % SEG_COLORS.length];
+        const g = wctx.createLinearGradient(cx, cy-r, cx, cy+r);
+        g.addColorStop(0, col.a);
+        g.addColorStop(1, col.b);
+
+        // segment
+        wctx.beginPath();
+        wctx.moveTo(cx, cy);
+        wctx.arc(cx, cy, r, a0, a1);
+        wctx.closePath();
+        wctx.fillStyle = g;
+        wctx.fill();
+
+        // divider
+        wctx.strokeStyle = "rgba(255,255,255,.15)";
+        wctx.lineWidth = 2;
+        wctx.beginPath();
+        wctx.moveTo(cx, cy);
+        wctx.arc(cx, cy, r, a0, a0);
+        wctx.stroke();
+
+        // subtle tile pattern inside segment
+        wctx.save();
+        wctx.beginPath();
+        wctx.moveTo(cx, cy);
+        wctx.arc(cx, cy, r, a0, a1);
+        wctx.closePath();
+        wctx.clip();
+
+        wctx.globalAlpha = 0.18;
+        wctx.fillStyle = "rgba(255,255,255,.9)";
+        const step = r*0.16;
+        for (let k=0;k<80;k++){
+          const px = cx - r + (k%10)*step*1.1;
+          const py = cy - r + Math.floor(k/10)*step*1.0;
+          wctx.fillRect(px, py, step*0.48, step*0.48);
+        }
+        wctx.globalAlpha = 1;
+        wctx.restore();
+
+        // label
+        const mid = a0 + arc/2;
+        wctx.save();
+        wctx.translate(cx, cy);
+        wctx.rotate(mid);
+        wctx.translate(0, -r*0.72);
+        wctx.rotate(Math.PI/2);
+
+        wctx.font = "900 14px Inter, system-ui, sans-serif";
+        wctx.textAlign = "center";
+        wctx.textBaseline = "middle";
+        wctx.fillStyle = "rgba(0,0,0,.55)";
+        wctx.fillText(PRIZES[i].label, 1, 1);
+        wctx.fillStyle = "rgba(255,255,255,.92)";
+        wctx.fillText(PRIZES[i].label, 0, 0);
+
+        wctx.restore();
+      }
+
+      // inner ring
+      wctx.beginPath();
+      wctx.arc(cx, cy, r*0.62, 0, Math.PI*2);
+      wctx.fillStyle = "rgba(0,0,0,.22)";
+      wctx.fill();
+      wctx.strokeStyle = "rgba(255,255,255,.18)";
+      wctx.lineWidth = 2;
+      wctx.stroke();
+
+      // outer ring
+      wctx.beginPath();
+      wctx.arc(cx, cy, r*1.02, 0, Math.PI*2);
+      wctx.strokeStyle = "rgba(255,255,255,.18)";
+      wctx.lineWidth = 10;
+      wctx.stroke();
+
+      // studs
+      const studs = 48;
+      for (let s=0;s<studs;s++){
+        const ang = (s/studs) * Math.PI*2;
+        const sx = cx + Math.cos(ang) * r*1.02;
+        const sy = cy + Math.sin(ang) * r*1.02;
+        wctx.beginPath();
+        wctx.arc(sx, sy, 2.3, 0, Math.PI*2);
+        wctx.fillStyle = (s%2===0) ? "rgba(255,211,106,.9)" : "rgba(255,255,255,.42)";
+        wctx.fill();
+      }
+
+      wctx.restore();
+
+      // top highlight
+      const hl = wctx.createRadialGradient(cx, cy - r*0.7, 10, cx, cy - r*0.7, r*1.2);
+      hl.addColorStop(0, "rgba(255,255,255,.14)");
+      hl.addColorStop(1, "rgba(255,255,255,0)");
+      wctx.fillStyle = hl;
+      wctx.beginPath();
+      wctx.arc(cx, cy, r*1.06, 0, Math.PI*2);
+      wctx.fill();
+    }
+
+    /* =========================
+      BLOK 20 — AUDIO TICK (WEB AUDIO)
+    ========================== */
+    let audioCtx = null;
+    function beep(freq=1200, dur=0.02, gain=0.03){
       try{
-        const raw = localStorage.getItem(LS_KEY);
-        if(!raw) return freshState();
-        const st = JSON.parse(raw);
-        return normalizeState(st);
-      }catch(e){
-        return freshState();
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const t0 = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        osc.type = "square";
+        osc.frequency.setValueAtTime(freq, t0);
+        g.gain.setValueAtTime(gain, t0);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+        osc.connect(g).connect(audioCtx.destination);
+        osc.start(t0);
+        osc.stop(t0 + dur);
+      }catch(e){}
+    }
+
+    /* =========================
+      BLOK 21 — CONFETTI
+    ========================== */
+    const conf = { on:false, particles:[] };
+
+    function burstConfetti(){
+      const w = window.innerWidth, h = window.innerHeight;
+      conf.particles.length = 0;
+      const count = 120;
+      for (let i=0;i<count;i++){
+        conf.particles.push({
+          x: w/2 + (Math.random()-0.5)*120,
+          y: h/2 - 60 + (Math.random()-0.5)*80,
+          vx: (Math.random()-0.5)*8,
+          vy: -Math.random()*7 - 2,
+          r: Math.random()*3 + 2,
+          a: 1,
+          rot: Math.random()*Math.PI*2,
+          vr: (Math.random()-0.5)*0.25,
+          t: 0,
+          kind: i%4
+        });
       }
-    }
-    function saveState(){
-      localStorage.setItem(LS_KEY, JSON.stringify(STATE));
-    }
-    function freshState(){
-      return normalizeState({
-        joined: false,
-        activity: [],      // {id, ts, amount, provider}
-        tierClaims: {},    // { [weekKey]: { [tierId]: true } }
-        dropClaims: {},    // { [dateKey]: { [windowIndex]: count } }
-        boosters: []       // {id, label, value, expiresAt, source}
-      });
-    }
-    function normalizeState(st){
-      st = st || {};
-      st.joined = !!st.joined;
-      st.activity = Array.isArray(st.activity) ? st.activity : [];
-      st.tierClaims = st.tierClaims && typeof st.tierClaims==="object" ? st.tierClaims : {};
-      st.dropClaims = st.dropClaims && typeof st.dropClaims==="object" ? st.dropClaims : {};
-      st.boosters = Array.isArray(st.boosters) ? st.boosters : [];
-      return st;
+      conf.on = true;
+      requestAnimationFrame(tickConfetti);
     }
 
-    let STATE = loadState();
+    function tickConfetti(){
+      if (!conf.on) return;
+      const w = window.innerWidth, h = window.innerHeight;
+      fctx.clearRect(0,0,w,h);
 
-    /* =========================================================
-      BLOK 14 — TIME / WEEK HELPERS
-    ========================================================== */
-    function pad2(n){ return String(n).padStart(2,"0"); }
-    function fmtTime(d){
-      return `${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
-    }
-    function fmtDateKey(d){
-      return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
-    }
-    function fmtMoney(n){
-      const v = Math.max(0, Math.floor(Number(n||0)));
-      return new Intl.NumberFormat("id-ID",{ style:"currency", currency:"IDR", maximumFractionDigits:0 }).format(v);
-    }
-    function getWeekStart(ts){
-      const d = new Date(ts);
-      d.setHours(0,0,0,0);
-      const weekStartsOn = CONFIG.weekly.weekStartsOn; // 1 = Monday
-      const day = d.getDay(); // 0 Sun .. 6 Sat
-      const diff = (day - weekStartsOn + 7) % 7;
-      d.setDate(d.getDate() - diff);
-      return d.getTime();
-    }
-    function getWeekEnd(ts){
-      const start = getWeekStart(ts);
-      const end = start + 7*24*60*60*1000 - 1;
-      return end;
-    }
-    function weekKey(ts){
-      const ws = new Date(getWeekStart(ts));
-      return `W_${ws.getFullYear()}${pad2(ws.getMonth()+1)}${pad2(ws.getDate())}`;
-    }
-    function msToHMS(ms){
-      ms = Math.max(0, ms);
-      const s = Math.floor(ms/1000);
-      const hh = Math.floor(s/3600);
-      const mm = Math.floor((s%3600)/60);
-      const ss = s%60;
-      if(hh>0) return `${hh}j ${mm}m`;
-      if(mm>0) return `${mm}m ${ss}d`;
-      return `${ss}d`;
-    }
+      let alive = 0;
+      for (const p of conf.particles){
+        p.t += 1;
+        p.vy += 0.18;
+        p.vx *= 0.995;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rot += p.vr;
+        p.a = Math.max(0, 1 - p.t/160);
 
-    /* =========================================================
-      BLOK 15 — DROP WINDOWS HELPERS
-    ========================================================== */
-    function parseHHMM(str){
-      const [h,m] = String(str).split(":").map(x=>parseInt(x,10));
-      return {h: isFinite(h)?h:0, m: isFinite(m)?m:0};
-    }
-    function windowTimesForToday(win, baseTs){
-      const d = new Date(baseTs);
-      d.setHours(0,0,0,0);
-      const {h:sh, m:sm} = parseHHMM(win.start);
-      const {h:eh, m:em} = parseHHMM(win.end);
-      const start = new Date(d); start.setHours(sh, sm, 0, 0);
-      const end = new Date(d); end.setHours(eh, em, 0, 0);
+        if (p.a > 0 && p.y < h + 40) alive++;
 
-      // support cross-midnight windows
-      let startTs = start.getTime();
-      let endTs = end.getTime();
-      if(endTs <= startTs) endTs += 24*60*60*1000;
-      return { startTs, endTs };
-    }
+        const col = p.kind===0 ? "rgba(255,211,106,"+p.a+")"
+                  : p.kind===1 ? "rgba(31,240,178,"+p.a+")"
+                  : p.kind===2 ? "rgba(99,217,255,"+p.a+")"
+                  : "rgba(255,59,106,"+p.a+")";
 
-    function getDropStatus(baseTs){
-      const dateKey = fmtDateKey(new Date(baseTs));
-      const wins = CONFIG.drop.windows.map((w, idx) => {
-        const {startTs, endTs} = windowTimesForToday(w, baseTs);
-        const isActive = baseTs >= startTs && baseTs < endTs;
-        const isDone = baseTs >= endTs;
-        const isNext = !isActive && !isDone && startTs > baseTs;
-        return { idx, ...w, startTs, endTs, isActive, isDone, isNext };
-      });
+        fctx.save();
+        fctx.translate(p.x, p.y);
+        fctx.rotate(p.rot);
+        fctx.fillStyle = col;
+        fctx.fillRect(-p.r, -p.r, p.r*2.2, p.r*1.4);
+        fctx.restore();
+      }
 
-      const active = wins.find(w=>w.isActive) || null;
-      const next = wins.filter(w=>w.isNext).sort((a,b)=>a.startTs-b.startTs)[0] || null;
-
-      return { dateKey, wins, active, next };
-    }
-
-    function recentToSum(baseTs){
-      const trailingMs = CONFIG.drop.trailingMinutes * 60 * 1000;
-      const cut = baseTs - trailingMs;
-      return STATE.activity
-        .filter(a => a.ts >= cut && a.ts <= baseTs)
-        .reduce((acc,a)=> acc + (Number(a.amount)||0), 0);
-    }
-
-    /* =========================================================
-      BLOK 16 — UI HOOKS
-    ========================================================== */
-    const $ = (q)=>document.querySelector(q);
-
-    const eventTitle = $("#eventTitle");
-    const eventSubtitle = $("#eventSubtitle");
-    const logo = $("#logo");
-
-    const dotDrop = $("#dotDrop");
-    const dropState = $("#dropState");
-    const dropHint = $("#dropHint");
-
-    const dotWeek = $("#dotWeek");
-    const weekState = $("#weekState");
-    const weekHint = $("#weekHint");
-
-    const kpiWeekly = $("#kpiWeekly");
-    const kpiRecent = $("#kpiRecent");
-    const kpiBoost = $("#kpiBoost");
-
-    const barFill = $("#barFill");
-    const progressLeft = $("#progressLeft");
-    const progressPct = $("#progressPct");
-    const weekEnds = $("#weekEnds");
-
-    const tiersEl = $("#tiers");
-    const timelineEl = $("#timeline");
-
-    const btnJoin = $("#btnJoin");
-    const btnReset = $("#btnReset");
-    const btnClaimDrop = $("#btnClaimDrop");
-
-    const claimRule = $("#claimRule");
-    const claimStatus = $("#claimStatus");
-
-    const toInput = $("#toInput");
-    const providerInput = $("#providerInput");
-    const btnAddTo = $("#btnAddTo");
-
-    const activityList = $("#activityList");
-    const boostList = $("#boostList");
-
-    const toast = $("#toast");
-
-    /* =========================================================
-      BLOK 17 — TOAST
-    ========================================================== */
-    let toastT = null;
-    function showToast(msg){
-      toast.textContent = msg;
-      toast.classList.add("show");
-      clearTimeout(toastT);
-      toastT = setTimeout(()=> toast.classList.remove("show"), 2200);
-    }
-
-    /* =========================================================
-      BLOK 18 — ACTIONS
-    ========================================================== */
-    function addActivity(amount, provider){
-      const n = Math.max(0, Math.floor(Number(amount||0)));
-      if(!n){
-        showToast("Masukkan nominal TO yang valid.");
+      if (alive <= 0){
+        conf.on = false;
+        fctx.clearRect(0,0,w,h);
         return;
       }
-      STATE.activity.unshift({
-        id: "a_" + Math.random().toString(16).slice(2),
-        ts: now(),
-        amount: n,
-        provider: String(provider||"SLOT")
-      });
-      // keep last 40 logs for demo
-      STATE.activity = STATE.activity.slice(0, 40);
-      saveState();
-      renderAll();
-      showToast(`TO ditambahkan: ${fmtMoney(n)} (${provider})`);
+      requestAnimationFrame(tickConfetti);
     }
 
-    function cleanExpiredBoosters(baseTs){
-      const before = STATE.boosters.length;
-      STATE.boosters = STATE.boosters.filter(b => (b.expiresAt||0) > baseTs);
-      if(STATE.boosters.length !== before) saveState();
+    /* =========================
+      BLOK 22 — HISTORY + JACKPOT
+    ========================== */
+    function loadJackpot(){
+      const j = getLS(STORAGE.JACKPOT, JACKPOT_SEED);
+      state.jackpot = (typeof j === "number" && isFinite(j)) ? j : JACKPOT_SEED;
+      renderJackpot();
     }
 
-    function addBooster(reward, sourceLabel){
-      if(!reward || reward.type!=="boost") return;
-      const expiresAt = now() + (Number(reward.hours||0) * 60 * 60 * 1000);
-      STATE.boosters.unshift({
-        id: "b_" + Math.random().toString(16).slice(2),
-        label: reward.label,
-        value: reward.value || "",
-        expiresAt,
-        source: sourceLabel || "Reward"
-      });
-      // keep last 12 boosters
-      STATE.boosters = STATE.boosters.slice(0, 12);
-      saveState();
+    function renderJackpot(){
+      jackpotText.textContent = fmtIDR(state.jackpot);
     }
 
-    function claimTier(tierId){
-      const wk = weekKey(now());
-      const claims = STATE.tierClaims[wk] || (STATE.tierClaims[wk] = {});
-      if(claims[tierId]){
-        showToast("Tier ini sudah pernah diklaim minggu ini.");
+    function spendJackpot(amount){
+      state.jackpot = Math.max(0, state.jackpot - amount);
+      // kalau sudah terlalu kecil, reset biar demo tetap “hidup”
+      if (state.jackpot < 50_000) state.jackpot = JACKPOT_SEED;
+      setLS(STORAGE.JACKPOT, state.jackpot);
+      renderJackpot();
+    }
+
+    function loadHistory(){
+      return getLS(STORAGE.HISTORY, []);
+    }
+
+    function pushHistory(userId, prizeLabel){
+      const hist = loadHistory();
+      hist.unshift({ t: Date.now(), userId, prize: prizeLabel });
+      hist.splice(50);
+      setLS(STORAGE.HISTORY, hist);
+      renderHistory(hist);
+    }
+
+    function renderHistory(hist){
+      histCount.textContent = String(hist.length);
+      if (!hist.length){
+        histBody.innerHTML = `<tr><td colspan="3" style="color:rgba(255,255,255,.65); padding:14px 10px;">Belum ada riwayat.</td></tr>`;
         return;
       }
-
-      const tier = CONFIG.weekly.tiers.find(t=>t.id===tierId);
-      if(!tier) return;
-
-      const weeklySum = getWeeklySum(now());
-      if(weeklySum < tier.reqTo){
-        showToast("Syarat TO tier belum terpenuhi.");
-        return;
-      }
-
-      claims[tierId] = true;
-      if(tier.reward?.type === "boost"){
-        addBooster(tier.reward, `Weekly Pass — ${tier.name}`);
-        showToast(`Klaim sukses: ${tier.reward.label}`);
-      }else{
-        showToast(`Klaim sukses: ${tier.reward?.label || "Perk"}`);
-      }
-
-      saveState();
-      renderAll();
-    }
-
-    function claimDrop(){
-      const baseTs = now();
-      const { dateKey, active } = getDropStatus(baseTs);
-      if(!active){
-        showToast("Tidak ada Drop Window yang aktif sekarang.");
-        return;
-      }
-
-      const recentSum = recentToSum(baseTs);
-      if(recentSum < CONFIG.drop.minToLastMinutes){
-        showToast(`Belum memenuhi syarat TO ${CONFIG.drop.trailingMinutes} menit terakhir.`);
-        return;
-      }
-
-      const dayClaims = STATE.dropClaims[dateKey] || (STATE.dropClaims[dateKey] = {});
-      const cur = Number(dayClaims[active.idx] || 0);
-      if(cur >= CONFIG.drop.claimPerWindowPerDay){
-        showToast("Drop window ini sudah diklaim hari ini.");
-        return;
-      }
-
-      dayClaims[active.idx] = cur + 1;
-
-      // grant reward
-      if(active.reward?.type === "boost"){
-        addBooster(active.reward, `Prime Drop — ${active.label}`);
-        showToast(`Drop didapat: ${active.reward.label}`);
-      }else{
-        showToast("Drop didapat.");
-      }
-
-      saveState();
-      renderAll();
-    }
-
-    function resetDemo(){
-      localStorage.removeItem(LS_KEY);
-      STATE = loadState();
-      renderAll();
-      showToast("Demo direset.");
-    }
-
-    function joinEvent(){
-      STATE.joined = true;
-      saveState();
-      renderAll();
-      showToast("Kamu sudah Join event (demo).");
-    }
-
-    /* =========================================================
-      BLOK 19 — DERIVED DATA
-    ========================================================== */
-    function getWeeklySum(baseTs){
-      const ws = getWeekStart(baseTs);
-      const we = ws + 7*24*60*60*1000;
-      return STATE.activity
-        .filter(a => a.ts >= ws && a.ts < we)
-        .reduce((acc,a)=> acc + (Number(a.amount)||0), 0);
-    }
-
-    function nextTierInfo(weeklySum){
-      const tiers = [...CONFIG.weekly.tiers].sort((a,b)=>a.reqTo-b.reqTo);
-      const next = tiers.find(t => weeklySum < t.reqTo) || null;
-      if(!next) return { next:null, left:0 };
-      return { next, left: Math.max(0, next.reqTo - weeklySum) };
-    }
-
-    function getClaimedTierMap(baseTs){
-      const wk = weekKey(baseTs);
-      return STATE.tierClaims[wk] || {};
-    }
-
-    /* =========================================================
-      BLOK 20 — RENDER
-    ========================================================== */
-    function renderHeader(baseTs){
-      eventTitle.textContent = CONFIG.brand.title;
-      eventSubtitle.textContent = CONFIG.brand.subtitle;
-      logo.textContent = CONFIG.brand.short;
-
-      const ws = new Date(getWeekStart(baseTs));
-      const we = new Date(getWeekEnd(baseTs));
-      dotWeek.classList.remove("off");
-      weekState.textContent = `Minggu: ${fmtDateKey(ws)} → ${fmtDateKey(we)}`;
-      weekHint.textContent = `Reset otomatis: ${fmtTime(ws)} (local)`;
-
-      // Drop status
-      const ds = getDropStatus(baseTs);
-      if(ds.active){
-        dotDrop.classList.remove("off");
-        dropState.textContent = `Drop: AKTIF (${ds.active.label})`;
-        dropHint.textContent = `Berakhir ${fmtTime(new Date(ds.active.endTs))}`;
-      }else if(ds.next){
-        dotDrop.classList.remove("off");
-        dotDrop.style.background = "var(--gold)";
-        dropState.textContent = `Drop: NEXT (${ds.next.label})`;
-        dropHint.textContent = `Mulai ${fmtTime(new Date(ds.next.startTs))}`;
-      }else{
-        dotDrop.classList.add("off");
-        dotDrop.style.background = "";
-        dropState.textContent = "Drop: selesai hari ini";
-        dropHint.textContent = "Cek lagi besok.";
-      }
-    }
-
-    function renderKPI(baseTs){
-      const weeklySum = getWeeklySum(baseTs);
-      const recentSum = recentToSum(baseTs);
-
-      cleanExpiredBoosters(baseTs);
-
-      kpiWeekly.textContent = fmtMoney(weeklySum);
-      kpiRecent.textContent = fmtMoney(recentSum);
-      kpiBoost.textContent = String(STATE.boosters.filter(b => b.expiresAt > baseTs).length);
-    }
-
-    function renderProgress(baseTs){
-      const weeklySum = getWeeklySum(baseTs);
-      const target = Math.max(1, Number(CONFIG.weekly.progressTarget||1));
-      const pct = Math.max(0, Math.min(1, weeklySum / target));
-
-      barFill.style.width = (pct*100).toFixed(1) + "%";
-      progressPct.textContent = `${Math.round(pct*100)}%`;
-
-      const { next, left } = nextTierInfo(weeklySum);
-      progressLeft.textContent = next ? fmtMoney(left) : "Semua tier terbuka";
-
-      const we = getWeekEnd(baseTs);
-      weekEnds.textContent = `Week ends ${fmtDateKey(new Date(we))} • ${fmtTime(new Date(we))}`;
-    }
-
-    function renderTiers(baseTs){
-      const weeklySum = getWeeklySum(baseTs);
-      const claimed = getClaimedTierMap(baseTs);
-
-      const tiers = [...CONFIG.weekly.tiers].sort((a,b)=>a.reqTo-b.reqTo);
-
-      tiersEl.innerHTML = tiers.map((t, idx) => {
-        const unlocked = weeklySum >= t.reqTo;
-        const isClaimed = !!claimed[t.id];
-        const canClaim = unlocked && !isClaimed;
-
-        const tag = isClaimed
-          ? `<span class="tag on">Claimed</span>`
-          : (canClaim ? `<span class="tag claim">Ready</span>` : `<span class="tag off">Locked</span>`);
-
-        const rewardLabel = t.reward?.label ? t.reward.label : "Reward";
-        const reqLabel = `Butuh TO: ${fmtMoney(t.reqTo)}`;
-
-        const btn = canClaim
-          ? `<button class="btn primary" data-claim="${t.id}">Claim</button>`
-          : `<button class="btn" disabled>${isClaimed ? "Sudah" : "Belum"}</button>`;
-
-        return `
-          <div class="tier">
-            <div class="badge">${idx+1}</div>
-            <div class="meta">
-              <b>${t.name}</b>
-              <span>${rewardLabel} • ${reqLabel}</span>
-            </div>
-            ${tag}
-            ${btn}
-          </div>
-        `;
-      }).join("");
-
-      tiersEl.querySelectorAll("[data-claim]").forEach(btn=>{
-        btn.addEventListener("click", () => claimTier(btn.getAttribute("data-claim")));
-      });
-    }
-
-    function renderDrop(baseTs){
-      const { dateKey, wins, active } = getDropStatus(baseTs);
-
-      // timeline pills
-      timelineEl.innerHTML = wins.map(w=>{
-        const st = fmtTime(new Date(w.startTs));
-        const en = fmtTime(new Date(w.endTs));
-        const cls = w.isActive ? "active" : (w.isNext ? "next" : (w.isDone ? "done" : ""));
-        const label = w.isActive ? "AKTIF" : (w.isNext ? "NEXT" : (w.isDone ? "DONE" : "—"));
-        return `
-          <div class="win ${cls}">
-            <i></i>
-            <div>
-              <b>${w.label}</b><br>
-              <span>${st}-${en} • ${label}</span>
-            </div>
-          </div>
-        `;
-      }).join("");
-
-      // claim rule
-      claimRule.textContent = `${fmtMoney(CONFIG.drop.minToLastMinutes)} TO / ${CONFIG.drop.trailingMinutes} menit terakhir`;
-      const recentSum = recentToSum(baseTs);
-
-      const dayClaims = STATE.dropClaims[dateKey] || {};
-      const claimedCount = active ? Number(dayClaims[active.idx]||0) : 0;
-      const alreadyClaimed = active ? claimedCount >= CONFIG.drop.claimPerWindowPerDay : false;
-
-      // button logic
-      const hasActive = !!active;
-      const meetReq = recentSum >= CONFIG.drop.minToLastMinutes;
-
-      btnClaimDrop.disabled = !(STATE.joined && hasActive && meetReq && !alreadyClaimed);
-
-      if(!STATE.joined){
-        claimStatus.className = "tag off";
-        claimStatus.textContent = "Join dulu";
-      }else if(!hasActive){
-        claimStatus.className = "tag off";
-        claimStatus.textContent = "Tidak aktif";
-      }else if(alreadyClaimed){
-        claimStatus.className = "tag on";
-        claimStatus.textContent = "Sudah diklaim";
-      }else if(!meetReq){
-        claimStatus.className = "tag off";
-        claimStatus.textContent = `Kurang: ${fmtMoney(CONFIG.drop.minToLastMinutes - recentSum)}`;
-      }else{
-        claimStatus.className = "tag claim";
-        claimStatus.textContent = "Bisa klaim";
-      }
-    }
-
-    function renderActivity(){
-      const items = STATE.activity.slice(0, 8);
-      if(items.length === 0){
-        activityList.innerHTML = `
-          <div class="item">
-            <div class="ic">🧾</div>
-            <div class="info">
-              <b>Belum ada aktivitas</b>
-              <span>Tambah TO di atas untuk melihat progress mingguan & syarat drop.</span>
-            </div>
-            <div class="right">—</div>
-          </div>
-        `;
-        return;
-      }
-
-      activityList.innerHTML = items.map(a=>{
-        const d = new Date(a.ts);
-        return `
-          <div class="item">
-            <div class="ic">⚡</div>
-            <div class="info">
-              <b>${fmtMoney(a.amount)} <span style="color:var(--muted);font-weight:800">• ${a.provider}</span></b>
-              <span>${fmtDateKey(d)} ${fmtTime(d)}</span>
-            </div>
-            <div class="right">TO</div>
-          </div>
-        `;
+      histBody.innerHTML = hist.map((h, idx) => {
+        const no = idx+1;
+        const uid = (h.userId || "-").toString().slice(0, 18);
+        const pr = h.prize || "-";
+        return `<tr>
+          <td class="mono">${no}</td>
+          <td class="mono">${escapeHtml(uid)}</td>
+          <td class="mono">${escapeHtml(pr)}</td>
+        </tr>`;
       }).join("");
     }
 
-    function renderBoosters(baseTs){
-      const active = STATE.boosters.filter(b => (b.expiresAt||0) > baseTs);
-      if(active.length === 0){
-        boostList.innerHTML = `
-          <div class="item">
-            <div class="ic">🎁</div>
-            <div class="info">
-              <b>Belum ada booster aktif</b>
-              <span>Klaim tier Weekly Pass atau claim Prime Drop saat window aktif.</span>
-            </div>
-            <div class="right">—</div>
-          </div>
-        `;
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, (m)=>({
+        "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
+      }[m]));
+    }
+
+    /* =========================
+      BLOK 23 — USER SPIN RULES
+    ========================== */
+    function loadUserSpinMap(){
+      return getLS(STORAGE.USERS, {});
+    }
+
+    function saveUserSpin(userId, payload){
+      const map = loadUserSpinMap();
+      map[userId] = payload;
+      setLS(STORAGE.USERS, map);
+    }
+
+    function canSpin(userId){
+      if (!userId) return { ok:false, reason:"Masukkan User ID dulu" };
+      const map = loadUserSpinMap();
+      const rec = map[userId];
+      if (!rec) return { ok:true };
+
+      // cooldown per hari
+      const last = rec.lastDate;
+      const now = todayKey();
+
+      if (last === now) return { ok:false, reason:"Kesempatan spin anda sudah habis" };
+      return { ok:true };
+    }
+
+    /* =========================
+      BLOK 24 — UI STATE
+    ========================== */
+    function setSystem(text){
+      sysText.textContent = text;
+    }
+
+    function setUser(userId){
+      state.userId = userId.trim();
+      userLabel.textContent = state.userId || "-";
+      userIdInput.value = state.userId || "";
+      setLS(STORAGE.USER, state.userId || "");
+
+      refreshSpinAvailability();
+    }
+
+    function refreshSpinAvailability(){
+      const uid = state.userId;
+      const verdict = canSpin(uid);
+
+      if (!uid){
+        spinSub.textContent = "Masukkan User ID";
+        centerBtn.disabled = true;
+        btnClaim.disabled = true;
+        spinStatus.textContent = "Menunggu User ID";
+        setSystem("Siap (butuh User ID)");
         return;
       }
 
-      boostList.innerHTML = active.slice(0, 8).map(b=>{
-        const left = (b.expiresAt||0) - baseTs;
-        return `
-          <div class="item">
-            <div class="ic">✨</div>
-            <div class="info">
-              <b>${b.label}</b>
-              <span>Sumber: ${b.source || "Reward"}</span>
-            </div>
-            <div class="right">Sisa ${msToHMS(left)}</div>
-          </div>
-        `;
-      }).join("");
+      if (state.spinning){
+        centerBtn.disabled = true;
+        btnClaim.disabled = true;
+        spinStatus.textContent = "Sedang memutar…";
+        setSystem("Memutar roda…");
+        return;
+      }
+
+      if (verdict.ok){
+        spinSub.textContent = "SPIN SEKARANG!";
+        centerBtn.disabled = false;
+        btnClaim.disabled = true;
+        spinStatus.textContent = "Siap spin";
+        setSystem("Siap diputar");
+      }else{
+        spinSub.textContent = "Kesempatan habis";
+        centerBtn.disabled = true;
+        btnClaim.disabled = false;
+        spinStatus.textContent = verdict.reason || "Kesempatan habis";
+        setSystem("Kesempatan habis");
+      }
     }
 
-    function renderJoinButton(){
-      btnJoin.textContent = STATE.joined ? "Joined" : "Join";
-      btnJoin.disabled = STATE.joined;
+    /* =========================
+      BLOK 25 — SPIN CORE (TARGET ROTATION)
+    ========================== */
+    function computeTargetRotationForIndex(index){
+      const arc = (Math.PI*2) / PRIZES.length;
+      const pointerAngle = -Math.PI/2; // pointer fixed at top
+      const segCenter = (index * arc) + (arc/2);
+
+      // aim center + small jitter inside the segment biar natural
+      const jitter = (Math.random() - 0.5) * (arc * 0.28);
+
+      // We need segCenter + rot == pointerAngle (mod 2π)
+      let target = pointerAngle - (segCenter + jitter);
+
+      // add extra turns
+      const turns = randInt(EXTRA_TURNS_MIN, EXTRA_TURNS_MAX);
+      target += (Math.PI*2) * turns;
+
+      return target;
     }
 
-    function renderAll(){
-      const baseTs = now();
-      renderHeader(baseTs);
-      renderJoinButton();
+    function spin(){
+      const uid = state.userId.trim();
+      const verdict = canSpin(uid);
+      if (!verdict.ok){
+        refreshSpinAvailability();
+        return;
+      }
+      if (state.spinning) return;
 
-      renderKPI(baseTs);
-      renderProgress(baseTs);
-      renderTiers(baseTs);
-      renderDrop(baseTs);
-      renderActivity();
-      renderBoosters(baseTs);
+      state.spinning = true;
+      refreshSpinAvailability();
+
+      const pickedIndex = weightedPick(PRIZES);
+      const prize = PRIZES[pickedIndex];
+
+      const startRot = state.rotation;
+      const targetRot = computeTargetRotationForIndex(pickedIndex);
+
+      // animate with easing
+      const dur = 5200;
+      const t0 = performance.now();
+
+      // tick sound per segment cross
+      let lastTick = null;
+
+      function frame(now){
+        const t = clamp((now - t0) / dur, 0, 1);
+
+        // soften end with back-ish
+        const e = (t < 0.85) ? easeOutCubic(t/0.85) : 1;
+        const b = (t < 0.85) ? 0 : easeOutBack((t-0.85)/0.15);
+        const mix = Math.min(1, lerp(e, b, 0.55));
+
+        state.rotation = startRot + (targetRot - startRot) * mix;
+        drawWheel();
+
+        // tick when crossing segment boundaries
+        const arc = (Math.PI*2) / PRIZES.length;
+        const cur = ((state.rotation % (Math.PI*2)) + (Math.PI*2)) % (Math.PI*2);
+        const bucket = Math.floor(cur / arc);
+        if (lastTick === null) lastTick = bucket;
+        if (bucket !== lastTick){
+          lastTick = bucket;
+          beep(1050 + (bucket%3)*90, 0.015, 0.02);
+        }
+
+        if (t < 1){
+          requestAnimationFrame(frame);
+          return;
+        }
+
+        // finalize
+        state.rotation = ((state.rotation % (Math.PI*2)) + (Math.PI*2)) % (Math.PI*2);
+        drawWheel();
+
+        // commit result
+        const code = uidCode();
+        const stamp = nowStamp();
+
+        state.lastWin = { userId: uid, prize, code, stamp };
+
+        // save user spin date (1x per day)
+        saveUserSpin(uid, { lastDate: todayKey(), prize: prize.label, code, stamp });
+
+        // update history + jackpot
+        pushHistory(uid, prize.label);
+        spendJackpot(prize.amount);
+
+        // open modal + confetti
+        openResultModal(state.lastWin);
+
+        state.spinning = false;
+        refreshSpinAvailability();
+      }
+
+      requestAnimationFrame(frame);
     }
 
-    /* =========================================================
-      BLOK 21 — EVENTS
-    ========================================================== */
-    btnAddTo.addEventListener("click", () => {
-      const raw = (toInput.value || "").toString().replace(/[^\d]/g, "");
-      addActivity(raw, providerInput.value);
-      toInput.value = "";
-      toInput.focus();
+    /* =========================
+      BLOK 26 — MODAL + PROOF PNG
+    ========================== */
+    function openResultModal(win){
+      winAmount.textContent = win.prize.label;
+      ticketCode.textContent = win.code;
+      ticketTime.textContent = win.stamp;
+
+      proofUser.textContent = win.userId;
+      proofPrize.textContent = win.prize.label;
+      proofCode.textContent = win.code;
+
+      btnClaim.disabled = false;
+
+      modal.classList.add("is-open");
+      burstConfetti();
+      beep(820, 0.06, 0.03);
+      beep(1040, 0.06, 0.03);
+    }
+
+    function closeModal(){
+      modal.classList.remove("is-open");
+    }
+
+    function downloadProofPNG(win){
+      // bikin image bukti via canvas (tanpa library)
+      const W = 1200, H = 760;
+      const c = document.createElement("canvas");
+      c.width = W; c.height = H;
+      const ctx = c.getContext("2d");
+
+      // bg gradient
+      const g = ctx.createLinearGradient(0,0,W,H);
+      g.addColorStop(0, "#05040c");
+      g.addColorStop(1, "#0a0820");
+      ctx.fillStyle = g;
+      ctx.fillRect(0,0,W,H);
+
+      // glow
+      const rg = ctx.createRadialGradient(W*0.35,H*0.25,20, W*0.35,H*0.25, 520);
+      rg.addColorStop(0, "rgba(31,240,178,.22)");
+      rg.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = rg;
+      ctx.fillRect(0,0,W,H);
+
+      const rg2 = ctx.createRadialGradient(W*0.78,H*0.22,20, W*0.78,H*0.22, 520);
+      rg2.addColorStop(0, "rgba(255,211,106,.20)");
+      rg2.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = rg2;
+      ctx.fillRect(0,0,W,H);
+
+      // tile pattern
+      ctx.globalAlpha = 0.15;
+      ctx.fillStyle = "#fff";
+      for (let y=70; y<H; y+=38){
+        for (let x=70; x<W; x+=38){
+          ctx.fillRect(x, y, 12, 12);
+        }
+      }
+      ctx.globalAlpha = 1;
+
+      // card
+      const pad = 70;
+      roundRect(ctx, pad, pad, W-pad*2, H-pad*2, 28);
+      ctx.fillStyle = "rgba(255,255,255,.06)";
+      ctx.fill();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "rgba(255,255,255,.18)";
+      ctx.stroke();
+
+      // header
+      ctx.font = "900 44px Inter, system-ui, sans-serif";
+      ctx.fillStyle = "rgba(255,255,255,.92)";
+      ctx.fillText("BUKTI KLAIM — MAHJONG LUCKY SPIN (DEMO)", pad+34, pad+78);
+
+      // accent line
+      const lg = ctx.createLinearGradient(pad+34,0,pad+540,0);
+      lg.addColorStop(0, "rgba(255,211,106,.95)");
+      lg.addColorStop(1, "rgba(31,240,178,.85)");
+      ctx.fillStyle = lg;
+      ctx.fillRect(pad+34, pad+96, 620, 8);
+
+      // content
+      ctx.font = "700 30px Inter, system-ui, sans-serif";
+      ctx.fillStyle = "rgba(255,255,255,.86)";
+      ctx.fillText("User ID:", pad+34, pad+170);
+      ctx.fillText("Hadiah:", pad+34, pad+230);
+      ctx.fillText("Kode:",   pad+34, pad+290);
+      ctx.fillText("Waktu:",  pad+34, pad+350);
+
+      ctx.font = "900 34px Inter, system-ui, sans-serif";
+      ctx.fillStyle = "rgba(255,255,255,.92)";
+      ctx.fillText(win.userId, pad+220, pad+170);
+      ctx.fillText(win.prize.label, pad+220, pad+230);
+      ctx.fillText(win.code, pad+220, pad+290);
+      ctx.fillText(win.stamp, pad+220, pad+350);
+
+      // big prize
+      ctx.font = "900 86px Inter, system-ui, sans-serif";
+      ctx.fillStyle = "rgba(255,211,106,.95)";
+      ctx.fillText(win.prize.label, pad+34, pad+480);
+
+      // footer note
+      ctx.font = "600 22px Inter, system-ui, sans-serif";
+      ctx.fillStyle = "rgba(255,255,255,.72)";
+      ctx.fillText("Catatan: Ini hanya demo front-end. Validasi klaim sebaiknya dilakukan via server.", pad+34, H-pad-40);
+
+      const url = c.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `bukti-${win.userId}-${win.code}.png`.replace(/[^a-zA-Z0-9._-]/g,"");
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    function roundRect(ctx, x, y, w, h, r){
+      const rr = Math.min(r, w/2, h/2);
+      ctx.beginPath();
+      ctx.moveTo(x+rr, y);
+      ctx.arcTo(x+w, y, x+w, y+h, rr);
+      ctx.arcTo(x+w, y+h, x, y+h, rr);
+      ctx.arcTo(x, y+h, x, y, rr);
+      ctx.arcTo(x, y, x+w, y, rr);
+      ctx.closePath();
+    }
+
+    /* =========================
+      BLOK 27 — EVENTS
+    ========================== */
+    btnSetUser.addEventListener("click", () => {
+      const v = userIdInput.value.trim();
+      if (!v){
+        setUser("");
+        return;
+      }
+      setUser(v);
     });
 
-    toInput.addEventListener("keydown", (e)=>{
-      if(e.key === "Enter") btnAddTo.click();
+    userIdInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") btnSetUser.click();
     });
 
-    btnClaimDrop.addEventListener("click", claimDrop);
-    btnReset.addEventListener("click", resetDemo);
-    btnJoin.addEventListener("click", joinEvent);
+    centerBtn.addEventListener("click", () => spin());
 
-    /* =========================================================
-      BLOK 22 — SPARK GENERATOR (LIGHTWEIGHT)
-    ========================================================== */
-    (function makeSparks(){
-      const host = document.getElementById("sparkField");
-      const count = Math.min(60, Math.max(28, Math.floor(window.innerWidth / 22)));
-      const W = () => window.innerWidth;
-      const H = () => window.innerHeight;
+    btnClaim.addEventListener("click", () => {
+      if (state.lastWin) openResultModal(state.lastWin);
+    });
 
-      host.innerHTML = "";
-      for(let i=0;i<count;i++){
-        const s = document.createElement("div");
-        s.className = "spark";
-        const x = Math.random() * W();
-        const y = Math.random() * H();
-        const dur = 4 + Math.random() * 7;
-        const delay = Math.random() * 5;
-        const size = 1 + Math.random() * 2;
+    modalClose.addEventListener("click", closeModal);
+    modalOverlay.addEventListener("click", closeModal);
 
-        s.style.left = x + "px";
-        s.style.top = y + "px";
-        s.style.width = size + "px";
-        s.style.height = size + "px";
-        s.style.animationDuration = dur + "s";
-        s.style.animationDelay = delay + "s";
-        s.style.opacity = 0;
+    btnDownloadProof.addEventListener("click", () => {
+      if (!state.lastWin) return;
+      downloadProofPNG(state.lastWin);
+    });
 
-        host.appendChild(s);
+    btnClaimNow.addEventListener("click", () => {
+      // GANTI LINK CS KAMU DI SINI:
+      // contoh WhatsApp: https://wa.me/62xxxxxxxxxx?text=...
+      // (jangan taruh link phishing. bikin jelas brand/CS milik kamu sendiri.)
+      const win = state.lastWin;
+      if (!win) return;
+
+      const msg = encodeURIComponent(
+        `KLAIM HADIAH (DEMO)\n` +
+        `User ID: ${win.userId}\n` +
+        `Hadiah: ${win.prize.label}\n` +
+        `Kode: ${win.code}\n` +
+        `Waktu: ${win.stamp}\n`
+      );
+
+      // placeholder: buka tab baru (ganti sesuai kebutuhan)
+      window.open("about:blank", "_blank");
+      alert("Ini hanya demo. Silakan ganti link CS di kode JS (lihat komentar).");
+    });
+
+    btnResetDemo.addEventListener("click", () => {
+      localStorage.removeItem(STORAGE.USER);
+      localStorage.removeItem(STORAGE.USERS);
+      localStorage.removeItem(STORAGE.HISTORY);
+      localStorage.removeItem(STORAGE.JACKPOT);
+      location.reload();
+    });
+
+    /* =========================
+      BLOK 28 — INIT
+    ========================== */
+    function init(){
+      resizeFx();
+      loadJackpot();
+
+      // load history
+      const hist = loadHistory();
+      renderHistory(hist);
+
+      // load saved user
+      const saved = (localStorage.getItem(STORAGE.USER) || "").replace(/^"|"$/g,"");
+      if (saved && typeof saved === "string"){
+        setUser(saved);
+      }else{
+        refreshSpinAvailability();
       }
-    })();
 
-    /* =========================================================
-      BLOK 23 — TICKER
-    ========================================================== */
-    renderAll();
-    setInterval(renderAll, 1000);
+      // initial draw
+      resizeWheel();
+      setTimeout(() => drawWheel(), 50);
+    }
 
+    init();
   </script>
 </body>
 </html>
