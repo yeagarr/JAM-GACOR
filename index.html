@@ -1,0 +1,848 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <!-- =========================
+    BLOK 1 — META / SEO
+  ========================== -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#070612" />
+  <title>Jam Gacor — Dashboard</title>
+  <meta name="description" content="Dashboard jam gacor: highlight waktu aktif, countdown, filter game, dan jadwal mingguan." />
+
+  <!-- =========================
+    BLOK 2 — FONTS
+  ========================== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- =========================
+    BLOK 3 — THEME TOKENS (GLASS / NEON)
+  ========================== -->
+  <style>
+    :root{
+      --bg0:#060512;
+      --bg1:#0b0830;
+      --ink: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --faint: rgba(255,255,255,.48);
+
+      --glass: rgba(255,255,255,.08);
+      --glass2: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.14);
+      --stroke2: rgba(255,255,255,.10);
+
+      --gold:#ffcc55;
+      --cyan:#6ae4ff;
+      --purple:#a77bff;
+      --green:#77ffb3;
+      --red:#ff6b8a;
+
+      --shadow: 0 22px 70px rgba(0,0,0,.55);
+      --shadow2: 0 10px 30px rgba(0,0,0,.45);
+
+      --r: 22px;
+      --r2: 16px;
+
+      --ease: cubic-bezier(.2,.9,.2,1);
+      --ease2: cubic-bezier(.2,.8,.2,1);
+    }
+
+    /* =========================
+      BLOK 4 — RESET / BASE
+    ========================== */
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(1100px 700px at 15% 10%, rgba(167,123,255,.22), transparent 60%),
+        radial-gradient(900px 650px at 85% 20%, rgba(106,228,255,.18), transparent 60%),
+        radial-gradient(1100px 900px at 50% 92%, rgba(255,204,85,.12), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      overflow-x:hidden;
+    }
+    a{ color:inherit; }
+    .wrap{
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 18px 60px;
+      position:relative;
+      z-index:2;
+    }
+
+    /* =========================
+      BLOK 5 — BACKDROP NOISE + PARTICLES CANVAS
+    ========================== */
+    .noise{
+      position:fixed; inset:0;
+      pointer-events:none;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
+      opacity:.34;
+      z-index:1;
+    }
+    canvas#particles{
+      position:fixed; inset:0;
+      pointer-events:none;
+      z-index:1;
+      opacity:.9;
+    }
+
+    /* =========================
+      BLOK 6 — HEADER / TOOLBAR
+    ========================== */
+    .top{
+      display:flex;
+      gap:14px;
+      align-items:stretch;
+      flex-wrap:wrap;
+      margin-bottom:16px;
+    }
+    .hero{
+      flex: 1 1 340px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      border:1px solid var(--stroke);
+      border-radius: var(--r);
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(16px) saturate(150%);
+      padding: 16px 16px;
+      overflow:hidden;
+      position:relative;
+    }
+    .hero:before{
+      content:"";
+      position:absolute; inset:-1px;
+      background:
+        radial-gradient(500px 250px at 20% 20%, rgba(167,123,255,.28), transparent 60%),
+        radial-gradient(520px 260px at 85% 15%, rgba(106,228,255,.20), transparent 60%),
+        radial-gradient(520px 300px at 55% 120%, rgba(255,204,85,.16), transparent 60%);
+      opacity:.7;
+      pointer-events:none;
+    }
+    .hero > *{ position:relative; z-index:2; }
+
+    .title{
+      display:flex; flex-direction:column; gap:6px;
+      min-width: 250px;
+    }
+    .title h1{
+      margin:0;
+      font-size: 18px;
+      letter-spacing:.2px;
+      line-height:1.15;
+      font-weight:900;
+    }
+    .title .sub{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      color:var(--muted);
+      font-size: 12.5px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid var(--stroke2);
+      background: rgba(0,0,0,.22);
+      backdrop-filter: blur(10px) saturate(160%);
+      color: var(--muted);
+    }
+    .dot{
+      width:8px; height:8px; border-radius:50%;
+      background: var(--cyan);
+      box-shadow: 0 0 18px rgba(106,228,255,.55);
+    }
+    .dot.ok{ background: var(--green); box-shadow: 0 0 18px rgba(119,255,179,.55); }
+    .dot.warn{ background: var(--gold); box-shadow: 0 0 18px rgba(255,204,85,.55); }
+    .dot.bad{ background: var(--red); box-shadow: 0 0 18px rgba(255,107,138,.55); }
+
+    .controls{
+      flex: 1 1 420px;
+      display:flex;
+      gap:10px;
+      align-items:stretch;
+      justify-content:flex-end;
+
+      background: rgba(255,255,255,.06);
+      border:1px solid var(--stroke2);
+      border-radius: var(--r);
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(16px) saturate(150%);
+      padding: 12px;
+      min-height: 72px;
+    }
+    .field{
+      display:flex; flex-direction:column; gap:6px;
+      flex: 1 1 220px;
+      min-width: 180px;
+    }
+    .label{
+      font-size: 11px;
+      color: var(--faint);
+      letter-spacing:.2px;
+    }
+    input, select{
+      width:100%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border:1px solid var(--stroke2);
+      background: rgba(0,0,0,.28);
+      color: var(--ink);
+      outline:none;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+      transition: transform .15s var(--ease), border-color .15s var(--ease), box-shadow .15s var(--ease);
+    }
+    input:focus, select:focus{
+      border-color: rgba(106,228,255,.55);
+      box-shadow: 0 0 0 4px rgba(106,228,255,.12), inset 0 0 0 1px rgba(255,255,255,.06);
+    }
+    .toggles{
+      display:flex;
+      gap:10px;
+      align-items:flex-end;
+      flex: 0 0 auto;
+      flex-wrap:wrap;
+    }
+    .btn{
+      padding: 10px 12px;
+      border-radius: 14px;
+      border:1px solid var(--stroke2);
+      background: rgba(0,0,0,.28);
+      color: var(--ink);
+      cursor:pointer;
+      user-select:none;
+      transition: transform .15s var(--ease), box-shadow .15s var(--ease), border-color .15s var(--ease);
+      white-space:nowrap;
+      font-weight:700;
+      font-size:12.5px;
+    }
+    .btn:hover{ transform: translateY(-1px); }
+    .btn:active{ transform: translateY(0px) scale(.99); }
+    .btn.on{
+      border-color: rgba(119,255,179,.55);
+      box-shadow: 0 0 0 4px rgba(119,255,179,.10), 0 10px 20px rgba(0,0,0,.35);
+    }
+    .hint{
+      margin: 14px 2px 0;
+      color: rgba(255,255,255,.58);
+      font-size: 12px;
+      line-height:1.5;
+    }
+
+    /* =========================
+      BLOK 7 — GRID / CARDS
+    ========================== */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .card{
+      grid-column: span 4;
+      min-height: 260px;
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
+      border:1px solid var(--stroke);
+      border-radius: var(--r);
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(16px) saturate(150%);
+      overflow:hidden;
+      position:relative;
+      transition: transform .18s var(--ease), border-color .18s var(--ease), box-shadow .18s var(--ease);
+    }
+    .card:hover{
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,.22);
+      box-shadow: var(--shadow);
+    }
+    .card .head{
+      display:flex;
+      gap:12px;
+      padding: 14px 14px 10px;
+      align-items:center;
+    }
+    .thumb{
+      width: 56px; height:56px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.16);
+      background:
+        radial-gradient(24px 24px at 30% 28%, rgba(255,204,85,.55), transparent 60%),
+        radial-gradient(30px 30px at 70% 35%, rgba(106,228,255,.48), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      overflow:hidden;
+      flex: 0 0 auto;
+      position:relative;
+      display:grid;
+      place-items:center;
+    }
+    .thumb img{
+      width:100%; height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .thumb .fallback{
+      font-weight:900;
+      opacity:.9;
+      letter-spacing:.6px;
+    }
+
+    .meta{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+    .name{
+      font-weight: 900;
+      letter-spacing:.2px;
+      line-height:1.15;
+      font-size: 14.5px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .provider{
+      color: var(--muted);
+      font-size: 12px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .score{
+      flex: 0 0 auto;
+      text-align:right;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-end;
+      gap:6px;
+    }
+    .pct{
+      font-weight: 900;
+      font-size: 16px;
+      letter-spacing:.2px;
+    }
+    .bar{
+      width: 90px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.12);
+      overflow:hidden;
+      position:relative;
+    }
+    .bar > i{
+      display:block;
+      height:100%;
+      width: 50%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(106,228,255,.9), rgba(255,204,85,.9), rgba(167,123,255,.9));
+      filter: saturate(1.2);
+      box-shadow: 0 0 18px rgba(106,228,255,.22);
+    }
+
+    .body{
+      padding: 0 14px 14px;
+    }
+    .statusRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin: 2px 0 10px;
+    }
+    .status{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .next{
+      color: rgba(255,255,255,.78);
+      font-size: 12px;
+      font-weight:700;
+      text-align:right;
+      white-space:nowrap;
+    }
+
+    .slots{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .slot{
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.22);
+      color: rgba(255,255,255,.82);
+      font-size: 12px;
+      font-weight:700;
+      letter-spacing:.1px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .15s var(--ease), border-color .15s var(--ease), box-shadow .15s var(--ease);
+    }
+    .slot:hover{ transform: translateY(-1px); }
+    .slot.active{
+      border-color: rgba(119,255,179,.6);
+      box-shadow: 0 0 0 4px rgba(119,255,179,.10), 0 14px 32px rgba(0,0,0,.35);
+    }
+    .slot.upcoming{
+      border-color: rgba(255,204,85,.6);
+      box-shadow: 0 0 0 4px rgba(255,204,85,.10);
+    }
+    .slot.past{
+      opacity:.55;
+    }
+
+    .footerNote{
+      margin-top: 14px;
+      padding: 14px 14px;
+      border-radius: var(--r);
+      border: 1px solid var(--stroke2);
+      background: rgba(255,255,255,.05);
+      color: rgba(255,255,255,.62);
+      font-size: 12.5px;
+      line-height: 1.6;
+      backdrop-filter: blur(14px) saturate(150%);
+    }
+
+    /* =========================
+      BLOK 8 — RESPONSIVE
+    ========================== */
+    @media (max-width: 980px){
+      .card{ grid-column: span 6; }
+    }
+    @media (max-width: 640px){
+      .hero{ flex: 1 1 100%; }
+      .controls{ flex: 1 1 100%; justify-content:stretch; }
+      .card{ grid-column: span 12; }
+      .bar{ width: 100px; }
+    }
+    @media (prefers-reduced-motion: reduce){
+      .card, .btn, .slot, input, select{ transition:none !important; }
+      canvas#particles{ display:none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="noise"></div>
+  <canvas id="particles"></canvas>
+
+  <div class="wrap">
+    <!-- =========================
+      BLOK 9 — TOP AREA
+    ========================== -->
+    <div class="top">
+      <div class="hero">
+        <div class="title">
+          <h1>BOCORAN JAM GACOR — Dashboard</h1>
+          <div class="sub">
+            <span class="pill"><span class="dot" id="nowDot"></span><span id="nowText">Loading…</span></span>
+            <span class="pill">Highlight aktif + countdown</span>
+          </div>
+        </div>
+        <div class="pill" title="Catatan">
+          Data jam bisa kamu atur sendiri dari config (bukan jaminan hasil).
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="field">
+          <div class="label">Cari game / provider</div>
+          <input id="q" placeholder="contoh: starlight / pragmatic" autocomplete="off" />
+        </div>
+
+        <div class="field" style="max-width:190px">
+          <div class="label">Timezone</div>
+          <select id="tz">
+            <option value="local">Otomatis (Browser)</option>
+            <option value="Asia/Jakarta">WIB (Asia/Jakarta)</option>
+            <option value="Asia/Makassar">WITA (Asia/Makassar)</option>
+            <option value="Asia/Jayapura">WIT (Asia/Jayapura)</option>
+          </select>
+        </div>
+
+        <div class="toggles">
+          <button class="btn" id="onlyActive">Hanya Aktif</button>
+          <button class="btn" id="copyAll">Copy Ringkasan</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hint">
+      <b>Logika:</b> setiap kartu berisi “skor” + daftar jam. Sistem akan menandai <b>AKTIF</b> (hijau), <b>SEBENTAR LAGI</b> (kuning, default ≤ 45 menit), dan <b>LEWAT</b> (redup).
+    </div>
+
+    <!-- =========================
+      BLOK 10 — GRID
+    ========================== -->
+    <div class="grid" id="grid"></div>
+
+    <!-- =========================
+      BLOK 11 — FOOTER NOTE
+    ========================== -->
+    <div class="footerNote">
+      <b>Disclaimer jujur:</b> “Jam gacor” bukan kepastian menang, karena hasil game tetap acak (RNG). Kalau kamu tetap pakai konsep ini, jadikan sebagai <b>jadwal fokus/prime-time</b> dan terapkan batas main (budget & waktu) biar tetap aman.
+    </div>
+
+  </div>
+
+  <!-- =========================
+    BLOK 12 — SCRIPT (DATA + LOGIC)
+  ========================== -->
+  <script>
+  ;(() => {
+    "use strict";
+
+    // =========================
+    // BLOK 12A — DATA CONFIG (EDIT INI SAJA)
+    // thumb: kalau kamu punya gambar, taruh di /public/assets/ lalu isi "assets/namafile.png"
+    // windows: format "HH:MM-HH:MM"
+    // =========================
+    const GAMES = [
+      {
+        id: "gates-pyroth",
+        name: "Gates of Pyroth",
+        provider: "Pragmatic Play",
+        score: 92,
+        thumb: "", // contoh: "assets/gates.jpg"
+        windows: ["00:05-02:30","03:45-05:25","07:35-09:26","12:05-15:25","22:18-23:10"]
+      },
+      {
+        id: "starlight-1000",
+        name: "Starlight Princess 1000",
+        provider: "Pragmatic Play",
+        score: 84,
+        thumb: "",
+        windows: ["00:05-02:30","03:45-05:25","07:35-09:26","12:05-15:25","22:18-23:10"]
+      },
+      {
+        id: "pyramid-bonanza",
+        name: "Pyramid Bonanza",
+        provider: "Pragmatic Play",
+        score: 80,
+        thumb: "",
+        windows: ["03:10-04:30","07:45-10:25","11:35-12:40","14:00-16:25","19:40-21:15"]
+      },
+      {
+        id: "magicians-secrets",
+        name: "Magicians Secrets",
+        provider: "Pragmatic Play",
+        score: 79,
+        thumb: "",
+        windows: ["04:05-07:30","10:45-12:35","13:33-18:12","20:15-22:00","22:45-23:59"]
+      },
+      {
+        id: "north-guardians",
+        name: "North Guardians",
+        provider: "Pragmatic Play",
+        score: 93,
+        thumb: "",
+        windows: ["02:05-04:30","07:15-10:30","12:35-15:00","18:00-20:23","22:00-23:40"]
+      }
+    ];
+
+    const UPCOMING_MIN = 45; // "sebentar lagi" threshold (menit)
+
+    // =========================
+    // BLOK 12B — HELPERS (TIME)
+    // =========================
+    const pad2 = (n) => String(n).padStart(2,"0");
+
+    function getNowInTZ(tz){
+      // tz = "local" => Date() biasa
+      if(tz === "local") return new Date();
+      // trick: format to parts then reconstruct in that tz as if local
+      const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: tz, hour12:false,
+        year:"numeric", month:"2-digit", day:"2-digit",
+        hour:"2-digit", minute:"2-digit", second:"2-digit"
+      }).formatToParts(new Date()).reduce((acc,p)=>{ acc[p.type]=p.value; return acc; }, {});
+      return new Date(`${parts.year}-${parts.month}-${parts.day}T${parts.hour}:${parts.minute}:${parts.second}`);
+    }
+
+    function minutesOfDay(d){
+      return d.getHours()*60 + d.getMinutes();
+    }
+
+    function parseWindow(win){ // "HH:MM-HH:MM"
+      const [a,b] = win.split("-");
+      const [sh,sm] = a.split(":").map(Number);
+      const [eh,em] = b.split(":").map(Number);
+      const start = sh*60+sm;
+      const end = eh*60+em;
+      return { start, end, raw: win };
+    }
+
+    function isActive(nowMin, w){
+      // handle cross-midnight window (end < start)
+      if(w.end < w.start){
+        return (nowMin >= w.start) || (nowMin <= w.end);
+      }
+      return nowMin >= w.start && nowMin <= w.end;
+    }
+
+    function minutesUntilNext(nowMin, w){
+      // returns >=0 minutes until start (0 if already started or active)
+      if(isActive(nowMin, w)) return 0;
+
+      let delta = w.start - nowMin;
+      if(delta < 0) delta += 1440; // next day
+      return delta;
+    }
+
+    function formatCountdown(mins){
+      if(mins <= 0) return "sekarang";
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      if(h <= 0) return `${m}m lagi`;
+      return `${h}j ${m}m lagi`;
+    }
+
+    // =========================
+    // BLOK 12C — RENDER
+    // =========================
+    const elGrid = document.getElementById("grid");
+    const elQ = document.getElementById("q");
+    const elTz = document.getElementById("tz");
+    const elOnlyActive = document.getElementById("onlyActive");
+    const elCopyAll = document.getElementById("copyAll");
+    const elNowText = document.getElementById("nowText");
+    const elNowDot = document.getElementById("nowDot");
+
+    let state = { q:"", tz:"local", onlyActive:false };
+
+    function render(){
+      const now = getNowInTZ(state.tz);
+      const nowMin = minutesOfDay(now);
+      const hh = pad2(now.getHours());
+      const mm = pad2(now.getMinutes());
+      const ss = pad2(now.getSeconds());
+
+      const tzLabel = state.tz === "local" ? "Local" : state.tz.split("/")[1].replaceAll("_"," ");
+      elNowText.textContent = `${hh}:${mm}:${ss} • ${tzLabel}`;
+
+      // dot state: green if any active, yellow if any upcoming soon
+      let anyActive = false;
+      let anyUpcoming = false;
+
+      const q = state.q.trim().toLowerCase();
+      let items = GAMES.slice();
+
+      if(q){
+        items = items.filter(g =>
+          g.name.toLowerCase().includes(q) ||
+          g.provider.toLowerCase().includes(q)
+        );
+      }
+
+      // compute status per item
+      const computed = items.map(g => {
+        const windows = g.windows.map(parseWindow);
+        const actives = windows.filter(w => isActive(nowMin, w));
+        const nextList = windows
+          .map(w => ({ w, inMin: minutesUntilNext(nowMin, w) }))
+          .filter(x => x.inMin > 0)
+          .sort((a,b) => a.inMin - b.inMin);
+
+        // if no next in same day (e.g. all passed), the +1440 logic already handles it
+        const next = nextList[0] || { w: windows[0], inMin: minutesUntilNext(nowMin, windows[0]) };
+
+        const isItemActive = actives.length > 0;
+        const isItemUpcoming = !isItemActive && next.inMin <= UPCOMING_MIN;
+
+        anyActive ||= isItemActive;
+        anyUpcoming ||= isItemUpcoming;
+
+        return { g, windows, actives, next, isItemActive, isItemUpcoming };
+      });
+
+      let final = computed;
+      if(state.onlyActive){
+        final = final.filter(x => x.isItemActive);
+      }
+
+      elGrid.innerHTML = final.map(({g, windows, actives, next, isItemActive, isItemUpcoming}) => {
+        const dotClass = isItemActive ? "ok" : (isItemUpcoming ? "warn" : "");
+        const statusText = isItemActive ? "AKTIF sekarang" : (isItemUpcoming ? "Sebentar lagi" : "Tidak aktif");
+        const nextText = isItemActive ? "Sedang jalan" : `Next: ${next.w.raw} • ${formatCountdown(next.inMin)}`;
+
+        const slots = windows.map(w => {
+          const active = isActive(nowMin, w);
+          const until = minutesUntilNext(nowMin, w);
+          const upcoming = !active && until > 0 && until <= UPCOMING_MIN;
+          const past = !active && !upcoming && until > UPCOMING_MIN; // simplistic visual (lewat/masih jauh)
+          const cls = active ? "slot active" : (upcoming ? "slot upcoming" : (past ? "slot past":"slot"));
+          const hint = active ? "Aktif" : (upcoming ? `Mulai ${formatCountdown(until)}` : "Lewat / jauh");
+          return `<div class="${cls}" data-copy="${g.name} • ${w.raw}">${w.raw}</div>`;
+        }).join("");
+
+        const barW = Math.max(0, Math.min(100, Number(g.score)||0));
+
+        return `
+          <div class="card" data-id="${g.id}">
+            <div class="head">
+              <div class="thumb">
+                ${g.thumb ? `<img src="${g.thumb}" alt="${g.name}">` : `<div class="fallback">${g.name.split(" ").slice(0,2).map(s=>s[0]).join("")}</div>`}
+              </div>
+              <div class="meta">
+                <div class="name" title="${g.name}">${g.name}</div>
+                <div class="provider" title="${g.provider}">${g.provider}</div>
+              </div>
+              <div class="score">
+                <div class="pct">${g.score}%</div>
+                <div class="bar"><i style="width:${barW}%"></i></div>
+              </div>
+            </div>
+
+            <div class="body">
+              <div class="statusRow">
+                <div class="status"><span class="dot ${dotClass}"></span><span>${statusText}</span></div>
+                <div class="next">${nextText}</div>
+              </div>
+              <div class="slots">${slots}</div>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // update global dot
+      elNowDot.className = "dot " + (anyActive ? "ok" : (anyUpcoming ? "warn" : "bad"));
+    }
+
+    // click to copy slot
+    document.addEventListener("click", async (e) => {
+      const slot = e.target.closest(".slot");
+      if(!slot) return;
+      const text = slot.getAttribute("data-copy") || slot.textContent.trim();
+      try{
+        await navigator.clipboard.writeText(text);
+        // micro feedback: quick pulse
+        slot.style.transform = "scale(0.98)";
+        setTimeout(() => slot.style.transform = "", 120);
+      }catch(_){}
+    });
+
+    // controls
+    elQ.addEventListener("input", () => { state.q = elQ.value; render(); });
+    elTz.addEventListener("change", () => { state.tz = elTz.value; render(); });
+
+    elOnlyActive.addEventListener("click", () => {
+      state.onlyActive = !state.onlyActive;
+      elOnlyActive.classList.toggle("on", state.onlyActive);
+      render();
+    });
+
+    elCopyAll.addEventListener("click", async () => {
+      const tzLabel = state.tz === "local" ? "Local" : state.tz;
+      const lines = GAMES.map(g => `• ${g.name} (${g.score}%) — ${g.windows.join(", ")}`).join("\n");
+      const text = `Jam Gacor (${tzLabel})\n${lines}`;
+      try{
+        await navigator.clipboard.writeText(text);
+        elCopyAll.classList.add("on");
+        setTimeout(()=>elCopyAll.classList.remove("on"), 550);
+      }catch(_){}
+    });
+
+    // tick
+    render();
+    setInterval(render, 1000);
+
+    // =========================
+    // BLOK 12D — PARTICLES (RINGAN)
+    // =========================
+    const canvas = document.getElementById("particles");
+    const ctx = canvas.getContext("2d");
+    let W=0,H=0, DPR=1;
+
+    const reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if(!reduced){
+      const resize = () => {
+        DPR = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+        W = canvas.width = Math.floor(innerWidth * DPR);
+        H = canvas.height = Math.floor(innerHeight * DPR);
+        canvas.style.width = innerWidth + "px";
+        canvas.style.height = innerHeight + "px";
+      };
+      window.addEventListener("resize", resize, {passive:true});
+      resize();
+
+      const rand = (a,b)=>a+Math.random()*(b-a);
+      const dots = Array.from({length: 62}, () => ({
+        x: rand(0,W), y: rand(0,H),
+        r: rand(0.8, 2.2)*DPR,
+        vx: rand(-0.15,0.15)*DPR,
+        vy: rand(-0.10,0.18)*DPR,
+        a: rand(0.12,0.38)
+      }));
+
+      function step(){
+        ctx.clearRect(0,0,W,H);
+
+        // soft vignette glow
+        const g = ctx.createRadialGradient(W*0.5, H*0.35, 0, W*0.5, H*0.35, Math.max(W,H)*0.65);
+        g.addColorStop(0, "rgba(167,123,255,0.10)");
+        g.addColorStop(0.55, "rgba(106,228,255,0.07)");
+        g.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = g;
+        ctx.fillRect(0,0,W,H);
+
+        // dots + subtle links
+        for(const p of dots){
+          p.x += p.vx; p.y += p.vy;
+          if(p.x < -50) p.x = W+50;
+          if(p.x > W+50) p.x = -50;
+          if(p.y < -50) p.y = H+50;
+          if(p.y > H+50) p.y = -50;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+          ctx.fillStyle = `rgba(255,255,255,${p.a})`;
+          ctx.fill();
+
+          // links
+          for(const q of dots){
+            const dx = p.x - q.x, dy = p.y - q.y;
+            const d2 = dx*dx + dy*dy;
+            const max = (140*DPR)*(140*DPR);
+            if(d2 > 0 && d2 < max){
+              const t = 1 - (d2/max);
+              ctx.strokeStyle = `rgba(106,228,255,${0.06*t})`;
+              ctx.lineWidth = 1*DPR;
+              ctx.beginPath();
+              ctx.moveTo(p.x,p.y);
+              ctx.lineTo(q.x,q.y);
+              ctx.stroke();
+            }
+          }
+        }
+
+        requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+  })();
+  </script>
+</body>
+</html>
