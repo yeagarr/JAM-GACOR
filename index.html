@@ -27,15 +27,19 @@
       --bg0:#070612;
       --bg1:#120a2d;
       --bg2:#1a1143;
+
       --glass: rgba(255,255,255,.08);
       --glass2: rgba(255,255,255,.06);
       --stroke: rgba(255,255,255,.14);
       --stroke2: rgba(255,255,255,.10);
+
       --text: rgba(255,255,255,.92);
       --muted: rgba(255,255,255,.70);
       --faint: rgba(255,255,255,.50);
+
       --shadow: 0 18px 60px rgba(0,0,0,.55);
       --shadow2: 0 10px 28px rgba(0,0,0,.35);
+
       --radius: 22px;
       --radius2: 16px;
       --pad: 18px;
@@ -71,6 +75,10 @@
     a{ color:inherit; text-decoration:none; }
     button, input, select, textarea{ font:inherit; color:inherit; }
     ::selection{ background: rgba(165,107,255,.28); }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
 
     /* =========================
       BLOK 5 — BACKDROP (NOISE + SPARKS)
@@ -119,10 +127,12 @@
       align-items:center;
       justify-content:space-between;
       margin-bottom:18px;
+      flex-wrap:wrap;
     }
     .brand{
       display:flex; align-items:center; gap:12px;
       user-select:none;
+      min-width: 260px;
     }
     .logo{
       width:44px; height:44px; border-radius:14px;
@@ -132,6 +142,7 @@
         linear-gradient(135deg, rgba(165,107,255,.65), rgba(94,246,255,.35));
       box-shadow: 0 18px 60px rgba(165,107,255,.18), 0 14px 32px rgba(0,0,0,.35);
       border:1px solid rgba(255,255,255,.14);
+      flex: 0 0 auto;
     }
     .brand h1{
       font-size:16px; margin:0;
@@ -151,6 +162,7 @@
       box-shadow: var(--shadow2);
       backdrop-filter: blur(14px) saturate(155%);
       -webkit-backdrop-filter: blur(14px) saturate(155%);
+      white-space: nowrap;
     }
     .pill small{ color:var(--muted); }
     .pill b{ font-weight:800; letter-spacing:.2px; }
@@ -269,6 +281,7 @@
       display:inline-flex; align-items:center; gap:10px;
       user-select:none;
     }
+    .btn[disabled]{ opacity:.55; cursor:not-allowed; filter: grayscale(.15); }
     .btn:hover{ filter: brightness(1.06); }
     .btn:active{ transform: scale(.985); }
     .btn.primary{
@@ -297,6 +310,7 @@
       border: 1px solid rgba(255,255,255,.12);
       display:grid; place-items:center;
       box-shadow: inset 0 0 0 1px rgba(255,255,255,.05);
+      font-size: 12px;
     }
 
     .note{
@@ -342,6 +356,7 @@
       flex-wrap:wrap;
       justify-content:flex-end;
     }
+
     .tag{
       font-size:11px;
       padding: 6px 10px;
@@ -349,6 +364,7 @@
       border:1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.06);
       color: rgba(255,255,255,.86);
+      white-space: nowrap;
     }
     .tag.warn{
       border-color: rgba(247,215,122,.22);
@@ -515,7 +531,7 @@
     }
 
     /* =========================
-      BLOK 9 — TOAST / MODAL
+      BLOK 9 — TOAST
     ========================== */
     .toast{
       position: fixed;
@@ -609,7 +625,7 @@
     <div class="hero">
       <div class="heroGrid">
         <div>
-          <h3>Konsep realistis: CS hanya verifikasi, sistem yang menentukan hadiah</h3>
+          <h3>Konsep realistis: CS verifikasi, sistem menentukan hadiah</h3>
           <p class="sub">
             Kode voucher <b>sekali pakai</b> dan <b>terikat username + transaksi</b>. Expired <b>15–30 menit</b>.
             Maksimal <b>3x</b> percobaan input kode. Hadiah “Spin manual” punya masa aktif <b>24 jam</b>.
@@ -618,9 +634,8 @@
           <div class="hr"></div>
 
           <div class="note">
-            <b>Catatan jujur untuk produksi:</b> versi ini adalah <u>demo front-end</u>. Untuk benar-benar aman & tidak bisa dimanipulasi,
-            generate kode + RNG hadiah + pencatatan spin harus dilakukan <b>server-side</b>, dan integrasi provider (Pragmatic/PGSoft)
-            butuh sistem bonus engine/aggregator.
+            <b>Catatan jujur untuk produksi:</b> Ini demo front-end. Untuk benar-benar aman & anti manipulasi,
+            generate kode + RNG hadiah + pencatatan harus <b>server-side</b>. Integrasi provider butuh bonus engine/aggregator.
           </div>
         </div>
 
@@ -644,11 +659,11 @@
         <div class="head">
           <div>
             <h2>Panel Event</h2>
-            <p>Simulasi lengkap: ajukan claim → CS approve → kode → box aktif → hadiah.</p>
+            <p>Simulasi: ajukan claim → verifikasi CS → kode → box aktif → hadiah.</p>
           </div>
           <div class="seg" role="tablist" aria-label="Mode panel">
-            <button id="tabMember" role="tab" aria-selected="true">Member</button>
-            <button id="tabCS" role="tab" aria-selected="false">CS</button>
+            <button id="tabMember" role="tab" aria-selected="true" aria-controls="viewMember" tabindex="0">Member</button>
+            <button id="tabCS" role="tab" aria-selected="false" aria-controls="viewCS" tabindex="-1">CS</button>
           </div>
         </div>
 
@@ -656,7 +671,7 @@
           <!-- =========================
             BLOK 13A.1 — MEMBER VIEW
           ========================== -->
-          <section id="viewMember">
+          <section id="viewMember" role="tabpanel" aria-labelledby="tabMember">
             <div class="row">
               <div class="field">
                 <label>Username</label>
@@ -692,7 +707,7 @@
 
             <h2 style="font-size:14px; margin:0 0 8px;">Aktivasi Box (Input Kode Voucher)</h2>
             <p class="mini" style="margin-top:0;">
-              Masukkan <b>username</b>, <b>TRX</b>, dan <b>kode</b> yang diberikan CS. Kode berlaku 15–30 menit, dan maksimal 3x percobaan.
+              Masukkan <b>username</b>, <b>TRX</b>, dan <b>kode</b> dari CS. Kode berlaku 15–30 menit, dan maksimal 3x percobaan.
             </p>
 
             <div class="row">
@@ -722,24 +737,24 @@
             <div class="hr"></div>
 
             <h2 style="font-size:14px; margin:0 0 8px;">Kotak Saya</h2>
-            <div id="myBoxes" class="list"></div>
+            <div id="myBoxes" class="list" aria-live="polite"></div>
 
             <div class="hr"></div>
 
             <h2 style="font-size:14px; margin:0 0 8px;">Hadiah Saya</h2>
-            <div id="myRewards" class="list"></div>
+            <div id="myRewards" class="list" aria-live="polite"></div>
           </section>
 
           <!-- =========================
             BLOK 13A.2 — CS VIEW
           ========================== -->
-          <section id="viewCS" style="display:none;">
+          <section id="viewCS" role="tabpanel" aria-labelledby="tabCS" style="display:none;">
             <div class="note">
-              <b>Aturan tegas (sesuai kebutuhan kamu):</b><br>
+              <b>Aturan tegas:</b><br>
               • Kode <b>sekali pakai</b>, terikat <b>username + transaksi</b><br>
               • Expired cepat <b>15–30 menit</b><br>
               • Limit percobaan input kode <b>3x</b><br>
-              <span class="faint">Di demo ini, CS hanya memverifikasi deposit & generate kode. Hadiah tetap ditentukan saat box dibuka.</span>
+              <span class="faint">Demo ini client-side. Produksi wajib server-side untuk anti manipulasi.</span>
             </div>
 
             <div class="hr"></div>
@@ -779,7 +794,12 @@
 
             <div class="hr"></div>
 
-            <h2 style="font-size:14px; margin:0 0 8px;">Kode Aktif (Belum dipakai)</h2>
+            <h2 style="font-size:14px; margin:0 0 8px;">Claim Terverifikasi (Re-issue Kode)</h2>
+            <div id="csVerified" class="list"></div>
+
+            <div class="hr"></div>
+
+            <h2 style="font-size:14px; margin:0 0 8px;">Kode Aktif</h2>
             <div id="csCodes" class="list"></div>
 
             <div class="hr"></div>
@@ -797,7 +817,7 @@
         <div class="head">
           <div>
             <h2>Peluang Hadiah (Transparan)</h2>
-            <p>Total 100%. Kamu bisa ganti angka odds ini kapan pun (untuk produksi: server-side).</p>
+            <p>Total 100%. Untuk produksi: pindah ke server-side agar fair & audit-able.</p>
           </div>
           <div class="rightActions">
             <span class="tag warn" title="Masa aktif hadiah spin">Spin aktif 24 jam</span>
@@ -825,7 +845,7 @@
             • 10x — nilai/spin Rp400<br>
             • 50x — nilai/spin Rp1.000<br>
             • 100x — nilai/spin Rp2.000<br>
-            <span class="faint">Masa aktif 24 jam. Untuk produksi, “otomatis masuk provider” butuh integrasi bonus engine/aggregator.</span>
+            <span class="faint">Masa aktif 24 jam.</span>
           </div>
 
           <div class="hr"></div>
@@ -834,7 +854,7 @@
             <b>Best practice anti-komplain:</b><br>
             • Tampilkan riwayat hadiah per user<br>
             • Jelaskan definisi “spin” + provider berlaku<br>
-            • Hindari “konfirmasi dua kali”; cukup aktivasi → box aktif → buka box
+            • Flow rapi: Aktivasi → Box aktif → Buka box (tanpa bolak-balik konfirmasi)
           </div>
         </div>
       </div>
@@ -851,79 +871,114 @@
 
   <script>
     /* =========================
-      BLOK 15 — DATA MODEL (DEMO STORAGE)
+      BLOK 15 — DATA MODEL (DEMO STORAGE) — HARDENED
+      - Fix bug rewardLabel
+      - Remove XSS surface: render with DOM + textContent
+      - Add re-issue code flow (verified claims)
+      - Make activation robust (attempts, expiry, opened box guard)
+      - No heavy re-render every second; tick updates countdown only
     ========================== */
-    const STORE_KEY = "mystery_box_deposit_demo_v1";
+
+    const STORE_KEY_V2 = "mystery_box_deposit_demo_v2";
+    const STORE_KEY_V1 = "mystery_box_deposit_demo_v1";
+    const SCHEMA = 2;
 
     const ODDS = [
-      // Cashback (contoh realistis + total tetap 100%)
-      { id:"cb5",   label:"Cashback 5% (maks Rp1.000)",  type:"cashback", pct:49.5, data:{percent:5, cap:1000} },
-      { id:"cb8",   label:"Cashback 8% (maks Rp2.000)",  type:"cashback", pct:18.0, data:{percent:8, cap:2000} },
-      { id:"cb12",  label:"Cashback 12% (maks Rp3.000)", type:"cashback", pct:10.0, data:{percent:12, cap:3000} },
-      { id:"cb20",  label:"Cashback 20% (maks Rp5.000)", type:"cashback", pct:5.0,  data:{percent:20, cap:5000} },
-      { id:"cb50",  label:"Cashback 50% (maks Rp10.000)",type:"cashback", pct:0.5,  data:{percent:50, cap:10000} },
+      { id:"cb5",   label:"Cashback 5% (maks Rp1.000)",   type:"cashback", pct:49.5, data:{percent:5, cap:1000} },
+      { id:"cb8",   label:"Cashback 8% (maks Rp2.000)",   type:"cashback", pct:18.0, data:{percent:8, cap:2000} },
+      { id:"cb12",  label:"Cashback 12% (maks Rp3.000)",  type:"cashback", pct:10.0, data:{percent:12, cap:3000} },
+      { id:"cb20",  label:"Cashback 20% (maks Rp5.000)",  type:"cashback", pct:5.0,  data:{percent:20, cap:5000} },
+      { id:"cb50",  label:"Cashback 50% (maks Rp10.000)", type:"cashback", pct:0.5,  data:{percent:50, cap:10000} },
 
-      // Spin manual (paket final kamu)
-      { id:"sp10",  label:"Spin 10x (Rp400/spin) — Pragmatic/PGSoft",  type:"spin", pct:12.0, data:{spins:10, bet:400} },
-      { id:"sp50",  label:"Spin 50x (Rp1.000/spin) — Pragmatic/PGSoft",type:"spin", pct:3.8,  data:{spins:50, bet:1000} },
-      { id:"sp100", label:"Spin 100x (Rp2.000/spin) — Pragmatic/PGSoft",type:"spin", pct:0.7,  data:{spins:100, bet:2000} },
+      { id:"sp10",  label:"Spin 10x (Rp400/spin) — Pragmatic/PGSoft",   type:"spin",   pct:12.0, data:{spins:10,  bet:400} },
+      { id:"sp50",  label:"Spin 50x (Rp1.000/spin) — Pragmatic/PGSoft", type:"spin",   pct:3.8,  data:{spins:50,  bet:1000} },
+      { id:"sp100", label:"Spin 100x (Rp2.000/spin) — Pragmatic/PGSoft",type:"spin",   pct:0.7,  data:{spins:100, bet:2000} },
 
-      // Voucher (contoh: transparan)
-      { id:"v50k",  label:"Voucher Rp50.000", type:"voucher", pct:0.45, data:{amount:50000} },
-      { id:"v1jt",  label:"Voucher Rp1.000.000", type:"voucher", pct:0.05, data:{amount:1000000} },
+      { id:"v50k",  label:"Voucher Rp50.000",   type:"voucher", pct:0.45, data:{amount:50000} },
+      { id:"v1jt",  label:"Voucher Rp1.000.000",type:"voucher", pct:0.05, data:{amount:1000000} },
     ];
 
+    /* =========================
+      BLOK 16 — HELPERS
+    ========================== */
+    const $ = (id)=> document.getElementById(id);
     function now(){ return Date.now(); }
+
+    function safeJSONParse(s, fallback){
+      try{ return JSON.parse(s); }catch(e){ return fallback; }
+    }
+
+    function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+
     function fmtMoney(n){
       const x = Math.max(0, Math.floor(Number(n)||0));
       return "Rp" + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
+
     function fmtTime(ts){
       const d = new Date(ts);
       const pad = (v)=> String(v).padStart(2,"0");
       return `${pad(d.getDate())}-${pad(d.getMonth()+1)}-${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
     }
-    function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
-    function safeJSONParse(s, fallback){
-      try{ return JSON.parse(s); }catch(e){ return fallback; }
+
+    function msLeft(ts){ return Math.max(0, ts - now()); }
+
+    function fmtLeftCompact(ms){
+      const s = Math.floor(ms/1000);
+      const m = Math.floor(s/60);
+      const r = s%60;
+      return `${m}m ${String(r).padStart(2,"0")}s`;
     }
+
+    function fmtLeftHours(ms){
+      const s = Math.floor(ms/1000);
+      const h = Math.floor(s/3600);
+      const m = Math.floor((s%3600)/60);
+      return `${h}j ${String(m).padStart(2,"0")}m`;
+    }
+
     function uid(prefix="id"){
+      // demo only (not cryptographically unique)
       return prefix + "_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
     }
 
-    const state = loadState();
-
-    function loadState(){
-      const base = { claims:[], codes:[], boxes:[], rewards:[], audit:[] };
-      const raw = localStorage.getItem(STORE_KEY);
-      if(!raw) return base;
-      const parsed = safeJSONParse(raw, base);
-      // harden structure
-      return {
-        claims: Array.isArray(parsed.claims)? parsed.claims : [],
-        codes:  Array.isArray(parsed.codes)? parsed.codes : [],
-        boxes:  Array.isArray(parsed.boxes)? parsed.boxes : [],
-        rewards:Array.isArray(parsed.rewards)? parsed.rewards : [],
-        audit:  Array.isArray(parsed.audit)? parsed.audit : [],
-      };
+    function parseNominal(raw){
+      const n = String(raw||"").replace(/[^\d]/g,"");
+      const v = Math.floor(Number(n)||0);
+      return Number.isFinite(v) ? v : 0;
     }
-    function save(){
-      localStorage.setItem(STORE_KEY, JSON.stringify(state));
-      renderAll();
+
+    function normalizeUsername(s){
+      const v = String(s||"").trim();
+      // long-term: keep simple to avoid XSS + weird parsing
+      if(!v) return { ok:false, v:"", why:"Username wajib diisi." };
+      if(v.length < 3) return { ok:false, v, why:"Username minimal 3 karakter." };
+      if(v.length > 32) return { ok:false, v, why:"Username terlalu panjang (maks 32)." };
+      if(!/^[a-zA-Z0-9._-]+$/.test(v)) return { ok:false, v, why:"Username hanya boleh huruf/angka . _ -" };
+      return { ok:true, v };
+    }
+
+    function normalizeTRX(s){
+      const v = String(s||"").trim();
+      if(!v) return { ok:false, v:"", why:"TRX wajib diisi." };
+      if(v.length < 6) return { ok:false, v, why:"TRX terlalu pendek." };
+      if(v.length > 64) return { ok:false, v, why:"TRX terlalu panjang (maks 64)." };
+      // allow wider set
+      if(!/^[a-zA-Z0-9._:@/-]+$/.test(v)) return { ok:false, v, why:"TRX berisi karakter tidak valid." };
+      return { ok:true, v };
     }
 
     /* =========================
-      BLOK 16 — CRYPTO (HASH CODE)
+      BLOK 17 — CRYPTO (HASH + RNG)
     ========================== */
     async function sha256Hex(text){
-      // Prefer WebCrypto (HTTPS). Fallback is NOT secure—demo only.
       if (window.crypto && crypto.subtle && window.TextEncoder) {
         const enc = new TextEncoder().encode(text);
         const buf = await crypto.subtle.digest("SHA-256", enc);
         const arr = Array.from(new Uint8Array(buf));
         return arr.map(b=>b.toString(16).padStart(2,"0")).join("");
       }
-      // Fallback: simple hash (not secure)
+      // fallback (demo-only)
       let h=2166136261;
       for(let i=0;i<text.length;i++){
         h ^= text.charCodeAt(i);
@@ -933,7 +988,7 @@
     }
 
     function randCode(len=8){
-      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/1/I/O for clarity
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/1/I/O
       let out = "";
       const arr = new Uint32Array(len);
       if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(arr);
@@ -944,13 +999,23 @@
       return out;
     }
 
+    function randFloat01(){
+      if(window.crypto && crypto.getRandomValues){
+        const a = new Uint32Array(1);
+        crypto.getRandomValues(a);
+        // 0..(2^32-1) -> 0..1
+        return a[0] / 4294967295;
+      }
+      return Math.random();
+    }
+
     /* =========================
-      BLOK 17 — TOAST
+      BLOK 18 — TOAST
     ========================== */
     let toastTimer = null;
     function toast(msg, kind=""){
-      const el = document.getElementById("toast");
-      const tx = document.getElementById("toastText");
+      const el = $("toast");
+      const tx = $("toastText");
       tx.textContent = msg;
       el.className = "toast show" + (kind ? " " + kind : "");
       clearTimeout(toastTimer);
@@ -958,206 +1023,281 @@
     }
 
     /* =========================
-      BLOK 18 — BUSINESS LOGIC
+      BLOK 19 — STATE (LOAD + MIGRATE + SAVE)
+    ========================== */
+    const state = loadState();
+
+    function defaultState(){
+      return { schema: SCHEMA, claims:[], codes:[], boxes:[], rewards:[], audit:[] };
+    }
+
+    function loadState(){
+      const base = defaultState();
+      const raw2 = localStorage.getItem(STORE_KEY_V2);
+      if(raw2){
+        const parsed = safeJSONParse(raw2, base);
+        return hardenState(parsed);
+      }
+      // migrate from V1 if exists
+      const raw1 = localStorage.getItem(STORE_KEY_V1);
+      if(raw1){
+        const v1 = safeJSONParse(raw1, null);
+        if(v1 && typeof v1 === "object"){
+          const migrated = migrateV1toV2(v1);
+          localStorage.setItem(STORE_KEY_V2, JSON.stringify(migrated));
+          return migrated;
+        }
+      }
+      return base;
+    }
+
+    function hardenState(s){
+      const base = defaultState();
+      const x = (s && typeof s === "object") ? s : base;
+      return {
+        schema: SCHEMA,
+        claims:  Array.isArray(x.claims)  ? x.claims  : [],
+        codes:   Array.isArray(x.codes)   ? x.codes   : [],
+        boxes:   Array.isArray(x.boxes)   ? x.boxes   : [],
+        rewards: Array.isArray(x.rewards) ? x.rewards : [],
+        audit:   Array.isArray(x.audit)   ? x.audit   : []
+      };
+    }
+
+    function migrateV1toV2(v1){
+      const s = defaultState();
+      // keep same arrays but normalize fields
+      const claims = Array.isArray(v1.claims) ? v1.claims : [];
+      const codes  = Array.isArray(v1.codes)  ? v1.codes  : [];
+      const boxes  = Array.isArray(v1.boxes)  ? v1.boxes  : [];
+      const rewards= Array.isArray(v1.rewards)? v1.rewards: [];
+      const audit  = Array.isArray(v1.audit)  ? v1.audit  : [];
+
+      // claims: pending/approved/rejected -> pending/verified/rejected
+      s.claims = claims.map(c=>({
+        id: c.id || uid("cl"),
+        username: String(c.username||""),
+        trx_ref: String(c.trx_ref||""),
+        nominal: Math.floor(Number(c.nominal)||0),
+        proof: String(c.proof||""),
+        status: c.status === "approved" ? "verified" : (c.status === "rejected" ? "rejected" : "pending"),
+        created_at: Number(c.created_at)||now(),
+        reviewed_at: c.reviewed_at ? Number(c.reviewed_at) : null
+      }));
+
+      // codes: add claim_id unknown; keep username/trx; add superseded_at
+      s.codes = codes.map(cd=>({
+        id: cd.id || uid("cd"),
+        claim_id: null,
+        username: String(cd.username||""),
+        trx_ref: String(cd.trx_ref||""),
+        code_hash: String(cd.code_hash||""),
+        code_preview: String(cd.code_preview||""), // demo-only
+        expires_at: Number(cd.expires_at)||now(),
+        attempts_left: clamp(Number(cd.attempts_left)||3, 0, 3),
+        used_at: cd.used_at ? Number(cd.used_at) : null,
+        created_at: Number(cd.created_at)||now(),
+        superseded_at: null
+      }));
+
+      s.boxes = boxes.map(b=>({
+        id: b.id || uid("bx"),
+        claim_id: null,
+        username: String(b.username||""),
+        trx_ref: String(b.trx_ref||""),
+        nominal: Math.floor(Number(b.nominal)||0),
+        status: String(b.status||"locked"),
+        created_at: Number(b.created_at)||now(),
+        activated_at: b.activated_at ? Number(b.activated_at) : null,
+        opened_at: b.opened_at ? Number(b.opened_at) : null
+      }));
+
+      s.rewards = rewards.map(r=>({
+        id: r.id || uid("rw"),
+        box_id: null,
+        username: String(r.username||""),
+        trx_ref: String(r.trx_ref||""),
+        created_at: Number(r.created_at)||now(),
+        type: String(r.type||""),
+        title: String(r.title||"Hadiah"),
+        expires_at: Number(r.expires_at)|| (now()+24*60*60*1000),
+        status: String(r.status||"granted"),
+        payload: (r.payload && typeof r.payload==="object") ? r.payload : {}
+      }));
+
+      s.audit = audit.map(a=>({
+        id: a.id || uid("au"),
+        ts: Number(a.ts)||now(),
+        text: String(a.text||"")
+      }));
+
+      return s;
+    }
+
+    function save(){
+      // derive statuses (expired reward)
+      deriveStatuses();
+      localStorage.setItem(STORE_KEY_V2, JSON.stringify(state));
+      renderAll();
+    }
+
+    function deriveStatuses(){
+      const t = now();
+      for(const r of state.rewards){
+        if(r.expires_at && r.expires_at <= t && r.status !== "completed"){
+          r.status = "expired";
+        }
+      }
+    }
+
+    /* =========================
+      BLOK 20 — BUSINESS LOGIC (HARDENED FLOW)
     ========================== */
     function addAudit(text){
-      state.audit.unshift({ id: uid("au"), ts: now(), text });
-      state.audit = state.audit.slice(0, 60);
+      state.audit.unshift({ id: uid("au"), ts: now(), text: String(text||"") });
+      state.audit = state.audit.slice(0, 80);
     }
 
-    function findClaim(username, trx){
-      return state.claims.find(c => c.username === username && c.trx_ref === trx);
-    }
-    function hasBox(username, trx){
-      return state.boxes.some(b => b.username === username && b.trx_ref === trx);
-    }
-
-    function validateNominal(n){
+    function validateNominalMin(n){
       const v = Math.floor(Number(n)||0);
       if (!Number.isFinite(v)) return { ok:false, v:0 };
       if (v < 20000) return { ok:false, v };
       return { ok:true, v };
     }
 
-    function weightedPick(){
-      const total = ODDS.reduce((s,x)=>s + x.pct, 0);
-      const r = Math.random()*total;
-      let acc=0;
-      for(const item of ODDS){
-        acc += item.pct;
-        if(r <= acc) return item;
-      }
-      return ODDS[ODDS.length-1];
+    function findClaim(username, trx){
+      return state.claims.find(c => c.username === username && c.trx_ref === trx);
     }
 
-    function rewardLabel(r){
-      if(r.type === "cashback"){
-        return `Cashback ${r.data.percent}% (maks ${fmtMoney(r.data.cap)})`;
-      }
-      if(r.type === "spin"){
-        return `Spin ${r.data.spins}x — ${fmtMoney(r.data.bet)}/spin`;
-      }
-      if(r.type === "voucher"){
-        return `Voucher ${fmtMoney(r.data.amount)}`;
-      }
-      return "Hadiah";
+    function findBox(username, trx){
+      return state.boxes.find(b => b.username === username && b.trx_ref === trx);
     }
 
-    function msLeft(ts){
-      return Math.max(0, ts - now());
-    }
-    function fmtLeft(ms){
-      const s = Math.floor(ms/1000);
-      const m = Math.floor(s/60);
-      const r = s%60;
-      return `${m}m ${String(r).padStart(2,"0")}s`;
-    }
-    function fmtLeftHours(ms){
-      const s = Math.floor(ms/1000);
-      const h = Math.floor(s/3600);
-      const m = Math.floor((s%3600)/60);
-      return `${h}j ${String(m).padStart(2,"0")}m`;
+    function hasOpenedBox(username, trx){
+      const b = findBox(username, trx);
+      return !!(b && b.opened_at);
     }
 
-    /* =========================
-      BLOK 19 — UI HANDLERS
-    ========================== */
-    const $ = (id)=> document.getElementById(id);
-
-    function setTab(which){
-      const isMember = which === "member";
-      $("tabMember").setAttribute("aria-selected", isMember ? "true":"false");
-      $("tabCS").setAttribute("aria-selected", isMember ? "false":"true");
-      $("viewMember").style.display = isMember ? "" : "none";
-      $("viewCS").style.display = isMember ? "none" : "";
+    function getLatestActiveCode(username, trx){
+      const t = now();
+      const list = state.codes
+        .filter(cd =>
+          cd.username === username &&
+          cd.trx_ref === trx &&
+          !cd.used_at &&
+          (!cd.superseded_at) &&
+          cd.expires_at > t &&
+          (cd.attempts_left || 0) > 0
+        )
+        .sort((a,b)=>(b.created_at||0)-(a.created_at||0));
+      return list[0] || null;
     }
 
-    $("tabMember").addEventListener("click", ()=> setTab("member"));
-    $("tabCS").addEventListener("click", ()=> setTab("cs"));
+    function getClaimActiveCode(claim){
+      if(!claim) return null;
+      return getLatestActiveCode(claim.username, claim.trx_ref);
+    }
 
-    $("btnFillDemo").addEventListener("click", ()=>{
-      const uname = "garr" + Math.floor(100 + Math.random()*900);
-      $("m_username").value = uname;
-      $("m_nominal").value = "20000";
-      $("m_trx").value = "TRX-" + new Date().toISOString().slice(0,10).replaceAll("-","") + "-" + Math.floor(10 + Math.random()*90);
-      $("m_proof").value = "bukti opsional";
-      $("a_username").value = uname;
-      $("a_trx").value = $("m_trx").value;
-      toast("Contoh form diisi.", "good");
-    });
-
-    $("btnSubmitClaim").addEventListener("click", ()=>{
-      const username = ($("m_username").value||"").trim();
-      const trx_ref = ($("m_trx").value||"").trim();
-      const proof = ($("m_proof").value||"").trim();
-      const nominalRaw = ($("m_nominal").value||"").trim().replace(/[^\d]/g,"");
-      const { ok, v:nominal } = validateNominal(nominalRaw);
-
-      if(!username || !trx_ref){
-        toast("Username dan TRX wajib diisi.", "bad");
-        return;
+    function invalidateOldCodesForClaim(claim){
+      const t = now();
+      for(const cd of state.codes){
+        if(cd.username===claim.username && cd.trx_ref===claim.trx_ref && !cd.used_at && !cd.superseded_at && cd.expires_at > t){
+          cd.superseded_at = t;
+          cd.expires_at = t; // hard stop
+        }
       }
-      if(!ok){
-        toast("Nominal minimal Rp20.000.", "warn");
-        return;
-      }
-      if(findClaim(username, trx_ref)){
-        toast("Claim untuk TRX ini sudah pernah dibuat.", "warn");
-        return;
-      }
-      if(hasBox(username, trx_ref)){
-        toast("Box untuk TRX ini sudah aktif/terbuat.", "warn");
-        return;
-      }
+    }
 
-      state.claims.unshift({
-        id: uid("cl"),
-        username,
-        trx_ref,
-        nominal,
-        proof,
-        status: "pending",
-        created_at: now(),
-        reviewed_at: null,
-      });
-      addAudit(`Claim masuk: ${username} • ${trx_ref} • ${fmtMoney(nominal)}`);
-      toast("Claim dikirim. Menunggu verifikasi CS.", "good");
-      // convenience
-      $("a_username").value = username;
-      $("a_trx").value = trx_ref;
-      save();
-    });
-
-    $("btnSeedDemo").addEventListener("click", ()=>{
-      const mk = (u, t, n)=>({
-        id: uid("cl"),
-        username:u, trx_ref:t, nominal:n, proof:"", status:"pending", created_at:now(), reviewed_at:null
-      });
-      const d1 = "demo" + Math.floor(100+Math.random()*900);
-      const d2 = "demo" + Math.floor(100+Math.random()*900);
-      state.claims.unshift(mk(d1, "TRX-DEMO-" + Math.floor(1000+Math.random()*9000), 20000));
-      state.claims.unshift(mk(d2, "TRX-DEMO-" + Math.floor(1000+Math.random()*9000), 50000));
-      addAudit("CS membuat 2 claim dummy.");
-      toast("2 claim dummy dibuat.", "good");
-      save();
-    });
-
-    $("btnResetAll").addEventListener("click", ()=>{
-      localStorage.removeItem(STORE_KEY);
-      location.reload();
-    });
-
-    async function csApprove(claimId){
+    async function issueCodeForClaim(claimId){
       const claim = state.claims.find(c=>c.id===claimId);
       if(!claim) return;
-      // approve only if still pending
-      if(claim.status !== "pending"){
-        toast("Claim ini sudah diproses.", "warn");
+
+      if(claim.status !== "verified"){
+        toast("Claim belum terverifikasi.", "warn");
         return;
       }
-      const expMin = Number($("cs_expiry").value||20);
-      const len = Number($("cs_len").value||8);
+      if(hasOpenedBox(claim.username, claim.trx_ref)){
+        toast("Box untuk TRX ini sudah dibuka. Jangan issue kode baru.", "bad");
+        return;
+      }
 
-      // create code (plaintext only to show CS for demo; store hash in db)
+      const expMin = clamp(Number($("cs_expiry").value||20), 15, 30);
+      const len = clamp(Number($("cs_len").value||8), 6, 10);
+
+      // prevent multiple active codes: invalidate previous ones
+      invalidateOldCodesForClaim(claim);
+
       const codePlain = randCode(len);
       const codeHash = await sha256Hex(codePlain);
 
-      // One-time code tied to username + trx_ref
-      const expires_at = now() + clamp(expMin, 15, 30) * 60 * 1000;
+      const expires_at = now() + expMin * 60 * 1000;
 
       state.codes.unshift({
         id: uid("cd"),
+        claim_id: claim.id,
         username: claim.username,
         trx_ref: claim.trx_ref,
         code_hash: codeHash,
-        // demo-only display:
+        // demo-only preview (hapus di produksi)
         code_preview: codePlain,
         expires_at,
         attempts_left: 3,
         used_at: null,
         created_at: now(),
+        superseded_at: null
       });
 
-      claim.status = "approved";
-      claim.reviewed_at = now();
-
-      // Create locked box (will be activated after code used)
-      if(!hasBox(claim.username, claim.trx_ref)){
+      // ensure box exists locked
+      let box = findBox(claim.username, claim.trx_ref);
+      if(!box){
         state.boxes.unshift({
           id: uid("bx"),
+          claim_id: claim.id,
           username: claim.username,
           trx_ref: claim.trx_ref,
           nominal: claim.nominal,
-          status: "locked", // becomes active when code used
+          status: "locked",
           created_at: now(),
           activated_at: null,
           opened_at: null
         });
       }
 
-      addAudit(`CS approve + generate kode: ${claim.username} • ${claim.trx_ref} (exp ${expMin}m)`);
+      addAudit(`CS issue kode: ${claim.username} • ${claim.trx_ref} (exp ${expMin}m)`);
       toast("Kode dibuat. Kirim ke member.", "good");
       save();
+    }
+
+    async function csApprove(claimId){
+      const claim = state.claims.find(c=>c.id===claimId);
+      if(!claim) return;
+      if(claim.status !== "pending"){
+        toast("Claim ini sudah diproses.", "warn");
+        return;
+      }
+
+      claim.status = "verified";
+      claim.reviewed_at = now();
+      addAudit(`CS verifikasi: ${claim.username} • ${claim.trx_ref} • ${fmtMoney(claim.nominal)}`);
+
+      // ensure box exists locked
+      let box = findBox(claim.username, claim.trx_ref);
+      if(!box){
+        state.boxes.unshift({
+          id: uid("bx"),
+          claim_id: claim.id,
+          username: claim.username,
+          trx_ref: claim.trx_ref,
+          nominal: claim.nominal,
+          status: "locked",
+          created_at: now(),
+          activated_at: null,
+          opened_at: null
+        });
+      }
+
+      // auto-issue first code for verified claim
+      await issueCodeForClaim(claim.id);
     }
 
     function csReject(claimId){
@@ -1175,57 +1315,71 @@
     }
 
     async function activateBox(){
-      const username = ($("a_username").value||"").trim();
-      const trx_ref  = ($("a_trx").value||"").trim();
-      const code     = ($("a_code").value||"").trim().toUpperCase();
+      const u = normalizeUsername($("a_username").value);
+      const t = normalizeTRX($("a_trx").value);
+      const code = String($("a_code").value||"").trim().toUpperCase();
 
-      if(!username || !trx_ref || !code){
-        toast("Username, TRX, dan kode wajib diisi.", "bad");
+      if(!u.ok){ toast(u.why, "bad"); return; }
+      if(!t.ok){ toast(t.why, "bad"); return; }
+      if(!code){ toast("Kode wajib diisi.", "bad"); return; }
+
+      const username = u.v;
+      const trx_ref  = t.v;
+
+      if(hasOpenedBox(username, trx_ref)){
+        toast("Box untuk TRX ini sudah dibuka. Tidak bisa aktivasi ulang.", "bad");
         return;
       }
 
-      // find latest valid code tied to username+trx
-      const allCodes = state.codes.filter(cd => cd.username===username && cd.trx_ref===trx_ref);
-      if(allCodes.length === 0){
-        toast("Tidak ada kode untuk username+TRX ini.", "bad");
+      const claim = findClaim(username, trx_ref);
+      if(!claim || claim.status !== "verified"){
+        toast("Claim belum diverifikasi CS untuk username+TRX ini.", "warn");
         return;
       }
 
-      // Prefer unused & not expired
-      const activeCode = allCodes.find(cd => !cd.used_at && cd.expires_at > now());
+      const activeCode = getLatestActiveCode(username, trx_ref);
       if(!activeCode){
-        toast("Kode sudah expired / juga tidak ada yang aktif. Minta CS buat kode baru.", "warn");
+        toast("Tidak ada kode aktif. Minta CS issue kode baru.", "warn");
         return;
       }
 
       if(activeCode.attempts_left <= 0){
-        toast("Limit 3x salah tercapai. Minta CS buat kode baru.", "bad");
+        toast("Limit 3x salah tercapai. Minta CS issue kode baru.", "bad");
         return;
       }
 
       const hash = await sha256Hex(code);
       if(hash !== activeCode.code_hash){
         activeCode.attempts_left = Math.max(0, activeCode.attempts_left - 1);
-        addAudit(`Gagal input kode: ${username} • ${trx_ref} (sisa ${activeCode.attempts_left}x)`);
+        addAudit(`Gagal kode: ${username} • ${trx_ref} (sisa ${activeCode.attempts_left}x)`);
         save();
         toast(`Kode salah. Sisa percobaan: ${activeCode.attempts_left}x`, activeCode.attempts_left ? "warn":"bad");
         return;
       }
 
-      // valid
+      // valid: consume code & activate box
       activeCode.used_at = now();
       addAudit(`Kode dipakai: ${username} • ${trx_ref}`);
 
-      // activate box
-      const box = state.boxes.find(b=>b.username===username && b.trx_ref===trx_ref);
+      let box = findBox(username, trx_ref);
       if(!box){
-        // should exist if CS followed flow, but keep safe
-        state.boxes.unshift({
+        // safety, should exist
+        box = {
           id: uid("bx"),
-          username, trx_ref, nominal: 20000,
-          status:"active", created_at:now(), activated_at:now(), opened_at:null
-        });
+          claim_id: claim.id,
+          username, trx_ref,
+          nominal: claim.nominal || 20000,
+          status: "active",
+          created_at: now(),
+          activated_at: now(),
+          opened_at: null
+        };
+        state.boxes.unshift(box);
       }else{
+        if(box.opened_at){
+          toast("Box sudah dibuka. Aktivasi dibatalkan.", "bad");
+          return;
+        }
         box.status = "active";
         box.activated_at = now();
       }
@@ -1235,7 +1389,28 @@
       save();
     }
 
-    $("btnActivate").addEventListener("click", activateBox);
+    function weightedPick(){
+      const total = ODDS.reduce((s,x)=>s + Number(x.pct||0), 0);
+      const r = randFloat01() * (total || 1);
+      let acc=0;
+      for(const item of ODDS){
+        acc += Number(item.pct||0);
+        if(r <= acc) return item;
+      }
+      return ODDS[ODDS.length-1];
+    }
+
+    function rewardLabel(r){
+      // reward hasil openBox menyimpan label final di r.title
+      if(r && r.title) return r.title;
+
+      // fallback: item ODDS
+      const d = (r && (r.data || r.payload)) || {};
+      if(r.type === "cashback") return `Cashback ${d.percent}% (maks ${fmtMoney(d.cap)})`;
+      if(r.type === "spin")     return `Spin ${d.spins}x — ${fmtMoney(d.bet)}/spin`;
+      if(r.type === "voucher")  return `Voucher ${fmtMoney(d.amount)}`;
+      return "Hadiah";
+    }
 
     function openBox(boxId){
       const box = state.boxes.find(b=>b.id===boxId);
@@ -1250,34 +1425,44 @@
         return;
       }
 
-      // pick reward by odds
       const pick = weightedPick();
-
       const reward = {
         id: uid("rw"),
+        box_id: box.id,
         username: box.username,
         trx_ref: box.trx_ref,
         created_at: now(),
         type: pick.type,
         title: pick.label,
-        // reward validity: 24h for spin and voucher (cashback can be immediate, but we keep expiry too for transparency)
         expires_at: now() + 24*60*60*1000,
         status: "granted",
-        payload: {
-          ...pick.data,
-          provider: null,
-          // for spin tracking (demo)
-          spins_done: 0
-        }
+        payload: {}
       };
 
-      // compute cashback nominal for demo
-      if(reward.type === "cashback"){
-        const amountRaw = Math.floor((box.nominal * (reward.payload.percent/100)));
-        reward.payload.amount = Math.min(amountRaw, reward.payload.cap);
+      if(pick.type === "cashback"){
+        const percent = pick.data.percent;
+        const cap = pick.data.cap;
+        const amountRaw = Math.floor(box.nominal * (percent/100));
+        const amount = Math.min(amountRaw, cap);
+        reward.payload = { percent, cap, amount };
       }
 
-      // mark box opened
+      if(pick.type === "spin"){
+        reward.payload = {
+          spins: pick.data.spins,
+          bet: pick.data.bet,
+          provider: null,
+          spins_done: 0
+        };
+      }
+
+      if(pick.type === "voucher"){
+        reward.payload = {
+          amount: pick.data.amount,
+          code: "VC-" + randCode(10) // demo voucher code
+        };
+      }
+
       box.opened_at = now();
       box.status = "opened";
 
@@ -1290,7 +1475,7 @@
     function setProvider(rewardId, provider){
       const r = state.rewards.find(x=>x.id===rewardId);
       if(!r || r.type !== "spin") return;
-      if(r.expires_at <= now()){
+      if(r.expires_at <= now() || r.status === "expired"){
         toast("Reward sudah expired (24 jam).", "bad");
         return;
       }
@@ -1300,11 +1485,10 @@
       save();
     }
 
-    // Demo-only: simulate spins progress (no money calc)
     function simulateSpin(rewardId){
       const r = state.rewards.find(x=>x.id===rewardId);
       if(!r || r.type !== "spin") return;
-      if(r.expires_at <= now()){
+      if(r.expires_at <= now() || r.status === "expired"){
         toast("Reward sudah expired (24 jam).", "bad");
         return;
       }
@@ -1314,8 +1498,8 @@
       }
 
       const total = r.payload.spins;
-      const step = Math.min(5, total - r.payload.spins_done);
-      r.payload.spins_done += step;
+      const step = Math.min(5, total - (r.payload.spins_done||0));
+      r.payload.spins_done = (r.payload.spins_done||0) + step;
 
       if(r.payload.spins_done >= total){
         r.payload.spins_done = total;
@@ -1329,270 +1513,110 @@
     }
 
     function copyText(text){
-      navigator.clipboard?.writeText(text).then(()=>{
-        toast("Disalin ke clipboard.", "good");
-      }).catch(()=>{
-        toast("Gagal copy (browser).", "warn");
+      const v = String(text ?? "");
+      navigator.clipboard?.writeText(v).then(()=> toast("Disalin ke clipboard.", "good"))
+      .catch(()=> toast("Gagal copy (browser).", "warn"));
+    }
+
+    /* =========================
+      BLOK 21 — UI / TAB
+    ========================== */
+    function setTab(which){
+      const isMember = which === "member";
+      $("tabMember").setAttribute("aria-selected", isMember ? "true":"false");
+      $("tabCS").setAttribute("aria-selected", isMember ? "false":"true");
+      $("tabMember").tabIndex = isMember ? 0 : -1;
+      $("tabCS").tabIndex = isMember ? -1 : 0;
+      $("viewMember").style.display = isMember ? "" : "none";
+      $("viewCS").style.display = isMember ? "none" : "";
+    }
+
+    function setupTabsA11y(){
+      const tabs = [$("tabMember"), $("tabCS")];
+      function focusTab(i){ tabs[i].focus(); }
+      tabs.forEach((tab, idx)=>{
+        tab.addEventListener("keydown", (e)=>{
+          if(e.key === "ArrowRight" || e.key === "ArrowLeft"){
+            e.preventDefault();
+            const next = e.key === "ArrowRight" ? (idx+1)%tabs.length : (idx-1+tabs.length)%tabs.length;
+            focusTab(next);
+            setTab(next===0 ? "member":"cs");
+          }
+        });
       });
     }
 
-    function purgeExpired(){
-      // In demo we keep history; only filter render states.
-      // You can implement actual deletion if needed.
-    }
+    $("tabMember").addEventListener("click", ()=> setTab("member"));
+    $("tabCS").addEventListener("click", ()=> setTab("cs"));
 
     /* =========================
-      BLOK 20 — RENDER
+      BLOK 22 — MEMBER EVENTS
     ========================== */
-    function renderOdds(){
-      const tb = $("oddsTbody");
-      tb.innerHTML = "";
-      const total = ODDS.reduce((s,x)=>s+x.pct,0);
-      for(const o of ODDS){
-        const tr = document.createElement("tr");
-        const td1 = document.createElement("td");
-        const td2 = document.createElement("td");
-        td1.textContent = o.label;
-        td2.className = "pct";
-        td2.textContent = (o.pct % 1 === 0 ? o.pct.toFixed(0) : o.pct.toFixed(2)) + "%";
-        tr.appendChild(td1); tr.appendChild(td2);
-        tb.appendChild(tr);
-      }
-      const tr = document.createElement("tr");
-      const td1 = document.createElement("td");
-      const td2 = document.createElement("td");
-      td1.innerHTML = "<b>Total</b>";
-      td2.className = "pct";
-      td2.innerHTML = "<b>" + (total % 1 === 0 ? total.toFixed(0) : total.toFixed(2)) + "%</b>";
-      tr.appendChild(td1); tr.appendChild(td2);
-      tb.appendChild(tr);
-    }
+    $("btnFillDemo").addEventListener("click", ()=>{
+      const uname = "garr" + Math.floor(100 + Math.random()*900);
+      $("m_username").value = uname;
+      $("m_nominal").value = "20000";
+      $("m_trx").value = "TRX-" + new Date().toISOString().slice(0,10).replaceAll("-","") + "-" + Math.floor(10 + Math.random()*90);
+      $("m_proof").value = "bukti opsional";
+      $("a_username").value = uname;
+      $("a_trx").value = $("m_trx").value;
+      toast("Contoh form diisi.", "good");
+      renderMember(); // live filter
+    });
 
-    function renderMember(){
-      // Boxes
-      const myBoxes = $("myBoxes");
-      myBoxes.innerHTML = "";
-      const username = ($("m_username").value||$("a_username").value||"").trim();
-      const boxes = state.boxes.filter(b => !username || b.username === username);
+    $("btnSubmitClaim").addEventListener("click", ()=>{
+      const u = normalizeUsername($("m_username").value);
+      const t = normalizeTRX($("m_trx").value);
+      const proof = String($("m_proof").value||"").trim();
+      const nominalRaw = parseNominal($("m_nominal").value);
+      const { ok, v:nominal } = validateNominalMin(nominalRaw);
 
-      if(boxes.length === 0){
-        myBoxes.innerHTML = `<div class="note">Belum ada box. Ajukan claim dulu, lalu aktivasi pakai kode.</div>`;
-      }else{
-        for(const b of boxes){
-          const st = b.status;
-          const tag = st==="active" ? `<span class="tag good">ACTIVE</span>` :
-                      st==="locked"? `<span class="tag warn">LOCKED</span>` :
-                      `<span class="tag">OPENED</span>`;
+      if(!u.ok){ toast(u.why, "bad"); return; }
+      if(!t.ok){ toast(t.why, "bad"); return; }
+      if(!ok){ toast("Nominal minimal Rp20.000.", "warn"); return; }
 
-          const el = document.createElement("div");
-          el.className = "item";
-          el.innerHTML = `
-            <div class="left">
-              <p class="title">Box • <span class="mono">${b.trx_ref}</span></p>
-              <p class="meta">User: <b>${b.username}</b> • Nominal: <b>${fmtMoney(b.nominal)}</b><br>
-              Dibuat: ${fmtTime(b.created_at)}${b.activated_at?` • Aktif: ${fmtTime(b.activated_at)}`:""}${b.opened_at?` • Dibuka: ${fmtTime(b.opened_at)}`:""}</p>
-            </div>
-            <div class="right">
-              ${tag}
-              ${st==="active" ? `<button class="btn primary" data-open="${b.id}"><span class="k">🎁</span> Buka Box</button>` : ``}
-            </div>
-          `;
-          myBoxes.appendChild(el);
+      const username = u.v;
+      const trx_ref = t.v;
+
+      const existing = findClaim(username, trx_ref);
+      if(existing){
+        if(existing.status === "rejected"){
+          toast("Claim ini pernah ditolak. Buat TRX baru / hubungi CS.", "warn");
+        }else{
+          toast("Claim untuk TRX ini sudah ada.", "warn");
         }
-        myBoxes.querySelectorAll("[data-open]").forEach(btn=>{
-          btn.addEventListener("click", ()=> openBox(btn.getAttribute("data-open")));
-        });
+        return;
       }
 
-      // Rewards
-      const myRewards = $("myRewards");
-      myRewards.innerHTML = "";
-      const rewards = state.rewards.filter(r => !username || r.username === username);
-
-      if(rewards.length === 0){
-        myRewards.innerHTML = `<div class="note">Belum ada hadiah. Buka box untuk mendapatkan hadiah.</div>`;
-      }else{
-        for(const r of rewards){
-          const expired = r.expires_at <= now();
-          const left = msLeft(r.expires_at);
-          const badge = expired ? `<span class="tag bad">EXPIRED</span>` : `<span class="tag good">AKTIF ${fmtLeftHours(left)}</span>`;
-
-          let detail = "";
-          let actions = "";
-
-          if(r.type === "cashback"){
-            detail = `Cashback: <b>${fmtMoney(r.payload.amount)}</b> (dari ${r.payload.percent}% • cap ${fmtMoney(r.payload.cap)})`;
-            actions = `<span class="tag">Instant</span>`;
-          }
-
-          if(r.type === "voucher"){
-            detail = `Voucher: <b>${fmtMoney(r.payload.amount)}</b>`;
-            actions = expired ? `` : `<button class="btn ghost" data-copy="${r.payload.amount}"><span class="k">⧉</span> Copy nominal</button>`;
-          }
-
-          if(r.type === "spin"){
-            detail = `Spin manual: <b>${r.payload.spins}x</b> — ${fmtMoney(r.payload.bet)}/spin • Provider: <b>${r.payload.provider || "Belum dipilih"}</b><br>
-                      Progress (demo): <b>${r.payload.spins_done || 0}/${r.payload.spins}</b>`;
-            const disabled = expired ? "disabled" : "";
-            actions = `
-              <button class="btn ghost" ${disabled} data-prov="${r.id}" data-p="PRAGMATIC PLAY"><span class="k">PP</span> Pragmatic</button>
-              <button class="btn ghost" ${disabled} data-prov="${r.id}" data-p="PGSOFT"><span class="k">PG</span> PGSoft</button>
-              <button class="btn primary" ${disabled} data-spin="${r.id}"><span class="k">▶</span> Simulasi Spin</button>
-            `;
-          }
-
-          const el = document.createElement("div");
-          el.className = "item";
-          el.innerHTML = `
-            <div class="left">
-              <p class="title">${rewardLabel(r)}</p>
-              <p class="meta">User: <b>${r.username}</b> • TRX: <span class="mono">${r.trx_ref}</span><br>
-              Didapat: ${fmtTime(r.created_at)} • ${detail}</p>
-            </div>
-            <div class="right">
-              ${badge}
-              ${actions}
-            </div>
-          `;
-          myRewards.appendChild(el);
-        }
-
-        myRewards.querySelectorAll("[data-copy]").forEach(btn=>{
-          btn.addEventListener("click", ()=> copyText(btn.getAttribute("data-copy")));
-        });
-        myRewards.querySelectorAll("[data-prov]").forEach(btn=>{
-          btn.addEventListener("click", ()=> setProvider(btn.getAttribute("data-prov"), btn.getAttribute("data-p")));
-        });
-        myRewards.querySelectorAll("[data-spin]").forEach(btn=>{
-          btn.addEventListener("click", ()=> simulateSpin(btn.getAttribute("data-spin")));
-        });
-      }
-    }
-
-    function renderCS(){
-      // Pending claims
-      const pending = state.claims.filter(c=>c.status==="pending");
-      const csPending = $("csPending");
-      csPending.innerHTML = "";
-      if(pending.length === 0){
-        csPending.innerHTML = `<div class="note">Tidak ada claim pending.</div>`;
-      }else{
-        for(const c of pending){
-          const el = document.createElement("div");
-          el.className = "item";
-          el.innerHTML = `
-            <div class="left">
-              <p class="title">Claim Pending • <span class="mono">${c.trx_ref}</span></p>
-              <p class="meta">User: <b>${c.username}</b> • Nominal: <b>${fmtMoney(c.nominal)}</b><br>
-              Masuk: ${fmtTime(c.created_at)}${c.proof?`<br>Proof: <span class="mono">${escapeHtml(c.proof)}</span>`:""}</p>
-            </div>
-            <div class="right">
-              <button class="btn good" data-approve="${c.id}"><span class="k">✓</span> Approve</button>
-              <button class="btn danger" data-reject="${c.id}"><span class="k">✕</span> Reject</button>
-            </div>
-          `;
-          csPending.appendChild(el);
-        }
-        csPending.querySelectorAll("[data-approve]").forEach(btn=>{
-          btn.addEventListener("click", ()=> csApprove(btn.getAttribute("data-approve")));
-        });
-        csPending.querySelectorAll("[data-reject]").forEach(btn=>{
-          btn.addEventListener("click", ()=> csReject(btn.getAttribute("data-reject")));
-        });
+      if(hasOpenedBox(username, trx_ref)){
+        toast("TRX ini sudah pernah dibuka. Gunakan TRX lain.", "warn");
+        return;
       }
 
-      // Active codes (unused)
-      const csCodes = $("csCodes");
-      csCodes.innerHTML = "";
-      const activeCodes = state.codes.filter(cd => !cd.used_at);
-      if(activeCodes.length === 0){
-        csCodes.innerHTML = `<div class="note">Belum ada kode aktif.</div>`;
-      }else{
-        for(const cd of activeCodes){
-          const expired = cd.expires_at <= now();
-          const left = msLeft(cd.expires_at);
-          const badge = expired ? `<span class="tag bad">EXPIRED</span>` : `<span class="tag good">Sisa ${fmtLeft(left)}</span>`;
-          const el = document.createElement("div");
-          el.className = "item";
-          el.innerHTML = `
-            <div class="left">
-              <p class="title">Kode Voucher • <span class="mono">${cd.trx_ref}</span></p>
-              <p class="meta">User: <b>${cd.username}</b> • Exp: ${fmtTime(cd.expires_at)} • Attempts: <b>${cd.attempts_left}x</b><br>
-              <span class="mono"><b>${cd.code_preview || "••••••••"}</b></span> <span class="faint">(demo-only tampilkan)</span></p>
-            </div>
-            <div class="right">
-              ${badge}
-              ${expired ? "" : `<button class="btn ghost" data-copycode="${cd.code_preview}"><span class="k">⧉</span> Copy kode</button>`}
-            </div>
-          `;
-          csCodes.appendChild(el);
-        }
-        csCodes.querySelectorAll("[data-copycode]").forEach(btn=>{
-          btn.addEventListener("click", ()=> copyText(btn.getAttribute("data-copycode")));
-        });
-      }
+      state.claims.unshift({
+        id: uid("cl"),
+        username,
+        trx_ref,
+        nominal,
+        proof,
+        status: "pending",
+        created_at: now(),
+        reviewed_at: null
+      });
 
-      // Audit
-      const csAudit = $("csAudit");
-      csAudit.innerHTML = "";
-      if(state.audit.length === 0){
-        csAudit.innerHTML = `<div class="note">Belum ada aktivitas.</div>`;
-      }else{
-        for(const a of state.audit.slice(0, 18)){
-          const el = document.createElement("div");
-          el.className = "item";
-          el.innerHTML = `
-            <div class="left">
-              <p class="title">${escapeHtml(a.text)}</p>
-              <p class="meta">${fmtTime(a.ts)}</p>
-            </div>
-            <div class="right">
-              <span class="tag">LOG</span>
-            </div>
-          `;
-          csAudit.appendChild(el);
-        }
-      }
-    }
+      addAudit(`Claim masuk: ${username} • ${trx_ref} • ${fmtMoney(nominal)}`);
+      toast("Claim dikirim. Menunggu verifikasi CS.", "good");
 
-    function escapeHtml(s){
-      return String(s)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
+      // convenience
+      $("a_username").value = username;
+      $("a_trx").value = trx_ref;
 
-    function renderAll(){
-      purgeExpired();
-      renderOdds();
-      renderMember();
-      renderCS();
-      // pill status quick hint
-      const pending = state.claims.filter(c=>c.status==="pending").length;
-      const activeCodes = state.codes.filter(cd=>!cd.used_at && cd.expires_at>now()).length;
-      $("pillStatus").textContent = pending ? `${pending} claim pending` : (activeCodes ? `${activeCodes} kode aktif` : "Siap digunakan");
-    }
+      save();
+    });
 
-    /* =========================
-      BLOK 21 — LIVE TICK (COUNTDOWNS)
-    ========================== */
-    setInterval(()=> {
-      // re-render lightweight for countdown labels
-      renderMember();
-      renderCS();
-      const pending = state.claims.filter(c=>c.status==="pending").length;
-      const activeCodes = state.codes.filter(cd=>!cd.used_at && cd.expires_at>now()).length;
-      $("pillStatus").textContent = pending ? `${pending} claim pending` : (activeCodes ? `${activeCodes} kode aktif` : "Siap digunakan");
-    }, 1000);
+    $("btnActivate").addEventListener("click", activateBox);
 
-    /* =========================
-      BLOK 22 — INIT
-    ========================== */
-    renderAll();
-
-    // Small UX: if user types username in claim, mirror to activate
+    // Mirror username typed in claim to activation (small UX)
     $("m_username").addEventListener("input", ()=>{
       const v = $("m_username").value.trim();
       if(v && !$("a_username").value.trim()) $("a_username").value = v;
@@ -1600,6 +1624,524 @@
     });
     $("a_username").addEventListener("input", renderMember);
     $("a_trx").addEventListener("input", renderMember);
+
+    /* =========================
+      BLOK 23 — CS EVENTS
+    ========================== */
+    $("btnSeedDemo").addEventListener("click", ()=>{
+      const mk = (u, t, n)=>({
+        id: uid("cl"),
+        username:u, trx_ref:t, nominal:n, proof:"",
+        status:"pending", created_at:now(), reviewed_at:null
+      });
+      const d1 = "demo" + Math.floor(100+Math.random()*900);
+      const d2 = "demo" + Math.floor(100+Math.random()*900);
+      state.claims.unshift(mk(d1, "TRX-DEMO-" + Math.floor(1000+Math.random()*9000), 20000));
+      state.claims.unshift(mk(d2, "TRX-DEMO-" + Math.floor(1000+Math.random()*9000), 50000));
+      addAudit("CS membuat 2 claim dummy.");
+      toast("2 claim dummy dibuat.", "good");
+      save();
+    });
+
+    $("btnResetAll").addEventListener("click", ()=>{
+      localStorage.removeItem(STORE_KEY_V2);
+      localStorage.removeItem(STORE_KEY_V1);
+      location.reload();
+    });
+
+    /* =========================
+      BLOK 24 — RENDER (SAFE DOM)
+    ========================== */
+    function el(tag, attrs={}, children=[]){
+      const node = document.createElement(tag);
+      for(const [k,v] of Object.entries(attrs||{})){
+        if(k === "class") node.className = v;
+        else if(k === "text") node.textContent = v;
+        else if(k === "html") node.innerHTML = v; // use only for safe static bits
+        else if(k.startsWith("data-")) node.setAttribute(k, v);
+        else if(k === "title") node.title = v;
+        else if(k === "disabled") node.disabled = !!v;
+        else node.setAttribute(k, v);
+      }
+      const arr = Array.isArray(children) ? children : [children];
+      for(const c of arr){
+        if(c == null) continue;
+        if(typeof c === "string") node.appendChild(document.createTextNode(c));
+        else node.appendChild(c);
+      }
+      return node;
+    }
+
+    function tagBadge(text, kind=""){
+      return el("span",{class:"tag"+(kind?(" "+kind):""), text});
+    }
+
+    function clear(node){
+      while(node.firstChild) node.removeChild(node.firstChild);
+    }
+
+    function renderOdds(){
+      const tb = $("oddsTbody");
+      clear(tb);
+      const total = ODDS.reduce((s,x)=>s + Number(x.pct||0),0);
+
+      for(const o of ODDS){
+        const tr = document.createElement("tr");
+        const td1 = document.createElement("td");
+        const td2 = document.createElement("td");
+        td1.textContent = o.label;
+        td2.className = "pct";
+        td2.textContent = (Number(o.pct)%1===0 ? Number(o.pct).toFixed(0) : Number(o.pct).toFixed(2)) + "%";
+        tr.appendChild(td1); tr.appendChild(td2);
+        tb.appendChild(tr);
+      }
+
+      const tr = document.createElement("tr");
+      const td1 = document.createElement("td");
+      const td2 = document.createElement("td");
+      td1.innerHTML = "<b>Total</b>";
+      td2.className = "pct";
+      td2.innerHTML = "<b>"+(total%1===0?total.toFixed(0):total.toFixed(2))+"%</b>";
+      tr.appendChild(td1); tr.appendChild(td2);
+      tb.appendChild(tr);
+    }
+
+    function currentFilterUsername(){
+      return String($("m_username").value||$("a_username").value||"").trim();
+    }
+
+    function renderMember(){
+      const usernameFilter = currentFilterUsername();
+
+      // BOXES
+      const myBoxes = $("myBoxes");
+      clear(myBoxes);
+
+      const boxes = state.boxes
+        .filter(b => !usernameFilter || b.username === usernameFilter)
+        .sort((a,b)=>(b.created_at||0)-(a.created_at||0));
+
+      if(boxes.length === 0){
+        myBoxes.appendChild(el("div",{class:"note", text:"Belum ada box. Ajukan claim dulu, lalu aktivasi pakai kode."}));
+      }else{
+        for(const b of boxes){
+          const left = el("div",{class:"left"});
+          const right = el("div",{class:"right"});
+
+          const title = el("p",{class:"title"});
+          title.appendChild(document.createTextNode("Box • "));
+          title.appendChild(el("span",{class:"mono", text: b.trx_ref}));
+
+          const meta = el("p",{class:"meta"});
+          meta.appendChild(document.createTextNode("User: "));
+          meta.appendChild(el("b",{text: b.username}));
+          meta.appendChild(document.createTextNode(" • Nominal: "));
+          meta.appendChild(el("b",{text: fmtMoney(b.nominal)}));
+          meta.appendChild(document.createElement("br"));
+          meta.appendChild(document.createTextNode("Dibuat: " + fmtTime(b.created_at)));
+          if(b.activated_at) meta.appendChild(document.createTextNode(" • Aktif: " + fmtTime(b.activated_at)));
+          if(b.opened_at) meta.appendChild(document.createTextNode(" • Dibuka: " + fmtTime(b.opened_at)));
+
+          left.appendChild(title);
+          left.appendChild(meta);
+
+          let stTag = tagBadge("OPENED");
+          if(b.status === "active") stTag = tagBadge("ACTIVE","good");
+          if(b.status === "locked") stTag = tagBadge("LOCKED","warn");
+
+          right.appendChild(stTag);
+
+          if(b.status === "active" && !b.opened_at){
+            const btn = el("button",{class:"btn primary","data-open":b.id});
+            btn.appendChild(el("span",{class:"k", text:"🎁"}));
+            btn.appendChild(document.createTextNode(" Buka Box"));
+            right.appendChild(btn);
+          }
+
+          myBoxes.appendChild(el("div",{class:"item"},[left,right]));
+        }
+      }
+
+      // REWARDS
+      const myRewards = $("myRewards");
+      clear(myRewards);
+
+      const rewards = state.rewards
+        .filter(r => !usernameFilter || r.username === usernameFilter)
+        .sort((a,b)=>(b.created_at||0)-(a.created_at||0));
+
+      if(rewards.length === 0){
+        myRewards.appendChild(el("div",{class:"note", text:"Belum ada hadiah. Buka box untuk mendapatkan hadiah."}));
+      }else{
+        const t = now();
+        for(const r of rewards){
+          const isExpired = (r.status === "expired") || (r.expires_at <= t);
+          const leftMs = Math.max(0, r.expires_at - t);
+
+          const left = el("div",{class:"left"});
+          const right = el("div",{class:"right"});
+
+          const title = el("p",{class:"title", text: rewardLabel(r) });
+
+          const meta = el("p",{class:"meta"});
+          meta.appendChild(document.createTextNode("User: "));
+          meta.appendChild(el("b",{text:r.username}));
+          meta.appendChild(document.createTextNode(" • TRX: "));
+          meta.appendChild(el("span",{class:"mono", text:r.trx_ref}));
+          meta.appendChild(document.createElement("br"));
+          meta.appendChild(document.createTextNode("Didapat: " + fmtTime(r.created_at) + " • "));
+
+          const cd = el("span",{class:"mono", "data-expire": String(r.expires_at), "data-kind":"reward"});
+          cd.textContent = isExpired ? "EXPIRED" : ("AKTIF " + fmtLeftHours(leftMs));
+          meta.appendChild(cd);
+
+          // detail + actions
+          const actions = el("div",{class:"right"});
+          actions.appendChild(isExpired ? tagBadge("EXPIRED","bad") : tagBadge("AKTIF","good"));
+
+          if(r.type === "cashback"){
+            const p = r.payload || {};
+            meta.appendChild(document.createElement("br"));
+            meta.appendChild(document.createTextNode(`Cashback: ${fmtMoney(p.amount||0)} (dari ${p.percent||0}% • cap ${fmtMoney(p.cap||0)})`));
+            actions.appendChild(tagBadge("Instant"));
+          }
+
+          if(r.type === "voucher"){
+            const p = r.payload || {};
+            meta.appendChild(document.createElement("br"));
+            meta.appendChild(document.createTextNode(`Voucher: ${fmtMoney(p.amount||0)} • Code: `));
+            meta.appendChild(el("span",{class:"mono", text: String(p.code||"—")}));
+            if(!isExpired){
+              actions.appendChild(el("button",{class:"btn ghost","data-copy":String(p.code||"")},[
+                el("span",{class:"k",text:"⧉"}), document.createTextNode(" Copy code")
+              ]));
+            }
+          }
+
+          if(r.type === "spin"){
+            const p = r.payload || {};
+            meta.appendChild(document.createElement("br"));
+            meta.appendChild(document.createTextNode(`Spin manual: ${p.spins||0}x — ${fmtMoney(p.bet||0)}/spin • Provider: `));
+            meta.appendChild(el("b",{text: p.provider || "Belum dipilih"}));
+            meta.appendChild(document.createElement("br"));
+            meta.appendChild(document.createTextNode(`Progress (demo): ${p.spins_done||0}/${p.spins||0}`));
+
+            const disabled = isExpired;
+
+            actions.appendChild(el("button",{class:"btn ghost",disabled:disabled,"data-prov":r.id,"data-p":"PRAGMATIC PLAY"},[
+              el("span",{class:"k",text:"PP"}), document.createTextNode(" Pragmatic")
+            ]));
+            actions.appendChild(el("button",{class:"btn ghost",disabled:disabled,"data-prov":r.id,"data-p":"PGSOFT"},[
+              el("span",{class:"k",text:"PG"}), document.createTextNode(" PGSoft")
+            ]));
+
+            actions.appendChild(el("button",{class:"btn primary",disabled:disabled,"data-spin":r.id},[
+              el("span",{class:"k",text:"▶"}), document.createTextNode(" Simulasi Spin")
+            ]));
+          }
+
+          left.appendChild(title);
+          left.appendChild(meta);
+
+          myRewards.appendChild(el("div",{class:"item"},[left,actions]));
+        }
+      }
+    }
+
+    function renderCS(){
+      // PENDING
+      const csPending = $("csPending");
+      clear(csPending);
+
+      const pending = state.claims
+        .filter(c=>c.status==="pending")
+        .sort((a,b)=>(b.created_at||0)-(a.created_at||0));
+
+      if(pending.length === 0){
+        csPending.appendChild(el("div",{class:"note", text:"Tidak ada claim pending."}));
+      }else{
+        for(const c of pending){
+          const left = el("div",{class:"left"});
+          const right = el("div",{class:"right"});
+
+          const title = el("p",{class:"title"});
+          title.appendChild(document.createTextNode("Claim Pending • "));
+          title.appendChild(el("span",{class:"mono", text:c.trx_ref}));
+
+          const meta = el("p",{class:"meta"});
+          meta.appendChild(document.createTextNode("User: "));
+          meta.appendChild(el("b",{text:c.username}));
+          meta.appendChild(document.createTextNode(" • Nominal: "));
+          meta.appendChild(el("b",{text:fmtMoney(c.nominal)}));
+          meta.appendChild(document.createElement("br"));
+          meta.appendChild(document.createTextNode("Masuk: " + fmtTime(c.created_at)));
+          if(c.proof){
+            meta.appendChild(document.createElement("br"));
+            meta.appendChild(document.createTextNode("Proof: "));
+            meta.appendChild(el("span",{class:"mono", text:c.proof}));
+          }
+
+          left.appendChild(title);
+          left.appendChild(meta);
+
+          right.appendChild(el("button",{class:"btn good","data-approve":c.id},[
+            el("span",{class:"k",text:"✓"}), document.createTextNode(" Approve")
+          ]));
+          right.appendChild(el("button",{class:"btn danger","data-reject":c.id},[
+            el("span",{class:"k",text:"✕"}), document.createTextNode(" Reject")
+          ]));
+
+          csPending.appendChild(el("div",{class:"item"},[left,right]));
+        }
+      }
+
+      // VERIFIED (reissue)
+      const csVerified = $("csVerified");
+      clear(csVerified);
+
+      const verified = state.claims
+        .filter(c=>c.status==="verified")
+        .sort((a,b)=>(b.reviewed_at||0)-(a.reviewed_at||0));
+
+      if(verified.length === 0){
+        csVerified.appendChild(el("div",{class:"note", text:"Belum ada claim yang diverifikasi."}));
+      }else{
+        for(const c of verified){
+          const left = el("div",{class:"left"});
+          const right = el("div",{class:"right"});
+
+          const title = el("p",{class:"title"});
+          title.appendChild(document.createTextNode("Verified • "));
+          title.appendChild(el("span",{class:"mono", text:c.trx_ref}));
+
+          const meta = el("p",{class:"meta"});
+          meta.appendChild(document.createTextNode("User: "));
+          meta.appendChild(el("b",{text:c.username}));
+          meta.appendChild(document.createTextNode(" • Nominal: "));
+          meta.appendChild(el("b",{text:fmtMoney(c.nominal)}));
+          meta.appendChild(document.createElement("br"));
+          meta.appendChild(document.createTextNode("Verified: " + (c.reviewed_at ? fmtTime(c.reviewed_at) : "—")));
+
+          const code = getClaimActiveCode(c);
+          const box = findBox(c.username, c.trx_ref);
+          const opened = !!(box && box.opened_at);
+
+          left.appendChild(title);
+          left.appendChild(meta);
+
+          if(opened){
+            right.appendChild(tagBadge("OPENED","bad"));
+          }else if(code){
+            const leftMs = msLeft(code.expires_at);
+            right.appendChild(tagBadge("KODE AKTIF","good"));
+            right.appendChild(el("span",{class:"tag", "data-expire":String(code.expires_at), "data-kind":"code"},[
+              document.createTextNode("Sisa "), el("b",{text: fmtLeftCompact(leftMs)})
+            ]));
+          }else{
+            right.appendChild(tagBadge("BUTUH KODE","warn"));
+          }
+
+          // always allow re-issue if not opened
+          const btn = el("button",{class:"btn ghost", disabled:opened, "data-issue":c.id},[
+            el("span",{class:"k",text:"♻"}), document.createTextNode(" Issue Kode")
+          ]);
+          right.appendChild(btn);
+
+          csVerified.appendChild(el("div",{class:"item"},[left,right]));
+        }
+      }
+
+      // CODES (active & recent)
+      const csCodes = $("csCodes");
+      clear(csCodes);
+
+      const tnow = now();
+      const codes = state.codes
+        .filter(cd => !cd.used_at && !cd.superseded_at)
+        .sort((a,b)=>(b.created_at||0)-(a.created_at||0))
+        .slice(0, 20);
+
+      if(codes.length === 0){
+        csCodes.appendChild(el("div",{class:"note", text:"Belum ada kode aktif."}));
+      }else{
+        for(const cd of codes){
+          const expired = cd.expires_at <= tnow;
+          const leftMs = msLeft(cd.expires_at);
+
+          const left = el("div",{class:"left"});
+          const right = el("div",{class:"right"});
+
+          const title = el("p",{class:"title"});
+          title.appendChild(document.createTextNode("Kode Voucher • "));
+          title.appendChild(el("span",{class:"mono", text:cd.trx_ref}));
+
+          const meta = el("p",{class:"meta"});
+          meta.appendChild(document.createTextNode("User: "));
+          meta.appendChild(el("b",{text:cd.username}));
+          meta.appendChild(document.createTextNode(" • Exp: " + fmtTime(cd.expires_at) + " • Attempts: "));
+          meta.appendChild(el("b",{text: String(cd.attempts_left||0) + "x"}));
+          meta.appendChild(document.createElement("br"));
+
+          const preview = cd.code_preview ? cd.code_preview : "••••••••";
+          meta.appendChild(el("span",{class:"mono"},[
+            el("b",{text: preview})
+          ]));
+          meta.appendChild(document.createTextNode(" "));
+          meta.appendChild(el("span",{class:"faint", text:"(demo-only tampilkan)"}));
+
+          left.appendChild(title);
+          left.appendChild(meta);
+
+          right.appendChild(expired ? tagBadge("EXPIRED","bad") : tagBadge("AKTIF","good"));
+          right.appendChild(el("span",{class:"tag", "data-expire":String(cd.expires_at), "data-kind":"code"},[
+            document.createTextNode(expired ? "Expired" : "Sisa "),
+            el("b",{text: expired ? "0m 00s" : fmtLeftCompact(leftMs)})
+          ]));
+
+          if(!expired && cd.code_preview){
+            right.appendChild(el("button",{class:"btn ghost","data-copycode":cd.code_preview},[
+              el("span",{class:"k",text:"⧉"}), document.createTextNode(" Copy kode")
+            ]));
+          }
+
+          csCodes.appendChild(el("div",{class:"item"},[left,right]));
+        }
+      }
+
+      // AUDIT
+      const csAudit = $("csAudit");
+      clear(csAudit);
+
+      if(state.audit.length === 0){
+        csAudit.appendChild(el("div",{class:"note", text:"Belum ada aktivitas."}));
+      }else{
+        for(const a of state.audit.slice(0, 22)){
+          const left = el("div",{class:"left"});
+          const right = el("div",{class:"right"});
+
+          left.appendChild(el("p",{class:"title", text:a.text}));
+          left.appendChild(el("p",{class:"meta", text: fmtTime(a.ts)}));
+
+          right.appendChild(tagBadge("LOG"));
+
+          csAudit.appendChild(el("div",{class:"item"},[left,right]));
+        }
+      }
+    }
+
+    function renderPill(){
+      const pending = state.claims.filter(c=>c.status==="pending").length;
+      const active = state.codes.filter(cd=>!cd.used_at && !cd.superseded_at && cd.expires_at>now() && (cd.attempts_left||0)>0).length;
+      $("pillStatus").textContent = pending ? `${pending} claim pending` : (active ? `${active} kode aktif` : "Siap digunakan");
+    }
+
+    function renderAll(){
+      renderOdds();
+      renderMember();
+      renderCS();
+      renderPill();
+    }
+
+    /* =========================
+      BLOK 25 — EVENT DELEGATION (NO re-bind per render)
+    ========================== */
+    $("myBoxes").addEventListener("click", (e)=>{
+      const btn = e.target.closest("[data-open]");
+      if(!btn) return;
+      openBox(btn.getAttribute("data-open"));
+    });
+
+    $("myRewards").addEventListener("click", (e)=>{
+      const copy = e.target.closest("[data-copy]");
+      if(copy) return copyText(copy.getAttribute("data-copy"));
+
+      const prov = e.target.closest("[data-prov]");
+      if(prov) return setProvider(prov.getAttribute("data-prov"), prov.getAttribute("data-p"));
+
+      const spin = e.target.closest("[data-spin]");
+      if(spin) return simulateSpin(spin.getAttribute("data-spin"));
+    });
+
+    $("csPending").addEventListener("click", (e)=>{
+      const a = e.target.closest("[data-approve]");
+      if(a) return csApprove(a.getAttribute("data-approve"));
+
+      const r = e.target.closest("[data-reject]");
+      if(r) return csReject(r.getAttribute("data-reject"));
+    });
+
+    $("csVerified").addEventListener("click", (e)=>{
+      const i = e.target.closest("[data-issue]");
+      if(i) return issueCodeForClaim(i.getAttribute("data-issue"));
+    });
+
+    $("csCodes").addEventListener("click", (e)=>{
+      const c = e.target.closest("[data-copycode]");
+      if(c) return copyText(c.getAttribute("data-copycode"));
+    });
+
+    /* =========================
+      BLOK 26 — LIGHT TICK (COUNTDOWNS ONLY)
+    ========================== */
+    let tickTimer = null;
+
+    function tickCountdowns(){
+      const t = now();
+      // update countdown badges by data-expire
+      const nodes = document.querySelectorAll("[data-expire]");
+      nodes.forEach(n=>{
+        const exp = Number(n.getAttribute("data-expire")||0);
+        const ms = Math.max(0, exp - t);
+        const kind = n.getAttribute("data-kind") || "";
+        const expired = ms <= 0;
+
+        if(kind === "reward"){
+          n.textContent = expired ? "EXPIRED" : ("AKTIF " + fmtLeftHours(ms));
+        }else{
+          // code
+          const b = n.querySelector("b");
+          if(b) b.textContent = expired ? "0m 00s" : fmtLeftCompact(ms);
+        }
+      });
+
+      // update pill only (cheap)
+      renderPill();
+
+      // derive reward expiry without full render
+      let changed = false;
+      for(const r of state.rewards){
+        if(r.status !== "expired" && r.status !== "completed" && r.expires_at <= t){
+          r.status = "expired";
+          changed = true;
+        }
+      }
+      if(changed){
+        // save silently once (avoid loops)
+        localStorage.setItem(STORE_KEY_V2, JSON.stringify(state));
+        renderMember(); // refresh only member rewards view
+      }
+    }
+
+    function startTick(){
+      if(tickTimer) clearInterval(tickTimer);
+      tickTimer = setInterval(()=>{
+        if(document.visibilityState !== "visible") return;
+        tickCountdowns();
+      }, 1000);
+
+      document.addEventListener("visibilitychange", ()=>{
+        if(document.visibilityState === "visible"){
+          tickCountdowns();
+        }
+      });
+    }
+
+    /* =========================
+      BLOK 27 — INIT
+    ========================== */
+    setupTabsA11y();
+    renderAll();
+    startTick();
   </script>
 </body>
 </html>
