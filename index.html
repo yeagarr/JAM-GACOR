@@ -7,49 +7,49 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="color-scheme" content="dark light" />
-  <meta name="theme-color" content="#05040c" />
-  <title>Mahjong Lucky Spin — Demo</title>
-  <meta name="description" content="Demo lucky spin bertema mahjong: input user ID, spin sekali per hari, hasil + bukti klaim, riwayat 50 spin." />
+  <meta name="theme-color" content="#070612" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Mystery Box Deposit — Demo</title>
 
   <!-- =========================
-    BLOK 2 — FONTS (ringan)
+    BLOK 2 — FONTS
   ========================== -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Kanit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     /* =========================
-      BLOK 3 — THEME TOKENS (MAHJONG JADE)
+      BLOK 3 — THEME TOKENS (VISION-GLASS)
     ========================== */
     :root{
-      --bg0:#05040c;
-      --bg1:#0a0820;
-      --ink:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.72);
-      --faint:rgba(255,255,255,.58);
+      --bg0:#070612;
+      --bg1:#120a2d;
+      --bg2:#1a1143;
+      --glass: rgba(255,255,255,.08);
+      --glass2: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.14);
+      --stroke2: rgba(255,255,255,.10);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --faint: rgba(255,255,255,.50);
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --shadow2: 0 10px 28px rgba(0,0,0,.35);
+      --radius: 22px;
+      --radius2: 16px;
+      --pad: 18px;
 
-      --jade:#1ff0b2;
-      --jade2:#12c891;
-      --gold:#ffd36a;
-      --gold2:#ffb74a;
-      --ruby:#ff3b6a;
-      --ice:#63d9ff;
+      --gold:#f7d77a;
+      --gold2:#ffd36a;
+      --purple:#a56bff;
+      --cyan:#5ef6ff;
+      --green:#4dffab;
+      --red:#ff4d6d;
 
-      --glass:rgba(255,255,255,.08);
-      --glass2:rgba(255,255,255,.12);
-      --stroke:rgba(255,255,255,.16);
-      --stroke2:rgba(255,255,255,.24);
-
-      --shadow: 0 22px 60px rgba(0,0,0,.55);
-      --shadow2: 0 10px 28px rgba(0,0,0,.45);
-
-      --r16:16px;
-      --r20:20px;
-      --r24:24px;
-
-      --easeOut:cubic-bezier(.16,1,.3,1);
-      --easeInOut:cubic-bezier(.48,0,.2,1);
+      --easeOut: cubic-bezier(.16,1,.3,1);
+      --easeSmall: cubic-bezier(.2,.8,.2,1);
+      --easeSpring: cubic-bezier(.2,1.3,.2,1);
     }
 
     /* =========================
@@ -59,1661 +59,1547 @@
     html,body{ height:100%; }
     body{
       margin:0;
-      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color:var(--ink);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 800px at 15% 10%, rgba(165,107,255,.22), transparent 55%),
+        radial-gradient(1000px 700px at 85% 20%, rgba(94,246,255,.14), transparent 55%),
+        radial-gradient(900px 700px at 50% 95%, rgba(247,215,122,.10), transparent 55%),
+        linear-gradient(180deg, var(--bg0), var(--bg1) 55%, var(--bg0));
       overflow-x:hidden;
-      background: radial-gradient(1200px 700px at 20% 10%, rgba(31,240,178,.18), transparent 60%),
-                  radial-gradient(900px 600px at 75% 25%, rgba(255,211,106,.14), transparent 60%),
-                  radial-gradient(900px 700px at 50% 90%, rgba(99,217,255,.10), transparent 65%),
-                  linear-gradient(180deg, var(--bg0), var(--bg1));
     }
     a{ color:inherit; text-decoration:none; }
-    button, input{ font:inherit; }
+    button, input, select, textarea{ font:inherit; color:inherit; }
+    ::selection{ background: rgba(165,107,255,.28); }
 
     /* =========================
-      BLOK 5 — BACKDROP (TILES + SPARKS)
+      BLOK 5 — BACKDROP (NOISE + SPARKS)
     ========================== */
-    .backdrop{
+    .noise{
       position:fixed; inset:0;
-      pointer-events:none;
-      opacity:.95;
+      pointer-events:none; z-index:0;
+      opacity:.08;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+      mix-blend-mode: overlay;
     }
-    .backdrop:before{
-      content:"";
-      position:absolute; inset:-30%;
+    .sparks{
+      position:fixed; inset:-20%;
+      pointer-events:none; z-index:0;
       background:
-        radial-gradient(650px 420px at 20% 30%, rgba(31,240,178,.12), transparent 70%),
-        radial-gradient(520px 360px at 75% 15%, rgba(255,211,106,.10), transparent 70%),
-        radial-gradient(700px 520px at 55% 90%, rgba(255,59,106,.08), transparent 70%);
-      filter: blur(10px);
-      transform: translateZ(0);
-    }
-    .backdrop:after{
-      content:"";
-      position:absolute; inset:0;
-      opacity:.22;
-      background:
-        repeating-linear-gradient(135deg,
-          rgba(255,255,255,.10) 0 1px,
-          transparent 1px 10px),
-        repeating-linear-gradient(45deg,
-          rgba(31,240,178,.08) 0 1px,
-          transparent 1px 14px);
-      mask-image: radial-gradient(circle at 50% 40%, rgba(0,0,0,1), rgba(0,0,0,.2) 62%, transparent 75%);
+        radial-gradient(3px 3px at 10% 20%, rgba(255,255,255,.55), transparent 60%),
+        radial-gradient(2px 2px at 70% 30%, rgba(255,255,255,.35), transparent 60%),
+        radial-gradient(2.4px 2.4px at 40% 80%, rgba(255,255,255,.28), transparent 60%),
+        radial-gradient(2px 2px at 90% 65%, rgba(255,255,255,.25), transparent 60%),
+        radial-gradient(3px 3px at 25% 55%, rgba(255,214,106,.28), transparent 60%),
+        radial-gradient(2px 2px at 55% 18%, rgba(165,107,255,.26), transparent 60%),
+        radial-gradient(3px 3px at 78% 86%, rgba(94,246,255,.18), transparent 60%);
       filter: blur(.2px);
+      animation: drift 14s linear infinite;
+      opacity:.7;
+    }
+    @keyframes drift{
+      0%{ transform: translate3d(0,0,0) rotate(0deg); }
+      100%{ transform: translate3d(4%, -3%, 0) rotate(6deg); }
     }
 
     /* =========================
-      BLOK 6 — LAYOUT
+      BLOK 6 — LAYOUT / SHELL
     ========================== */
     .wrap{
       position:relative;
-      min-height:100%;
-      padding:28px 18px 40px;
-      display:grid;
-      place-items:center;
+      z-index:1;
+      max-width:1180px;
+      margin:0 auto;
+      padding: 26px 18px 40px;
     }
 
-    .shell{
-      width:min(1180px, 100%);
-      display:grid;
-      grid-template-columns: 1fr 420px;
-      gap:18px;
-      align-items:stretch;
-    }
-
-    @media (max-width: 980px){
-      .shell{ grid-template-columns: 1fr; }
-    }
-
-    .card{
-      border:1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-      backdrop-filter: blur(18px) saturate(160%);
-      -webkit-backdrop-filter: blur(18px) saturate(160%);
-      border-radius: var(--r24);
-      box-shadow: var(--shadow2);
-      overflow:hidden;
-      position:relative;
-    }
-    .card:before{
-      content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(800px 280px at 20% 0%, rgba(255,211,106,.22), transparent 55%),
-                  radial-gradient(700px 240px at 90% 15%, rgba(31,240,178,.18), transparent 55%);
-      opacity:.65;
-      pointer-events:none;
-    }
-    .card > *{ position:relative; }
-
-    /* =========================
-      BLOK 7 — HEADER
-    ========================== */
     .topbar{
-      grid-column: 1 / -1;
       display:flex;
+      gap:14px;
       align-items:center;
       justify-content:space-between;
-      padding:14px 18px;
-      border-radius: var(--r24);
-      border:1px solid rgba(255,255,255,.12);
-      background: linear-gradient(180deg, rgba(0,0,0,.22), rgba(0,0,0,.12));
-      backdrop-filter: blur(14px) saturate(140%);
-      -webkit-backdrop-filter: blur(14px) saturate(140%);
-      box-shadow: var(--shadow2);
+      margin-bottom:18px;
     }
     .brand{
-      display:flex; gap:12px; align-items:center;
-      min-width: 0;
+      display:flex; align-items:center; gap:12px;
+      user-select:none;
     }
     .logo{
       width:44px; height:44px; border-radius:14px;
-      border:1px solid rgba(255,255,255,.18);
       background:
-        radial-gradient(circle at 30% 30%, rgba(31,240,178,.55), transparent 55%),
-        radial-gradient(circle at 70% 55%, rgba(255,211,106,.45), transparent 60%),
-        linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
-      box-shadow: 0 10px 25px rgba(0,0,0,.35);
-      display:grid; place-items:center;
-      position:relative;
-      overflow:hidden;
-    }
-    .logo:after{
-      content:"";
-      position:absolute; inset:-30%;
-      background: repeating-linear-gradient(45deg, rgba(255,255,255,.14) 0 1px, transparent 1px 10px);
-      opacity:.22;
-      transform: rotate(10deg);
+        radial-gradient(18px 18px at 30% 25%, rgba(255,255,255,.45), transparent 55%),
+        radial-gradient(90px 70px at 60% 70%, rgba(247,215,122,.24), transparent 60%),
+        linear-gradient(135deg, rgba(165,107,255,.65), rgba(94,246,255,.35));
+      box-shadow: 0 18px 60px rgba(165,107,255,.18), 0 14px 32px rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.14);
     }
     .brand h1{
-      margin:0;
-      font-size:16px;
-      line-height:1.15;
+      font-size:16px; margin:0;
       letter-spacing:.2px;
-      font-weight:900;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      line-height:1.05;
     }
     .brand p{
-      margin:2px 0 0;
-      font-size:12px;
-      color:var(--muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      margin:2px 0 0; font-size:12px; color:var(--muted);
     }
 
     .pill{
-      display:inline-flex;
-      gap:8px;
-      align-items:center;
-      padding:9px 12px;
-      border-radius: 999px;
-      border:1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.18);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      font-size:12px;
-      color:var(--muted);
-      user-select:none;
-    }
-    .dot{
-      width:8px; height:8px; border-radius:999px;
-      background: var(--jade);
-      box-shadow: 0 0 0 3px rgba(31,240,178,.18), 0 0 20px rgba(31,240,178,.55);
-    }
-
-    /* =========================
-      BLOK 8 — MAIN (WHEEL STAGE)
-    ========================== */
-    .stage{
-      padding:18px;
-      display:grid;
-      grid-template-rows: auto 1fr auto;
-      gap:14px;
-      min-height: 620px;
-    }
-
-    .headline{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:14px;
-    }
-    .headline .txt h2{
-      margin:0;
-      font-family:Kanit, Inter, system-ui, sans-serif;
-      letter-spacing:.4px;
-      font-size:22px;
-      line-height:1.15;
-    }
-    .headline .txt p{
-      margin:6px 0 0;
-      color:var(--muted);
-      font-size:13px;
-      max-width: 520px;
-    }
-    .badge{
-      display:flex; flex-direction:column; gap:4px; align-items:flex-end;
-      text-align:right;
+      display:flex; align-items:center; gap:10px;
       padding:10px 12px;
-      border-radius: 16px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      min-width: 200px;
-    }
-    .badge span{ font-size:11px; color:var(--muted); }
-    .badge strong{
-      font-size:16px;
-      letter-spacing:.6px;
-      font-weight:900;
-      background: linear-gradient(90deg, var(--gold), var(--jade));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-    }
-
-    .wheelWrap{
-      display:grid;
-      place-items:center;
-      position:relative;
-      padding: 12px;
-    }
-
-    .wheelShell{
-      width:min(520px, 95%);
-      aspect-ratio: 1 / 1;
       border-radius:999px;
-      position:relative;
-      display:grid;
-      place-items:center;
-      filter: drop-shadow(0 25px 60px rgba(0,0,0,.5));
-    }
-
-    .wheelShell:before{
-      content:"";
-      position:absolute; inset:-14px;
-      border-radius:999px;
-      background: radial-gradient(circle at 50% 35%, rgba(255,211,106,.22), transparent 58%),
-                  radial-gradient(circle at 50% 75%, rgba(31,240,178,.20), transparent 62%),
-                  conic-gradient(from 180deg, rgba(255,255,255,.10), rgba(255,255,255,.02), rgba(255,255,255,.10));
+      background: rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.12);
-      box-shadow: 0 25px 80px rgba(0,0,0,.55);
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(14px) saturate(155%);
+      -webkit-backdrop-filter: blur(14px) saturate(155%);
+    }
+    .pill small{ color:var(--muted); }
+    .pill b{ font-weight:800; letter-spacing:.2px; }
+    .dot{
+      width:10px; height:10px; border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.9), rgba(255,255,255,0) 55%), rgba(94,246,255,.55);
+      box-shadow: 0 0 0 3px rgba(94,246,255,.12), 0 0 18px rgba(94,246,255,.28);
     }
 
-    canvas#wheel{
-      width:100%;
-      height:100%;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(0,0,0,.25);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+    .grid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:16px;
+    }
+    @media (max-width: 980px){
+      .grid{ grid-template-columns: 1fr; }
     }
 
-    .pointer{
-      position:absolute;
-      top:-4px;
-      left:50%;
-      transform: translateX(-50%);
-      width: 0; height: 0;
-      border-left: 16px solid transparent;
-      border-right: 16px solid transparent;
-      border-bottom: 32px solid rgba(255,211,106,.95);
-      filter: drop-shadow(0 10px 16px rgba(0,0,0,.4));
-    }
-    .pointer:after{
-      content:"";
-      position:absolute;
-      left:-8px;
-      top:8px;
-      width:16px;
-      height:16px;
-      border-radius: 4px;
-      background: rgba(0,0,0,.28);
-      border:1px solid rgba(255,255,255,.18);
-      transform: rotate(45deg);
-    }
-
-    .centerBtn{
-      position:absolute;
-      inset: 50%;
-      transform: translate(-50%,-50%);
-      width: 140px; height: 140px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.20);
-      background:
-        radial-gradient(circle at 35% 30%, rgba(255,255,255,.18), transparent 55%),
-        radial-gradient(circle at 60% 65%, rgba(31,240,178,.18), transparent 60%),
-        linear-gradient(180deg, rgba(0,0,0,.30), rgba(0,0,0,.18));
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
-      display:grid;
-      place-items:center;
-      padding: 14px;
-      user-select:none;
-      cursor:pointer;
-      transition: transform .25s var(--easeOut), box-shadow .25s var(--easeOut);
+      backdrop-filter: blur(20px) saturate(170%);
+      -webkit-backdrop-filter: blur(20px) saturate(170%);
+      overflow:hidden;
     }
-    .centerBtn:hover{ transform: translate(-50%,-50%) scale(1.02); }
-    .centerBtn:active{ transform: translate(-50%,-50%) scale(.98); }
-    .centerBtn .inner{
-      width: 100%;
-      height: 100%;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
+    .card .head{
+      padding: 16px 18px 12px;
+      display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+      border-bottom:1px solid rgba(255,255,255,.08);
       background:
-        radial-gradient(circle at 40% 30%, rgba(255,211,106,.55), transparent 60%),
-        radial-gradient(circle at 70% 65%, rgba(31,240,178,.45), transparent 62%),
-        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-      display:grid;
-      place-items:center;
-      text-align:center;
-      padding: 12px;
+        radial-gradient(600px 220px at 20% 0%, rgba(165,107,255,.18), transparent 60%),
+        radial-gradient(520px 240px at 90% 10%, rgba(94,246,255,.12), transparent 58%);
     }
-    .centerBtn .inner strong{
-      display:block;
-      font-size: 18px;
-      letter-spacing: .8px;
-      font-weight: 900;
-      background: linear-gradient(90deg, var(--gold), var(--jade));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
+    .head h2{
+      font-size:14px;
+      letter-spacing:.25px;
+      margin:0 0 6px;
     }
-    .centerBtn .inner span{
-      display:block;
-      margin-top:4px;
-      font-size: 11px;
-      color:rgba(255,255,255,.70);
-      letter-spacing:.2px;
-    }
-
-    .stageFooter{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      padding-top: 8px;
-      border-top: 1px solid rgba(255,255,255,.10);
-    }
-    .status{
-      display:flex; gap:10px; align-items:center;
+    .head p{
+      margin:0;
       font-size:12px;
       color:var(--muted);
+      line-height:1.35;
     }
-    .status b{ color: var(--ink); }
-    .miniBtn{
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      color:var(--ink);
-      padding: 9px 10px;
-      border-radius: 12px;
-      cursor:pointer;
-      transition: transform .18s var(--easeOut), background .18s var(--easeOut);
-    }
-    .miniBtn:hover{ transform: translateY(-1px); background: rgba(0,0,0,.26); }
-    .miniBtn:active{ transform: translateY(0px) scale(.98); }
+    .card .body{ padding: 16px 18px 18px; }
 
-    /* =========================
-      BLOK 9 — SIDE PANEL (INPUT + HISTORY)
-    ========================== */
-    .side{
-      padding:18px;
+    .seg{
+      display:flex; gap:8px; flex-wrap:wrap;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .seg button{
+      border:0;
+      background: transparent;
+      padding: 10px 12px;
+      border-radius: 999px;
+      color: var(--muted);
+      cursor:pointer;
+      transition: transform .15s var(--easeOut), background .2s var(--easeOut), color .2s var(--easeOut);
+    }
+    .seg button[aria-selected="true"]{
+      background: rgba(255,255,255,.10);
+      color: var(--text);
+      box-shadow: 0 10px 26px rgba(0,0,0,.25);
+    }
+    .seg button:active{ transform: scale(.98); }
+
+    .row{
       display:grid;
-      grid-template-rows: auto auto 1fr auto;
+      grid-template-columns: 1fr 1fr;
       gap:12px;
-      min-height: 620px;
     }
-    .sectionTitle{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:10px;
-      padding-bottom:8px;
-      border-bottom:1px solid rgba(255,255,255,.10);
+    @media (max-width: 560px){
+      .row{ grid-template-columns: 1fr; }
     }
-    .sectionTitle h3{
-      margin:0;
-      font-size:13px;
-      letter-spacing:.4px;
-      color: rgba(255,255,255,.86);
+
+    .field{
+      display:flex; flex-direction:column; gap:6px;
     }
-    .hint{
-      font-size:11px;
+    .field label{
+      font-size:12px;
       color: var(--muted);
     }
-
-    .formRow{
-      display:grid;
-      grid-template-columns: 1fr auto;
-      gap:10px;
-      align-items:center;
-    }
-    .input{
+    .field input, .field select, .field textarea{
       width:100%;
       padding: 12px 12px;
       border-radius: 14px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.22);
-      color: var(--ink);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.24);
       outline:none;
-      transition: border-color .2s var(--easeOut), background .2s var(--easeOut);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
+      transition: border-color .2s var(--easeOut), box-shadow .2s var(--easeOut);
     }
-    .input:focus{
-      border-color: rgba(31,240,178,.55);
-      background: rgba(0,0,0,.28);
+    .field input:focus, .field select:focus, .field textarea:focus{
+      border-color: rgba(94,246,255,.35);
+      box-shadow: 0 0 0 4px rgba(94,246,255,.12);
     }
 
+    .btns{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin-top: 12px;
+    }
     .btn{
-      border:1px solid rgba(255,255,255,.14);
-      background: linear-gradient(180deg, rgba(255,211,106,.22), rgba(31,240,178,.12));
-      color: var(--ink);
-      padding: 12px 14px;
-      border-radius: 14px;
+      border:0;
       cursor:pointer;
-      font-weight: 900;
-      letter-spacing:.4px;
-      box-shadow: 0 14px 28px rgba(0,0,0,.35);
-      transition: transform .18s var(--easeOut), filter .18s var(--easeOut), opacity .18s var(--easeOut);
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: 0 14px 32px rgba(0,0,0,.28);
+      transition: transform .15s var(--easeOut), filter .2s var(--easeOut), background .2s var(--easeOut);
+      display:inline-flex; align-items:center; gap:10px;
       user-select:none;
     }
-    .btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
-    .btn:active{ transform: translateY(0px) scale(.99); }
-    .btn[disabled]{ opacity:.45; cursor:not-allowed; filter:none; transform:none; }
+    .btn:hover{ filter: brightness(1.06); }
+    .btn:active{ transform: scale(.985); }
+    .btn.primary{
+      background:
+        radial-gradient(14px 14px at 30% 25%, rgba(255,255,255,.40), transparent 55%),
+        linear-gradient(135deg, rgba(165,107,255,.75), rgba(94,246,255,.38));
+      border-color: rgba(255,255,255,.18);
+    }
+    .btn.danger{
+      background: rgba(255,77,109,.14);
+      border-color: rgba(255,77,109,.22);
+    }
+    .btn.good{
+      background: rgba(77,255,171,.12);
+      border-color: rgba(77,255,171,.22);
+    }
+    .btn.ghost{
+      background: rgba(255,255,255,.06);
+      border-color: rgba(255,255,255,.12);
+      box-shadow:none;
+    }
+    .btn small{ color: rgba(255,255,255,.78); }
+    .btn .k{
+      width:22px; height:22px; border-radius:8px;
+      background: rgba(0,0,0,.26);
+      border: 1px solid rgba(255,255,255,.12);
+      display:grid; place-items:center;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.05);
+    }
 
     .note{
-      font-size:12px;
-      color: var(--muted);
-      line-height:1.45;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.18);
-    }
-    .note b{ color: var(--ink); }
-
-    .tableWrap{
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.16);
+      padding: 12px 12px;
       border-radius: 16px;
-      overflow:hidden;
-      display:flex;
-      flex-direction:column;
-      min-height: 0;
-    }
-    .tableHead{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      padding: 10px 12px;
-      border-bottom:1px solid rgba(255,255,255,.10);
-      font-size:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
       color: var(--muted);
+      font-size:12px;
+      line-height:1.5;
     }
-    .tbl{
+    .note b{ color: var(--text); }
+
+    .list{
+      display:flex; flex-direction:column; gap:10px;
+      margin-top:12px;
+    }
+    .item{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      border-radius: 18px;
+      padding: 12px 12px;
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content:space-between;
+    }
+    .item .left{ min-width:0; }
+    .item .title{
+      margin:0; font-size:13px; font-weight:800;
+      letter-spacing:.2px;
+    }
+    .item .meta{
+      margin:4px 0 0;
+      font-size:12px; color: var(--muted);
+      line-height:1.35;
+      word-break:break-word;
+    }
+    .item .right{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .tag{
+      font-size:11px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: rgba(255,255,255,.86);
+    }
+    .tag.warn{
+      border-color: rgba(247,215,122,.22);
+      background: rgba(247,215,122,.10);
+    }
+    .tag.good{
+      border-color: rgba(77,255,171,.24);
+      background: rgba(77,255,171,.10);
+    }
+    .tag.bad{
+      border-color: rgba(255,77,109,.26);
+      background: rgba(255,77,109,.12);
+    }
+
+    /* =========================
+      BLOK 7 — HERO / BOX ILLUSTRATION
+    ========================== */
+    .hero{
+      position:relative;
+      padding: 18px 18px 14px;
+      border-radius: var(--radius);
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(740px 240px at 15% 0%, rgba(165,107,255,.18), transparent 55%),
+        radial-gradient(640px 260px at 90% 20%, rgba(94,246,255,.14), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+      margin-bottom: 16px;
+    }
+    .heroGrid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+      align-items:center;
+    }
+    @media (max-width: 820px){
+      .heroGrid{ grid-template-columns: 1fr; }
+    }
+    .hero h3{
+      margin:0 0 8px;
+      font-size:18px;
+      letter-spacing:.2px;
+    }
+    .hero .sub{
+      margin:0;
+      font-size:12.5px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .boxArt{
+      position:relative;
+      height: 150px;
+      border-radius: 22px;
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        radial-gradient(160px 120px at 30% 25%, rgba(255,255,255,.18), transparent 60%),
+        radial-gradient(220px 180px at 70% 70%, rgba(247,215,122,.16), transparent 65%),
+        linear-gradient(135deg, rgba(165,107,255,.32), rgba(94,246,255,.16));
+      box-shadow: 0 24px 70px rgba(0,0,0,.45);
+      overflow:hidden;
+    }
+    .boxArt::before{
+      content:"";
+      position:absolute; inset:-40%;
+      background:
+        conic-gradient(from 210deg, rgba(255,255,255,.0), rgba(255,255,255,.14), rgba(255,255,255,0) 55%),
+        radial-gradient(closest-side, rgba(255,255,255,.12), transparent 68%);
+      filter: blur(1px);
+      animation: sheen 5.8s linear infinite;
+      opacity:.65;
+    }
+    .boxCube{
+      position:absolute;
+      left:50%; top:54%;
+      width: 96px; height: 76px;
+      transform: translate(-50%,-50%) rotateX(12deg);
+      border-radius: 18px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.06)),
+        radial-gradient(70px 60px at 30% 20%, rgba(255,255,255,.28), transparent 55%),
+        linear-gradient(135deg, rgba(247,215,122,.55), rgba(165,107,255,.28));
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
+    }
+    .boxLid{
+      position:absolute;
+      left:50%; top:36%;
+      width: 104px; height: 26px;
+      transform: translate(-50%,-50%);
+      border-radius: 16px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.08)),
+        linear-gradient(135deg, rgba(94,246,255,.26), rgba(165,107,255,.22));
+      border: 1px solid rgba(255,255,255,.16);
+      box-shadow: 0 14px 32px rgba(0,0,0,.35);
+      animation: bob 2.8s var(--easeSmall) infinite;
+      transform-origin: 50% 100%;
+    }
+    .boxBand{
+      position:absolute; left:50%; top:54%;
+      width: 110px; height: 10px;
+      transform: translate(-50%,-50%);
+      border-radius: 999px;
+      background: rgba(0,0,0,.20);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.05);
+    }
+    .glowOrb{
+      position:absolute;
+      right: -16px; bottom: -16px;
+      width: 120px; height: 120px;
+      border-radius:999px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), rgba(255,255,255,0) 55%), rgba(94,246,255,.20);
+      filter: blur(.2px);
+      box-shadow: 0 0 0 18px rgba(94,246,255,.08), 0 0 80px rgba(94,246,255,.22);
+      opacity:.75;
+    }
+    @keyframes sheen{
+      0%{ transform: translate3d(-4%,-2%,0) rotate(0deg); }
+      100%{ transform: translate3d(4%,2%,0) rotate(360deg); }
+    }
+    @keyframes bob{
+      0%,100%{ transform: translate(-50%,-50%) rotate(0deg); }
+      50%{ transform: translate(-50%,-56%) rotate(-3deg); }
+    }
+
+    /* =========================
+      BLOK 8 — TABLE (ODDS)
+    ========================== */
+    .tableWrap{
+      border-radius: 18px;
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.16);
+    }
+    table{
       width:100%;
       border-collapse: collapse;
       font-size:12px;
     }
-    .tbl th, .tbl td{
-      padding: 10px 10px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-      vertical-align:top;
-    }
-    .tbl th{
+    thead th{
       text-align:left;
-      color: rgba(255,255,255,.74);
-      font-weight: 800;
-      position: sticky;
-      top: 0;
-      background: rgba(0,0,0,.26);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      z-index: 1;
-    }
-    .tbl td{
+      padding: 12px 12px;
       color: rgba(255,255,255,.82);
-    }
-    .scroll{
-      overflow:auto;
-      max-height: 100%;
-    }
-    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
-
-    .sideFooter{
-      display:flex;
-      gap:10px;
-      justify-content:space-between;
-      align-items:center;
-      flex-wrap:wrap;
-      padding-top: 6px;
-      border-top: 1px solid rgba(255,255,255,.10);
-    }
-
-    /* =========================
-      BLOK 10 — MODAL (RESULT)
-    ========================== */
-    .modal{
-      position:fixed; inset:0;
-      display:none;
-      place-items:center;
-      z-index: 50;
-      padding: 18px;
-    }
-    .modal.is-open{ display:grid; }
-    .modal .overlay{
-      position:absolute; inset:0;
-      background: rgba(0,0,0,.55);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-    .modalCard{
-      width:min(720px, 100%);
-      border-radius: var(--r24);
-      border:1px solid rgba(255,255,255,.18);
-      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-      backdrop-filter: blur(18px) saturate(160%);
-      -webkit-backdrop-filter: blur(18px) saturate(160%);
-      box-shadow: var(--shadow);
-      position:relative;
-      overflow:hidden;
-      transform: translateY(8px);
-      animation: pop .25s var(--easeOut) forwards;
-    }
-    @keyframes pop{
-      to{ transform: translateY(0); }
-    }
-    .modalHead{
-      padding: 16px 18px 10px;
-      border-bottom: 1px solid rgba(255,255,255,.10);
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-    }
-    .modalHead h3{
-      margin:0;
-      font-family:Kanit, Inter, system-ui, sans-serif;
-      font-size: 22px;
-      letter-spacing:.6px;
-    }
-    .closeX{
-      width:40px; height:40px;
-      border-radius: 14px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      cursor:pointer;
-      color: var(--ink);
-    }
-    .modalBody{
-      padding: 14px 18px 18px;
-      display:grid;
-      grid-template-columns: 1fr 280px;
-      gap:14px;
-    }
-    @media (max-width: 820px){
-      .modalBody{ grid-template-columns: 1fr; }
-    }
-    .bigWin{
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.16);
-      border-radius: 18px;
-      padding: 14px;
-      position:relative;
-      overflow:hidden;
-    }
-    .bigWin:before{
-      content:"";
-      position:absolute; inset:-60%;
-      background:
-        radial-gradient(circle at 35% 35%, rgba(255,211,106,.25), transparent 55%),
-        radial-gradient(circle at 65% 60%, rgba(31,240,178,.22), transparent 60%),
-        repeating-linear-gradient(45deg, rgba(255,255,255,.12) 0 1px, transparent 1px 12px);
-      opacity:.35;
-      transform: rotate(8deg);
-      pointer-events:none;
-    }
-    .bigWin > *{ position:relative; }
-
-    .winAmount{
-      font-size: 32px;
-      font-weight: 950;
-      letter-spacing: .4px;
-      margin: 8px 0 10px;
-      background: linear-gradient(90deg, var(--gold), var(--jade));
-      -webkit-background-clip:text;
-      background-clip:text;
-      color:transparent;
-    }
-    .winMeta{
-      margin:0;
-      color: var(--muted);
-      font-size: 12px;
-      line-height:1.5;
-    }
-
-    .proof{
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      border-radius: 18px;
-      padding: 12px;
-      display:grid;
-      gap:10px;
-      align-content:start;
-    }
-    .proof .box{
-      border-radius: 16px;
-      border:1px dashed rgba(255,255,255,.22);
-      padding: 10px;
       background: rgba(255,255,255,.06);
-      color: rgba(255,255,255,.82);
-      font-size: 12px;
-      line-height: 1.45;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      font-weight:800;
+      letter-spacing:.2px;
     }
-    .proof .actions{
-      display:grid;
-      gap:10px;
+    tbody td{
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      color: rgba(255,255,255,.88);
+      vertical-align: top;
     }
-    .btnAlt{
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(0,0,0,.18);
-      color: var(--ink);
+    tbody tr:last-child td{ border-bottom:0; }
+    .pct{
+      text-align:right;
+      font-variant-numeric: tabular-nums;
+      color: rgba(255,255,255,.86);
+      white-space:nowrap;
+    }
+
+    /* =========================
+      BLOK 9 — TOAST / MODAL
+    ========================== */
+    .toast{
+      position: fixed;
+      left:50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      z-index: 999;
       padding: 12px 14px;
-      border-radius: 14px;
-      cursor:pointer;
-      font-weight: 900;
-      letter-spacing:.3px;
-      transition: transform .18s var(--easeOut), background .18s var(--easeOut), opacity .18s var(--easeOut);
+      border-radius: 999px;
+      background: rgba(0,0,0,.55);
+      border: 1px solid rgba(255,255,255,.14);
+      backdrop-filter: blur(16px) saturate(160%);
+      -webkit-backdrop-filter: blur(16px) saturate(160%);
+      box-shadow: 0 18px 60px rgba(0,0,0,.45);
+      display:none;
+      gap:10px;
+      align-items:center;
+      max-width: calc(100vw - 24px);
+      color: rgba(255,255,255,.90);
+      font-size:12.5px;
     }
-    .btnAlt:hover{ transform: translateY(-1px); background: rgba(0,0,0,.26); }
-    .btnAlt:active{ transform: translateY(0px) scale(.99); }
+    .toast.show{ display:flex; animation: pop .32s var(--easeSpring); }
+    @keyframes pop{
+      0%{ transform: translateX(-50%) translateY(8px) scale(.98); opacity:0; }
+      100%{ transform: translateX(-50%) translateY(0) scale(1); opacity:1; }
+    }
+    .toast .tDot{
+      width:10px; height:10px; border-radius:999px;
+      background: rgba(255,255,255,.18);
+      box-shadow: 0 0 0 3px rgba(255,255,255,.06);
+    }
+    .toast.good .tDot{ background: rgba(77,255,171,.60); box-shadow:0 0 0 3px rgba(77,255,171,.14), 0 0 18px rgba(77,255,171,.22); }
+    .toast.bad  .tDot{ background: rgba(255,77,109,.60); box-shadow:0 0 0 3px rgba(255,77,109,.14), 0 0 18px rgba(255,77,109,.20); }
+    .toast.warn .tDot{ background: rgba(247,215,122,.70); box-shadow:0 0 0 3px rgba(247,215,122,.14), 0 0 18px rgba(247,215,122,.20); }
 
     /* =========================
-      BLOK 11 — CONFETTI CANVAS
+      BLOK 10 — SMALL UTILITIES
     ========================== */
-    #fx{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index: 60;
+    .muted{ color: var(--muted); }
+    .faint{ color: var(--faint); }
+    .hr{
+      height:1px;
+      background: rgba(255,255,255,.08);
+      margin: 14px 0;
     }
-
-    /* =========================
-      BLOK 12 — REDUCED MOTION
-    ========================== */
-    @media (prefers-reduced-motion: reduce){
-      .centerBtn, .btn, .btnAlt, .miniBtn{ transition:none !important; }
-      .modalCard{ animation:none !important; transform:none !important; }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    .mini{
+      font-size:11.5px;
+      color: var(--muted);
+      line-height:1.45;
+    }
+    .rightActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      align-items:center;
     }
   </style>
 </head>
 
 <body>
-  <div class="backdrop" aria-hidden="true"></div>
-  <canvas id="fx" aria-hidden="true"></canvas>
+  <div class="sparks"></div>
+  <div class="noise"></div>
 
   <div class="wrap">
-    <div class="shell">
-      <!-- TOPBAR -->
-      <div class="topbar" role="banner">
-        <div class="brand">
-          <div class="logo" aria-hidden="true">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" style="position:relative; z-index:1">
-              <path d="M12 2l2.2 4.7 5.1.7-3.8 3.7.9 5.2L12 14.9 7.6 16.3l.9-5.2L4.7 7.4l5.1-.7L12 2z" stroke="rgba(255,255,255,.85)" stroke-width="1.6" />
-            </svg>
-          </div>
-          <div style="min-width:0">
-            <h1>Mahjong Lucky Spin</h1>
-            <p>Demo promo — input User ID, spin, hasil + bukti klaim, riwayat 50</p>
-          </div>
-        </div>
-
-        <div class="pill" title="Status sistem">
-          <span class="dot"></span>
-          <span id="sysText">Siap diputar</span>
+    <!-- =========================
+      BLOK 11 — TOPBAR
+    ========================== -->
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Mystery Box Deposit</h1>
+          <p>Deposit ≥ <b>Rp20.000</b> → Ajukan Claim → Kode Voucher → Box Aktif → Buka Box</p>
         </div>
       </div>
 
-      <!-- MAIN STAGE -->
-      <section class="card stage" aria-label="Lucky Spin">
-        <div class="headline">
-          <div class="txt">
-            <h2>Putar rodanya & dapatkan hadiah hingga <span style="color:var(--gold); font-weight:950">IDR 200.000</span></h2>
-            <p>Masukkan <b>User ID</b> di panel kanan. Kamu bisa spin <b>1x per hari</b> (demo). Setelah itu, tombol klaim akan muncul beserta kartu bukti untuk screenshot / unduh PNG.</p>
-          </div>
+      <div class="pill" title="Demo lokal (LocalStorage)">
+        <span class="dot" aria-hidden="true"></span>
+        <div>
+          <small>Status</small><br>
+          <b id="pillStatus">Demo aktif</b>
+        </div>
+      </div>
+    </div>
 
-          <div class="badge" aria-label="Total jackpot">
-            <span>Total Jackpot</span>
-            <strong id="jackpotText">IDR 888.888.888</strong>
+    <!-- =========================
+      BLOK 12 — HERO
+    ========================== -->
+    <div class="hero">
+      <div class="heroGrid">
+        <div>
+          <h3>Konsep realistis: CS hanya verifikasi, sistem yang menentukan hadiah</h3>
+          <p class="sub">
+            Kode voucher <b>sekali pakai</b> dan <b>terikat username + transaksi</b>. Expired <b>15–30 menit</b>.
+            Maksimal <b>3x</b> percobaan input kode. Hadiah “Spin manual” punya masa aktif <b>24 jam</b>.
+          </p>
+
+          <div class="hr"></div>
+
+          <div class="note">
+            <b>Catatan jujur untuk produksi:</b> versi ini adalah <u>demo front-end</u>. Untuk benar-benar aman & tidak bisa dimanipulasi,
+            generate kode + RNG hadiah + pencatatan spin harus dilakukan <b>server-side</b>, dan integrasi provider (Pragmatic/PGSoft)
+            butuh sistem bonus engine/aggregator.
           </div>
         </div>
 
-        <div class="wheelWrap">
-          <div class="wheelShell" aria-label="Roda keberuntungan">
-            <div class="pointer" aria-hidden="true"></div>
-            <canvas id="wheel" width="600" height="600"></canvas>
+        <div class="boxArt" aria-hidden="true">
+          <div class="boxLid"></div>
+          <div class="boxCube"></div>
+          <div class="boxBand"></div>
+          <div class="glowOrb"></div>
+        </div>
+      </div>
+    </div>
 
-            <button id="centerBtn" class="centerBtn" type="button" aria-label="Spin sekarang">
-              <div class="inner">
-                <strong>SPIN</strong>
-                <span id="spinSub">Masukkan User ID</span>
+    <!-- =========================
+      BLOK 13 — MAIN GRID
+    ========================== -->
+    <div class="grid">
+      <!-- =========================
+        BLOK 13A — MEMBER / CS PANEL (LEFT)
+      ========================== -->
+      <div class="card">
+        <div class="head">
+          <div>
+            <h2>Panel Event</h2>
+            <p>Simulasi lengkap: ajukan claim → CS approve → kode → box aktif → hadiah.</p>
+          </div>
+          <div class="seg" role="tablist" aria-label="Mode panel">
+            <button id="tabMember" role="tab" aria-selected="true">Member</button>
+            <button id="tabCS" role="tab" aria-selected="false">CS</button>
+          </div>
+        </div>
+
+        <div class="body">
+          <!-- =========================
+            BLOK 13A.1 — MEMBER VIEW
+          ========================== -->
+          <section id="viewMember">
+            <div class="row">
+              <div class="field">
+                <label>Username</label>
+                <input id="m_username" placeholder="contoh: garr123" autocomplete="off" />
               </div>
-            </button>
+              <div class="field">
+                <label>Nominal Deposit (Rp)</label>
+                <input id="m_nominal" placeholder="20000" inputmode="numeric" autocomplete="off" />
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:12px;">
+              <div class="field">
+                <label>Referensi Transaksi / TRX ID</label>
+                <input id="m_trx" placeholder="contoh: TRX-20251206-001" autocomplete="off" />
+              </div>
+              <div class="field">
+                <label>Bukti deposit (opsional, link/teks)</label>
+                <input id="m_proof" placeholder="opsional" autocomplete="off" />
+              </div>
+            </div>
+
+            <div class="btns">
+              <button class="btn primary" id="btnSubmitClaim">
+                <span class="k">✓</span> Ajukan Claim
+              </button>
+              <button class="btn ghost" id="btnFillDemo">
+                <span class="k">★</span> Isi Contoh
+              </button>
+            </div>
+
+            <div class="hr"></div>
+
+            <h2 style="font-size:14px; margin:0 0 8px;">Aktivasi Box (Input Kode Voucher)</h2>
+            <p class="mini" style="margin-top:0;">
+              Masukkan <b>username</b>, <b>TRX</b>, dan <b>kode</b> yang diberikan CS. Kode berlaku 15–30 menit, dan maksimal 3x percobaan.
+            </p>
+
+            <div class="row">
+              <div class="field">
+                <label>Username</label>
+                <input id="a_username" placeholder="harus sama seperti claim" autocomplete="off" />
+              </div>
+              <div class="field">
+                <label>TRX ID</label>
+                <input id="a_trx" placeholder="harus sama seperti claim" autocomplete="off" />
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:12px;">
+              <div class="field" style="grid-column: 1 / -1;">
+                <label>Kode Voucher</label>
+                <input id="a_code" class="mono" placeholder="contoh: 8KQ7J2MZ" autocomplete="off" />
+              </div>
+            </div>
+
+            <div class="btns">
+              <button class="btn good" id="btnActivate">
+                <span class="k">⚡</span> Aktivasi Box
+              </button>
+            </div>
+
+            <div class="hr"></div>
+
+            <h2 style="font-size:14px; margin:0 0 8px;">Kotak Saya</h2>
+            <div id="myBoxes" class="list"></div>
+
+            <div class="hr"></div>
+
+            <h2 style="font-size:14px; margin:0 0 8px;">Hadiah Saya</h2>
+            <div id="myRewards" class="list"></div>
+          </section>
+
+          <!-- =========================
+            BLOK 13A.2 — CS VIEW
+          ========================== -->
+          <section id="viewCS" style="display:none;">
+            <div class="note">
+              <b>Aturan tegas (sesuai kebutuhan kamu):</b><br>
+              • Kode <b>sekali pakai</b>, terikat <b>username + transaksi</b><br>
+              • Expired cepat <b>15–30 menit</b><br>
+              • Limit percobaan input kode <b>3x</b><br>
+              <span class="faint">Di demo ini, CS hanya memverifikasi deposit & generate kode. Hadiah tetap ditentukan saat box dibuka.</span>
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="row">
+              <div class="field">
+                <label>Expired kode (menit)</label>
+                <select id="cs_expiry">
+                  <option value="15">15 menit</option>
+                  <option value="20" selected>20 menit</option>
+                  <option value="30">30 menit</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Panjang kode</label>
+                <select id="cs_len">
+                  <option value="6">6 karakter</option>
+                  <option value="8" selected>8 karakter</option>
+                  <option value="10">10 karakter</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="btns">
+              <button class="btn ghost" id="btnSeedDemo">
+                <span class="k">➕</span> Buat 2 Claim Dummy
+              </button>
+              <button class="btn danger" id="btnResetAll">
+                <span class="k">↺</span> Reset Demo Data
+              </button>
+            </div>
+
+            <div class="hr"></div>
+
+            <h2 style="font-size:14px; margin:0 0 8px;">Claim Masuk (Pending)</h2>
+            <div id="csPending" class="list"></div>
+
+            <div class="hr"></div>
+
+            <h2 style="font-size:14px; margin:0 0 8px;">Kode Aktif (Belum dipakai)</h2>
+            <div id="csCodes" class="list"></div>
+
+            <div class="hr"></div>
+
+            <h2 style="font-size:14px; margin:0 0 8px;">Audit Log</h2>
+            <div id="csAudit" class="list"></div>
+          </section>
+        </div>
+      </div>
+
+      <!-- =========================
+        BLOK 13B — ODDS + RULES (RIGHT)
+      ========================== -->
+      <div class="card">
+        <div class="head">
+          <div>
+            <h2>Peluang Hadiah (Transparan)</h2>
+            <p>Total 100%. Kamu bisa ganti angka odds ini kapan pun (untuk produksi: server-side).</p>
+          </div>
+          <div class="rightActions">
+            <span class="tag warn" title="Masa aktif hadiah spin">Spin aktif 24 jam</span>
+            <span class="tag" title="Provider yang berlaku">PRAGMATIC • PGSOFT</span>
           </div>
         </div>
 
-        <div class="stageFooter">
-          <div class="status">
-            <span>User:</span>
-            <b id="userLabel" class="mono">-</b>
-            <span>•</span>
-            <span>Status:</span>
-            <b id="spinStatus">Menunggu User ID</b>
-          </div>
-
-          <div style="display:flex; gap:10px; align-items:center;">
-            <button id="btnClaim" class="miniBtn" type="button" disabled>KLAIM SEKARANG</button>
-            <button id="btnResetDemo" class="miniBtn" type="button" title="Hapus data demo localStorage">Reset Demo</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- SIDE PANEL -->
-      <aside class="card side" aria-label="Panel user & riwayat">
-        <div class="sectionTitle">
-          <h3>MASUKAN USER ID</h3>
-          <div class="hint">Wajib diisi untuk spin</div>
-        </div>
-
-        <div class="formRow">
-          <input id="userId" class="input" placeholder="Contoh: AJAIB12345" autocomplete="off" inputmode="text" />
-          <button id="btnSetUser" class="btn" type="button">SIMPAN</button>
-        </div>
-
-        <div class="note" id="noteBox">
-          <b>Info:</b> Kesempatan spin kamu akan dihitung per User ID. Setelah berhasil spin, status akan berubah jadi <b>“Kesempatan spin habis”</b> sampai besok.
-        </div>
-
-        <div class="tableWrap">
-          <div class="tableHead">
-            <div><b>50</b> Daftar Riwayat Spin Terakhir</div>
-            <div class="mono" id="histCount">0</div>
-          </div>
-          <div class="scroll">
-            <table class="tbl" aria-label="Riwayat spin">
+        <div class="body">
+          <div class="tableWrap" aria-label="Tabel peluang hadiah">
+            <table>
               <thead>
                 <tr>
-                  <th style="width:48px">NO</th>
-                  <th>USER ID</th>
-                  <th style="width:140px">HADIAH</th>
+                  <th>Hadiah</th>
+                  <th style="width:110px; text-align:right;">Peluang</th>
                 </tr>
               </thead>
-              <tbody id="histBody">
-                <tr><td colspan="3" style="color:rgba(255,255,255,.65); padding:14px 10px;">Belum ada riwayat.</td></tr>
-              </tbody>
+              <tbody id="oddsTbody"></tbody>
             </table>
           </div>
-        </div>
 
-        <div class="sideFooter">
-          <span class="hint">Tip: kalau mau ganti tema pakai asset sendiri, taruh di <span class="mono">/public/assets</span>.</span>
+          <div class="hr"></div>
+
+          <div class="note">
+            <b>Spin manual (paket final):</b><br>
+            • 10x — nilai/spin Rp400<br>
+            • 50x — nilai/spin Rp1.000<br>
+            • 100x — nilai/spin Rp2.000<br>
+            <span class="faint">Masa aktif 24 jam. Untuk produksi, “otomatis masuk provider” butuh integrasi bonus engine/aggregator.</span>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="note">
+            <b>Best practice anti-komplain:</b><br>
+            • Tampilkan riwayat hadiah per user<br>
+            • Jelaskan definisi “spin” + provider berlaku<br>
+            • Hindari “konfirmasi dua kali”; cukup aktivasi → box aktif → buka box
+          </div>
         </div>
-      </aside>
+      </div>
     </div>
   </div>
 
   <!-- =========================
-    BLOK 13 — MODAL RESULT
+    BLOK 14 — TOAST
   ========================== -->
-  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="overlay" id="modalOverlay"></div>
-
-    <div class="modalCard">
-      <div class="modalHead">
-        <div>
-          <h3 id="modalTitle">SELAMAT!</h3>
-          <div class="hint" id="modalSub">Anda memenangkan hadiah sebesar</div>
-        </div>
-        <button class="closeX" type="button" id="modalClose" aria-label="Tutup">✕</button>
-      </div>
-
-      <div class="modalBody">
-        <div class="bigWin" id="proofArea">
-          <div class="hint">Hasil</div>
-          <div class="winAmount" id="winAmount">IDR 0</div>
-          <p class="winMeta" id="winMeta">
-            Silahkan hubungi CS untuk klaim hadiah anda dengan screenshot ini.
-          </p>
-          <p class="winMeta">
-            <span class="mono" id="ticketCode">CODE-XXXX</span> • <span class="mono" id="ticketTime">YYYY-MM-DD HH:mm</span>
-          </p>
-        </div>
-
-        <div class="proof">
-          <div class="box">
-            <b>Bukti Klaim (Demo)</b><br/>
-            User ID: <span class="mono" id="proofUser">-</span><br/>
-            Hadiah: <span class="mono" id="proofPrize">-</span><br/>
-            Kode: <span class="mono" id="proofCode">-</span><br/>
-            <span style="color:rgba(255,255,255,.65)">Gunakan tombol unduh untuk buat PNG atau cukup screenshot.</span>
-          </div>
-
-          <div class="actions">
-            <button class="btnAlt" id="btnDownloadProof" type="button">UNDUH BUKTI (PNG)</button>
-            <button class="btnAlt" id="btnClaimNow" type="button">KLAIM SEKARANG</button>
-          </div>
-
-          <div class="hint">
-            Tombol klaim ini hanya demo. Ganti link CS-mu di kode JS.
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="tDot" aria-hidden="true"></span>
+    <span id="toastText">—</span>
   </div>
 
   <script>
     /* =========================
-      BLOK 14 — DATA + STORAGE KEYS
+      BLOK 15 — DATA MODEL (DEMO STORAGE)
     ========================== */
-    const STORAGE = {
-      USER: "mw2_user_v1",
-      USERS: "mw2_userspin_v1",
-      HISTORY: "mw2_history_v1",
-      JACKPOT: "mw2_jackpot_v1"
-    };
+    const STORE_KEY = "mystery_box_deposit_demo_v1";
 
-    const JACKPOT_SEED = 888_888_888;
+    const ODDS = [
+      // Cashback (contoh realistis + total tetap 100%)
+      { id:"cb5",   label:"Cashback 5% (maks Rp1.000)",  type:"cashback", pct:49.5, data:{percent:5, cap:1000} },
+      { id:"cb8",   label:"Cashback 8% (maks Rp2.000)",  type:"cashback", pct:18.0, data:{percent:8, cap:2000} },
+      { id:"cb12",  label:"Cashback 12% (maks Rp3.000)", type:"cashback", pct:10.0, data:{percent:12, cap:3000} },
+      { id:"cb20",  label:"Cashback 20% (maks Rp5.000)", type:"cashback", pct:5.0,  data:{percent:20, cap:5000} },
+      { id:"cb50",  label:"Cashback 50% (maks Rp10.000)",type:"cashback", pct:0.5,  data:{percent:50, cap:10000} },
 
-    // Hadiah max IDR 200.000 (ngikutin headline di referensi)
-    const PRIZES = [
-      { label: "IDR 1.000",   amount: 1000,   weight: 24 },
-      { label: "IDR 2.000",   amount: 2000,   weight: 22 },
-      { label: "IDR 5.000",   amount: 5000,   weight: 18 },
-      { label: "IDR 10.000",  amount: 10000,  weight: 14 },
-      { label: "IDR 20.000",  amount: 20000,  weight: 10 },
-      { label: "IDR 50.000",  amount: 50000,  weight: 7  },
-      { label: "IDR 100.000", amount: 100000, weight: 4  },
-      { label: "IDR 200.000", amount: 200000, weight: 1  },
+      // Spin manual (paket final kamu)
+      { id:"sp10",  label:"Spin 10x (Rp400/spin) — Pragmatic/PGSoft",  type:"spin", pct:12.0, data:{spins:10, bet:400} },
+      { id:"sp50",  label:"Spin 50x (Rp1.000/spin) — Pragmatic/PGSoft",type:"spin", pct:3.8,  data:{spins:50, bet:1000} },
+      { id:"sp100", label:"Spin 100x (Rp2.000/spin) — Pragmatic/PGSoft",type:"spin", pct:0.7,  data:{spins:100, bet:2000} },
+
+      // Voucher (contoh: transparan)
+      { id:"v50k",  label:"Voucher Rp50.000", type:"voucher", pct:0.45, data:{amount:50000} },
+      { id:"v1jt",  label:"Voucher Rp1.000.000", type:"voucher", pct:0.05, data:{amount:1000000} },
     ];
 
-    const SEG_COLORS = [
-      { a:"rgba(31,240,178,.95)", b:"rgba(18,200,145,.72)" }, // jade
-      { a:"rgba(255,211,106,.95)", b:"rgba(255,183,74,.72)" }, // gold
-      { a:"rgba(99,217,255,.92)", b:"rgba(99,217,255,.55)" }, // ice
-      { a:"rgba(255,59,106,.92)", b:"rgba(255,59,106,.55)" }, // ruby
-    ];
+    function now(){ return Date.now(); }
+    function fmtMoney(n){
+      const x = Math.max(0, Math.floor(Number(n)||0));
+      return "Rp" + x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+    function fmtTime(ts){
+      const d = new Date(ts);
+      const pad = (v)=> String(v).padStart(2,"0");
+      return `${pad(d.getDate())}-${pad(d.getMonth()+1)}-${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    }
+    function clamp(n,a,b){ return Math.max(a, Math.min(b,n)); }
+    function safeJSONParse(s, fallback){
+      try{ return JSON.parse(s); }catch(e){ return fallback; }
+    }
+    function uid(prefix="id"){
+      return prefix + "_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
+    }
 
-    const SPIN_COOLDOWN_DAYS = 1; // 1x per hari (demo)
-    const EXTRA_TURNS_MIN = 7;
-    const EXTRA_TURNS_MAX = 9;
+    const state = loadState();
+
+    function loadState(){
+      const base = { claims:[], codes:[], boxes:[], rewards:[], audit:[] };
+      const raw = localStorage.getItem(STORE_KEY);
+      if(!raw) return base;
+      const parsed = safeJSONParse(raw, base);
+      // harden structure
+      return {
+        claims: Array.isArray(parsed.claims)? parsed.claims : [],
+        codes:  Array.isArray(parsed.codes)? parsed.codes : [],
+        boxes:  Array.isArray(parsed.boxes)? parsed.boxes : [],
+        rewards:Array.isArray(parsed.rewards)? parsed.rewards : [],
+        audit:  Array.isArray(parsed.audit)? parsed.audit : [],
+      };
+    }
+    function save(){
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      renderAll();
+    }
 
     /* =========================
-      BLOK 15 — HELPERS
+      BLOK 16 — CRYPTO (HASH CODE)
     ========================== */
-    const $ = (q, el=document) => el.querySelector(q);
-
-    function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
-    function lerp(a,b,t){ return a + (b-a)*t; }
-    function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
-    function easeOutBack(t){
-      const c1 = 1.70158, c3 = c1 + 1;
-      return 1 + c3*Math.pow(t-1,3) + c1*Math.pow(t-1,2);
-    }
-
-    function fmtIDR(n){
-      return "IDR " + (n|0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-
-    function todayKey(){
-      const d = new Date();
-      const y = d.getFullYear();
-      const m = String(d.getMonth()+1).padStart(2,"0");
-      const day = String(d.getDate()).padStart(2,"0");
-      return `${y}-${m}-${day}`;
-    }
-
-    function nowStamp(){
-      const d = new Date();
-      const y = d.getFullYear();
-      const m = String(d.getMonth()+1).padStart(2,"0");
-      const day = String(d.getDate()).padStart(2,"0");
-      const hh = String(d.getHours()).padStart(2,"0");
-      const mm = String(d.getMinutes()).padStart(2,"0");
-      return `${y}-${m}-${day} ${hh}:${mm}`;
-    }
-
-    function safeParse(json, fallback){
-      try{ return JSON.parse(json); }catch(e){ return fallback; }
-    }
-
-    function getLS(key, fallback){
-      const raw = localStorage.getItem(key);
-      if (!raw) return fallback;
-      return safeParse(raw, fallback);
-    }
-    function setLS(key, val){
-      localStorage.setItem(key, JSON.stringify(val));
-    }
-
-    function weightedPick(items){
-      let total = 0;
-      for (const x of items) total += x.weight;
-      let r = Math.random() * total;
-      for (let i=0;i<items.length;i++){
-        r -= items[i].weight;
-        if (r <= 0) return i;
+    async function sha256Hex(text){
+      // Prefer WebCrypto (HTTPS). Fallback is NOT secure—demo only.
+      if (window.crypto && crypto.subtle && window.TextEncoder) {
+        const enc = new TextEncoder().encode(text);
+        const buf = await crypto.subtle.digest("SHA-256", enc);
+        const arr = Array.from(new Uint8Array(buf));
+        return arr.map(b=>b.toString(16).padStart(2,"0")).join("");
       }
-      return items.length-1;
+      // Fallback: simple hash (not secure)
+      let h=2166136261;
+      for(let i=0;i<text.length;i++){
+        h ^= text.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return ("00000000"+(h>>>0).toString(16)).slice(-8) + "_demo";
     }
 
-    function randInt(a,b){
-      return Math.floor(Math.random()*(b-a+1))+a;
-    }
-
-    function uidCode(){
-      return "CODE-" + Math.random().toString(16).slice(2,6).toUpperCase() + "-" + Math.random().toString(16).slice(2,6).toUpperCase();
+    function randCode(len=8){
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/1/I/O for clarity
+      let out = "";
+      const arr = new Uint32Array(len);
+      if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(arr);
+      for(let i=0;i<len;i++){
+        const r = arr[i] ? arr[i] : Math.floor(Math.random()*1e9);
+        out += chars[r % chars.length];
+      }
+      return out;
     }
 
     /* =========================
-      BLOK 16 — STATE
+      BLOK 17 — TOAST
     ========================== */
-    const state = {
-      userId: "",
-      spinning: false,
-      rotation: 0,
-      jackpot: JACKPOT_SEED,
-      lastWin: null,
-    };
-
-    /* =========================
-      BLOK 17 — DOM REFS
-    ========================== */
-    const wheel = $("#wheel");
-    const wctx = wheel.getContext("2d");
-
-    const fx = $("#fx");
-    const fctx = fx.getContext("2d");
-
-    const userIdInput = $("#userId");
-    const btnSetUser = $("#btnSetUser");
-    const centerBtn = $("#centerBtn");
-    const spinSub = $("#spinSub");
-
-    const sysText = $("#sysText");
-    const userLabel = $("#userLabel");
-    const spinStatus = $("#spinStatus");
-
-    const jackpotText = $("#jackpotText");
-
-    const histBody = $("#histBody");
-    const histCount = $("#histCount");
-
-    const btnClaim = $("#btnClaim");
-    const btnResetDemo = $("#btnResetDemo");
-
-    const modal = $("#modal");
-    const modalOverlay = $("#modalOverlay");
-    const modalClose = $("#modalClose");
-    const winAmount = $("#winAmount");
-    const ticketCode = $("#ticketCode");
-    const ticketTime = $("#ticketTime");
-    const proofUser = $("#proofUser");
-    const proofPrize = $("#proofPrize");
-    const proofCode = $("#proofCode");
-    const btnDownloadProof = $("#btnDownloadProof");
-    const btnClaimNow = $("#btnClaimNow");
-
-    /* =========================
-      BLOK 18 — CANVAS RESIZE
-    ========================== */
-    function resizeFx(){
-      const dpr = window.devicePixelRatio || 1;
-      fx.width = Math.floor(window.innerWidth * dpr);
-      fx.height = Math.floor(window.innerHeight * dpr);
-      fctx.setTransform(dpr,0,0,dpr,0,0);
+    let toastTimer = null;
+    function toast(msg, kind=""){
+      const el = document.getElementById("toast");
+      const tx = document.getElementById("toastText");
+      tx.textContent = msg;
+      el.className = "toast show" + (kind ? " " + kind : "");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(()=> el.className="toast", 2300);
     }
 
-    function resizeWheel(){
-      const rect = wheel.getBoundingClientRect();
-      const size = Math.min(rect.width, rect.height);
-      const dpr = window.devicePixelRatio || 1;
-
-      wheel.width = Math.floor(size * dpr);
-      wheel.height = Math.floor(size * dpr);
-      wheel.style.width = size + "px";
-      wheel.style.height = size + "px";
-      wctx.setTransform(dpr,0,0,dpr,0,0);
-
-      drawWheel();
+    /* =========================
+      BLOK 18 — BUSINESS LOGIC
+    ========================== */
+    function addAudit(text){
+      state.audit.unshift({ id: uid("au"), ts: now(), text });
+      state.audit = state.audit.slice(0, 60);
     }
 
-    window.addEventListener("resize", () => {
-      resizeFx();
-      resizeWheel();
+    function findClaim(username, trx){
+      return state.claims.find(c => c.username === username && c.trx_ref === trx);
+    }
+    function hasBox(username, trx){
+      return state.boxes.some(b => b.username === username && b.trx_ref === trx);
+    }
+
+    function validateNominal(n){
+      const v = Math.floor(Number(n)||0);
+      if (!Number.isFinite(v)) return { ok:false, v:0 };
+      if (v < 20000) return { ok:false, v };
+      return { ok:true, v };
+    }
+
+    function weightedPick(){
+      const total = ODDS.reduce((s,x)=>s + x.pct, 0);
+      const r = Math.random()*total;
+      let acc=0;
+      for(const item of ODDS){
+        acc += item.pct;
+        if(r <= acc) return item;
+      }
+      return ODDS[ODDS.length-1];
+    }
+
+    function rewardLabel(r){
+      if(r.type === "cashback"){
+        return `Cashback ${r.data.percent}% (maks ${fmtMoney(r.data.cap)})`;
+      }
+      if(r.type === "spin"){
+        return `Spin ${r.data.spins}x — ${fmtMoney(r.data.bet)}/spin`;
+      }
+      if(r.type === "voucher"){
+        return `Voucher ${fmtMoney(r.data.amount)}`;
+      }
+      return "Hadiah";
+    }
+
+    function msLeft(ts){
+      return Math.max(0, ts - now());
+    }
+    function fmtLeft(ms){
+      const s = Math.floor(ms/1000);
+      const m = Math.floor(s/60);
+      const r = s%60;
+      return `${m}m ${String(r).padStart(2,"0")}s`;
+    }
+    function fmtLeftHours(ms){
+      const s = Math.floor(ms/1000);
+      const h = Math.floor(s/3600);
+      const m = Math.floor((s%3600)/60);
+      return `${h}j ${String(m).padStart(2,"0")}m`;
+    }
+
+    /* =========================
+      BLOK 19 — UI HANDLERS
+    ========================== */
+    const $ = (id)=> document.getElementById(id);
+
+    function setTab(which){
+      const isMember = which === "member";
+      $("tabMember").setAttribute("aria-selected", isMember ? "true":"false");
+      $("tabCS").setAttribute("aria-selected", isMember ? "false":"true");
+      $("viewMember").style.display = isMember ? "" : "none";
+      $("viewCS").style.display = isMember ? "none" : "";
+    }
+
+    $("tabMember").addEventListener("click", ()=> setTab("member"));
+    $("tabCS").addEventListener("click", ()=> setTab("cs"));
+
+    $("btnFillDemo").addEventListener("click", ()=>{
+      const uname = "garr" + Math.floor(100 + Math.random()*900);
+      $("m_username").value = uname;
+      $("m_nominal").value = "20000";
+      $("m_trx").value = "TRX-" + new Date().toISOString().slice(0,10).replaceAll("-","") + "-" + Math.floor(10 + Math.random()*90);
+      $("m_proof").value = "bukti opsional";
+      $("a_username").value = uname;
+      $("a_trx").value = $("m_trx").value;
+      toast("Contoh form diisi.", "good");
     });
 
-    /* =========================
-      BLOK 19 — WHEEL DRAW
-    ========================== */
-    function drawWheel(){
-      const size = parseFloat(getComputedStyle(wheel).width);
-      const cx = size/2, cy = size/2;
-      const r = size * 0.46;
+    $("btnSubmitClaim").addEventListener("click", ()=>{
+      const username = ($("m_username").value||"").trim();
+      const trx_ref = ($("m_trx").value||"").trim();
+      const proof = ($("m_proof").value||"").trim();
+      const nominalRaw = ($("m_nominal").value||"").trim().replace(/[^\d]/g,"");
+      const { ok, v:nominal } = validateNominal(nominalRaw);
 
-      wctx.clearRect(0,0,size,size);
-
-      // base glow
-      const glow = wctx.createRadialGradient(cx, cy, r*0.1, cx, cy, r*1.1);
-      glow.addColorStop(0, "rgba(255,255,255,.06)");
-      glow.addColorStop(.45, "rgba(31,240,178,.10)");
-      glow.addColorStop(1, "rgba(0,0,0,0)");
-      wctx.fillStyle = glow;
-      wctx.beginPath();
-      wctx.arc(cx, cy, r*1.08, 0, Math.PI*2);
-      wctx.fill();
-
-      const arc = (Math.PI*2) / PRIZES.length;
-      const rot = state.rotation;
-
-      // rim
-      wctx.save();
-      wctx.translate(cx, cy);
-      wctx.rotate(rot);
-      wctx.translate(-cx, -cy);
-
-      for (let i=0;i<PRIZES.length;i++){
-        const a0 = i*arc;
-        const a1 = a0 + arc;
-
-        const col = SEG_COLORS[i % SEG_COLORS.length];
-        const g = wctx.createLinearGradient(cx, cy-r, cx, cy+r);
-        g.addColorStop(0, col.a);
-        g.addColorStop(1, col.b);
-
-        // segment
-        wctx.beginPath();
-        wctx.moveTo(cx, cy);
-        wctx.arc(cx, cy, r, a0, a1);
-        wctx.closePath();
-        wctx.fillStyle = g;
-        wctx.fill();
-
-        // divider
-        wctx.strokeStyle = "rgba(255,255,255,.15)";
-        wctx.lineWidth = 2;
-        wctx.beginPath();
-        wctx.moveTo(cx, cy);
-        wctx.arc(cx, cy, r, a0, a0);
-        wctx.stroke();
-
-        // subtle tile pattern inside segment
-        wctx.save();
-        wctx.beginPath();
-        wctx.moveTo(cx, cy);
-        wctx.arc(cx, cy, r, a0, a1);
-        wctx.closePath();
-        wctx.clip();
-
-        wctx.globalAlpha = 0.18;
-        wctx.fillStyle = "rgba(255,255,255,.9)";
-        const step = r*0.16;
-        for (let k=0;k<80;k++){
-          const px = cx - r + (k%10)*step*1.1;
-          const py = cy - r + Math.floor(k/10)*step*1.0;
-          wctx.fillRect(px, py, step*0.48, step*0.48);
-        }
-        wctx.globalAlpha = 1;
-        wctx.restore();
-
-        // label
-        const mid = a0 + arc/2;
-        wctx.save();
-        wctx.translate(cx, cy);
-        wctx.rotate(mid);
-        wctx.translate(0, -r*0.72);
-        wctx.rotate(Math.PI/2);
-
-        wctx.font = "900 14px Inter, system-ui, sans-serif";
-        wctx.textAlign = "center";
-        wctx.textBaseline = "middle";
-        wctx.fillStyle = "rgba(0,0,0,.55)";
-        wctx.fillText(PRIZES[i].label, 1, 1);
-        wctx.fillStyle = "rgba(255,255,255,.92)";
-        wctx.fillText(PRIZES[i].label, 0, 0);
-
-        wctx.restore();
-      }
-
-      // inner ring
-      wctx.beginPath();
-      wctx.arc(cx, cy, r*0.62, 0, Math.PI*2);
-      wctx.fillStyle = "rgba(0,0,0,.22)";
-      wctx.fill();
-      wctx.strokeStyle = "rgba(255,255,255,.18)";
-      wctx.lineWidth = 2;
-      wctx.stroke();
-
-      // outer ring
-      wctx.beginPath();
-      wctx.arc(cx, cy, r*1.02, 0, Math.PI*2);
-      wctx.strokeStyle = "rgba(255,255,255,.18)";
-      wctx.lineWidth = 10;
-      wctx.stroke();
-
-      // studs
-      const studs = 48;
-      for (let s=0;s<studs;s++){
-        const ang = (s/studs) * Math.PI*2;
-        const sx = cx + Math.cos(ang) * r*1.02;
-        const sy = cy + Math.sin(ang) * r*1.02;
-        wctx.beginPath();
-        wctx.arc(sx, sy, 2.3, 0, Math.PI*2);
-        wctx.fillStyle = (s%2===0) ? "rgba(255,211,106,.9)" : "rgba(255,255,255,.42)";
-        wctx.fill();
-      }
-
-      wctx.restore();
-
-      // top highlight
-      const hl = wctx.createRadialGradient(cx, cy - r*0.7, 10, cx, cy - r*0.7, r*1.2);
-      hl.addColorStop(0, "rgba(255,255,255,.14)");
-      hl.addColorStop(1, "rgba(255,255,255,0)");
-      wctx.fillStyle = hl;
-      wctx.beginPath();
-      wctx.arc(cx, cy, r*1.06, 0, Math.PI*2);
-      wctx.fill();
-    }
-
-    /* =========================
-      BLOK 20 — AUDIO TICK (WEB AUDIO)
-    ========================== */
-    let audioCtx = null;
-    function beep(freq=1200, dur=0.02, gain=0.03){
-      try{
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const t0 = audioCtx.currentTime;
-        const osc = audioCtx.createOscillator();
-        const g = audioCtx.createGain();
-        osc.type = "square";
-        osc.frequency.setValueAtTime(freq, t0);
-        g.gain.setValueAtTime(gain, t0);
-        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-        osc.connect(g).connect(audioCtx.destination);
-        osc.start(t0);
-        osc.stop(t0 + dur);
-      }catch(e){}
-    }
-
-    /* =========================
-      BLOK 21 — CONFETTI
-    ========================== */
-    const conf = { on:false, particles:[] };
-
-    function burstConfetti(){
-      const w = window.innerWidth, h = window.innerHeight;
-      conf.particles.length = 0;
-      const count = 120;
-      for (let i=0;i<count;i++){
-        conf.particles.push({
-          x: w/2 + (Math.random()-0.5)*120,
-          y: h/2 - 60 + (Math.random()-0.5)*80,
-          vx: (Math.random()-0.5)*8,
-          vy: -Math.random()*7 - 2,
-          r: Math.random()*3 + 2,
-          a: 1,
-          rot: Math.random()*Math.PI*2,
-          vr: (Math.random()-0.5)*0.25,
-          t: 0,
-          kind: i%4
-        });
-      }
-      conf.on = true;
-      requestAnimationFrame(tickConfetti);
-    }
-
-    function tickConfetti(){
-      if (!conf.on) return;
-      const w = window.innerWidth, h = window.innerHeight;
-      fctx.clearRect(0,0,w,h);
-
-      let alive = 0;
-      for (const p of conf.particles){
-        p.t += 1;
-        p.vy += 0.18;
-        p.vx *= 0.995;
-        p.x += p.vx;
-        p.y += p.vy;
-        p.rot += p.vr;
-        p.a = Math.max(0, 1 - p.t/160);
-
-        if (p.a > 0 && p.y < h + 40) alive++;
-
-        const col = p.kind===0 ? "rgba(255,211,106,"+p.a+")"
-                  : p.kind===1 ? "rgba(31,240,178,"+p.a+")"
-                  : p.kind===2 ? "rgba(99,217,255,"+p.a+")"
-                  : "rgba(255,59,106,"+p.a+")";
-
-        fctx.save();
-        fctx.translate(p.x, p.y);
-        fctx.rotate(p.rot);
-        fctx.fillStyle = col;
-        fctx.fillRect(-p.r, -p.r, p.r*2.2, p.r*1.4);
-        fctx.restore();
-      }
-
-      if (alive <= 0){
-        conf.on = false;
-        fctx.clearRect(0,0,w,h);
+      if(!username || !trx_ref){
+        toast("Username dan TRX wajib diisi.", "bad");
         return;
       }
-      requestAnimationFrame(tickConfetti);
-    }
-
-    /* =========================
-      BLOK 22 — HISTORY + JACKPOT
-    ========================== */
-    function loadJackpot(){
-      const j = getLS(STORAGE.JACKPOT, JACKPOT_SEED);
-      state.jackpot = (typeof j === "number" && isFinite(j)) ? j : JACKPOT_SEED;
-      renderJackpot();
-    }
-
-    function renderJackpot(){
-      jackpotText.textContent = fmtIDR(state.jackpot);
-    }
-
-    function spendJackpot(amount){
-      state.jackpot = Math.max(0, state.jackpot - amount);
-      // kalau sudah terlalu kecil, reset biar demo tetap “hidup”
-      if (state.jackpot < 50_000) state.jackpot = JACKPOT_SEED;
-      setLS(STORAGE.JACKPOT, state.jackpot);
-      renderJackpot();
-    }
-
-    function loadHistory(){
-      return getLS(STORAGE.HISTORY, []);
-    }
-
-    function pushHistory(userId, prizeLabel){
-      const hist = loadHistory();
-      hist.unshift({ t: Date.now(), userId, prize: prizeLabel });
-      hist.splice(50);
-      setLS(STORAGE.HISTORY, hist);
-      renderHistory(hist);
-    }
-
-    function renderHistory(hist){
-      histCount.textContent = String(hist.length);
-      if (!hist.length){
-        histBody.innerHTML = `<tr><td colspan="3" style="color:rgba(255,255,255,.65); padding:14px 10px;">Belum ada riwayat.</td></tr>`;
+      if(!ok){
+        toast("Nominal minimal Rp20.000.", "warn");
         return;
       }
-      histBody.innerHTML = hist.map((h, idx) => {
-        const no = idx+1;
-        const uid = (h.userId || "-").toString().slice(0, 18);
-        const pr = h.prize || "-";
-        return `<tr>
-          <td class="mono">${no}</td>
-          <td class="mono">${escapeHtml(uid)}</td>
-          <td class="mono">${escapeHtml(pr)}</td>
-        </tr>`;
-      }).join("");
-    }
-
-    function escapeHtml(s){
-      return String(s).replace(/[&<>"']/g, (m)=>({
-        "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
-      }[m]));
-    }
-
-    /* =========================
-      BLOK 23 — USER SPIN RULES
-    ========================== */
-    function loadUserSpinMap(){
-      return getLS(STORAGE.USERS, {});
-    }
-
-    function saveUserSpin(userId, payload){
-      const map = loadUserSpinMap();
-      map[userId] = payload;
-      setLS(STORAGE.USERS, map);
-    }
-
-    function canSpin(userId){
-      if (!userId) return { ok:false, reason:"Masukkan User ID dulu" };
-      const map = loadUserSpinMap();
-      const rec = map[userId];
-      if (!rec) return { ok:true };
-
-      // cooldown per hari
-      const last = rec.lastDate;
-      const now = todayKey();
-
-      if (last === now) return { ok:false, reason:"Kesempatan spin anda sudah habis" };
-      return { ok:true };
-    }
-
-    /* =========================
-      BLOK 24 — UI STATE
-    ========================== */
-    function setSystem(text){
-      sysText.textContent = text;
-    }
-
-    function setUser(userId){
-      state.userId = userId.trim();
-      userLabel.textContent = state.userId || "-";
-      userIdInput.value = state.userId || "";
-      setLS(STORAGE.USER, state.userId || "");
-
-      refreshSpinAvailability();
-    }
-
-    function refreshSpinAvailability(){
-      const uid = state.userId;
-      const verdict = canSpin(uid);
-
-      if (!uid){
-        spinSub.textContent = "Masukkan User ID";
-        centerBtn.disabled = true;
-        btnClaim.disabled = true;
-        spinStatus.textContent = "Menunggu User ID";
-        setSystem("Siap (butuh User ID)");
+      if(findClaim(username, trx_ref)){
+        toast("Claim untuk TRX ini sudah pernah dibuat.", "warn");
+        return;
+      }
+      if(hasBox(username, trx_ref)){
+        toast("Box untuk TRX ini sudah aktif/terbuat.", "warn");
         return;
       }
 
-      if (state.spinning){
-        centerBtn.disabled = true;
-        btnClaim.disabled = true;
-        spinStatus.textContent = "Sedang memutar…";
-        setSystem("Memutar roda…");
-        return;
-      }
-
-      if (verdict.ok){
-        spinSub.textContent = "SPIN SEKARANG!";
-        centerBtn.disabled = false;
-        btnClaim.disabled = true;
-        spinStatus.textContent = "Siap spin";
-        setSystem("Siap diputar");
-      }else{
-        spinSub.textContent = "Kesempatan habis";
-        centerBtn.disabled = true;
-        btnClaim.disabled = false;
-        spinStatus.textContent = verdict.reason || "Kesempatan habis";
-        setSystem("Kesempatan habis");
-      }
-    }
-
-    /* =========================
-      BLOK 25 — SPIN CORE (TARGET ROTATION)
-    ========================== */
-    function computeTargetRotationForIndex(index){
-      const arc = (Math.PI*2) / PRIZES.length;
-      const pointerAngle = -Math.PI/2; // pointer fixed at top
-      const segCenter = (index * arc) + (arc/2);
-
-      // aim center + small jitter inside the segment biar natural
-      const jitter = (Math.random() - 0.5) * (arc * 0.28);
-
-      // We need segCenter + rot == pointerAngle (mod 2π)
-      let target = pointerAngle - (segCenter + jitter);
-
-      // add extra turns
-      const turns = randInt(EXTRA_TURNS_MIN, EXTRA_TURNS_MAX);
-      target += (Math.PI*2) * turns;
-
-      return target;
-    }
-
-    function spin(){
-      const uid = state.userId.trim();
-      const verdict = canSpin(uid);
-      if (!verdict.ok){
-        refreshSpinAvailability();
-        return;
-      }
-      if (state.spinning) return;
-
-      state.spinning = true;
-      refreshSpinAvailability();
-
-      const pickedIndex = weightedPick(PRIZES);
-      const prize = PRIZES[pickedIndex];
-
-      const startRot = state.rotation;
-      const targetRot = computeTargetRotationForIndex(pickedIndex);
-
-      // animate with easing
-      const dur = 5200;
-      const t0 = performance.now();
-
-      // tick sound per segment cross
-      let lastTick = null;
-
-      function frame(now){
-        const t = clamp((now - t0) / dur, 0, 1);
-
-        // soften end with back-ish
-        const e = (t < 0.85) ? easeOutCubic(t/0.85) : 1;
-        const b = (t < 0.85) ? 0 : easeOutBack((t-0.85)/0.15);
-        const mix = Math.min(1, lerp(e, b, 0.55));
-
-        state.rotation = startRot + (targetRot - startRot) * mix;
-        drawWheel();
-
-        // tick when crossing segment boundaries
-        const arc = (Math.PI*2) / PRIZES.length;
-        const cur = ((state.rotation % (Math.PI*2)) + (Math.PI*2)) % (Math.PI*2);
-        const bucket = Math.floor(cur / arc);
-        if (lastTick === null) lastTick = bucket;
-        if (bucket !== lastTick){
-          lastTick = bucket;
-          beep(1050 + (bucket%3)*90, 0.015, 0.02);
-        }
-
-        if (t < 1){
-          requestAnimationFrame(frame);
-          return;
-        }
-
-        // finalize
-        state.rotation = ((state.rotation % (Math.PI*2)) + (Math.PI*2)) % (Math.PI*2);
-        drawWheel();
-
-        // commit result
-        const code = uidCode();
-        const stamp = nowStamp();
-
-        state.lastWin = { userId: uid, prize, code, stamp };
-
-        // save user spin date (1x per day)
-        saveUserSpin(uid, { lastDate: todayKey(), prize: prize.label, code, stamp });
-
-        // update history + jackpot
-        pushHistory(uid, prize.label);
-        spendJackpot(prize.amount);
-
-        // open modal + confetti
-        openResultModal(state.lastWin);
-
-        state.spinning = false;
-        refreshSpinAvailability();
-      }
-
-      requestAnimationFrame(frame);
-    }
-
-    /* =========================
-      BLOK 26 — MODAL + PROOF PNG
-    ========================== */
-    function openResultModal(win){
-      winAmount.textContent = win.prize.label;
-      ticketCode.textContent = win.code;
-      ticketTime.textContent = win.stamp;
-
-      proofUser.textContent = win.userId;
-      proofPrize.textContent = win.prize.label;
-      proofCode.textContent = win.code;
-
-      btnClaim.disabled = false;
-
-      modal.classList.add("is-open");
-      burstConfetti();
-      beep(820, 0.06, 0.03);
-      beep(1040, 0.06, 0.03);
-    }
-
-    function closeModal(){
-      modal.classList.remove("is-open");
-    }
-
-    function downloadProofPNG(win){
-      // bikin image bukti via canvas (tanpa library)
-      const W = 1200, H = 760;
-      const c = document.createElement("canvas");
-      c.width = W; c.height = H;
-      const ctx = c.getContext("2d");
-
-      // bg gradient
-      const g = ctx.createLinearGradient(0,0,W,H);
-      g.addColorStop(0, "#05040c");
-      g.addColorStop(1, "#0a0820");
-      ctx.fillStyle = g;
-      ctx.fillRect(0,0,W,H);
-
-      // glow
-      const rg = ctx.createRadialGradient(W*0.35,H*0.25,20, W*0.35,H*0.25, 520);
-      rg.addColorStop(0, "rgba(31,240,178,.22)");
-      rg.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = rg;
-      ctx.fillRect(0,0,W,H);
-
-      const rg2 = ctx.createRadialGradient(W*0.78,H*0.22,20, W*0.78,H*0.22, 520);
-      rg2.addColorStop(0, "rgba(255,211,106,.20)");
-      rg2.addColorStop(1, "rgba(0,0,0,0)");
-      ctx.fillStyle = rg2;
-      ctx.fillRect(0,0,W,H);
-
-      // tile pattern
-      ctx.globalAlpha = 0.15;
-      ctx.fillStyle = "#fff";
-      for (let y=70; y<H; y+=38){
-        for (let x=70; x<W; x+=38){
-          ctx.fillRect(x, y, 12, 12);
-        }
-      }
-      ctx.globalAlpha = 1;
-
-      // card
-      const pad = 70;
-      roundRect(ctx, pad, pad, W-pad*2, H-pad*2, 28);
-      ctx.fillStyle = "rgba(255,255,255,.06)";
-      ctx.fill();
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = "rgba(255,255,255,.18)";
-      ctx.stroke();
-
-      // header
-      ctx.font = "900 44px Inter, system-ui, sans-serif";
-      ctx.fillStyle = "rgba(255,255,255,.92)";
-      ctx.fillText("BUKTI KLAIM — MAHJONG LUCKY SPIN (DEMO)", pad+34, pad+78);
-
-      // accent line
-      const lg = ctx.createLinearGradient(pad+34,0,pad+540,0);
-      lg.addColorStop(0, "rgba(255,211,106,.95)");
-      lg.addColorStop(1, "rgba(31,240,178,.85)");
-      ctx.fillStyle = lg;
-      ctx.fillRect(pad+34, pad+96, 620, 8);
-
-      // content
-      ctx.font = "700 30px Inter, system-ui, sans-serif";
-      ctx.fillStyle = "rgba(255,255,255,.86)";
-      ctx.fillText("User ID:", pad+34, pad+170);
-      ctx.fillText("Hadiah:", pad+34, pad+230);
-      ctx.fillText("Kode:",   pad+34, pad+290);
-      ctx.fillText("Waktu:",  pad+34, pad+350);
-
-      ctx.font = "900 34px Inter, system-ui, sans-serif";
-      ctx.fillStyle = "rgba(255,255,255,.92)";
-      ctx.fillText(win.userId, pad+220, pad+170);
-      ctx.fillText(win.prize.label, pad+220, pad+230);
-      ctx.fillText(win.code, pad+220, pad+290);
-      ctx.fillText(win.stamp, pad+220, pad+350);
-
-      // big prize
-      ctx.font = "900 86px Inter, system-ui, sans-serif";
-      ctx.fillStyle = "rgba(255,211,106,.95)";
-      ctx.fillText(win.prize.label, pad+34, pad+480);
-
-      // footer note
-      ctx.font = "600 22px Inter, system-ui, sans-serif";
-      ctx.fillStyle = "rgba(255,255,255,.72)";
-      ctx.fillText("Catatan: Ini hanya demo front-end. Validasi klaim sebaiknya dilakukan via server.", pad+34, H-pad-40);
-
-      const url = c.toDataURL("image/png");
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `bukti-${win.userId}-${win.code}.png`.replace(/[^a-zA-Z0-9._-]/g,"");
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    }
-
-    function roundRect(ctx, x, y, w, h, r){
-      const rr = Math.min(r, w/2, h/2);
-      ctx.beginPath();
-      ctx.moveTo(x+rr, y);
-      ctx.arcTo(x+w, y, x+w, y+h, rr);
-      ctx.arcTo(x+w, y+h, x, y+h, rr);
-      ctx.arcTo(x, y+h, x, y, rr);
-      ctx.arcTo(x, y, x+w, y, rr);
-      ctx.closePath();
-    }
-
-    /* =========================
-      BLOK 27 — EVENTS
-    ========================== */
-    btnSetUser.addEventListener("click", () => {
-      const v = userIdInput.value.trim();
-      if (!v){
-        setUser("");
-        return;
-      }
-      setUser(v);
+      state.claims.unshift({
+        id: uid("cl"),
+        username,
+        trx_ref,
+        nominal,
+        proof,
+        status: "pending",
+        created_at: now(),
+        reviewed_at: null,
+      });
+      addAudit(`Claim masuk: ${username} • ${trx_ref} • ${fmtMoney(nominal)}`);
+      toast("Claim dikirim. Menunggu verifikasi CS.", "good");
+      // convenience
+      $("a_username").value = username;
+      $("a_trx").value = trx_ref;
+      save();
     });
 
-    userIdInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") btnSetUser.click();
+    $("btnSeedDemo").addEventListener("click", ()=>{
+      const mk = (u, t, n)=>({
+        id: uid("cl"),
+        username:u, trx_ref:t, nominal:n, proof:"", status:"pending", created_at:now(), reviewed_at:null
+      });
+      const d1 = "demo" + Math.floor(100+Math.random()*900);
+      const d2 = "demo" + Math.floor(100+Math.random()*900);
+      state.claims.unshift(mk(d1, "TRX-DEMO-" + Math.floor(1000+Math.random()*9000), 20000));
+      state.claims.unshift(mk(d2, "TRX-DEMO-" + Math.floor(1000+Math.random()*9000), 50000));
+      addAudit("CS membuat 2 claim dummy.");
+      toast("2 claim dummy dibuat.", "good");
+      save();
     });
 
-    centerBtn.addEventListener("click", () => spin());
-
-    btnClaim.addEventListener("click", () => {
-      if (state.lastWin) openResultModal(state.lastWin);
-    });
-
-    modalClose.addEventListener("click", closeModal);
-    modalOverlay.addEventListener("click", closeModal);
-
-    btnDownloadProof.addEventListener("click", () => {
-      if (!state.lastWin) return;
-      downloadProofPNG(state.lastWin);
-    });
-
-    btnClaimNow.addEventListener("click", () => {
-      // GANTI LINK CS KAMU DI SINI:
-      // contoh WhatsApp: https://wa.me/62xxxxxxxxxx?text=...
-      // (jangan taruh link phishing. bikin jelas brand/CS milik kamu sendiri.)
-      const win = state.lastWin;
-      if (!win) return;
-
-      const msg = encodeURIComponent(
-        `KLAIM HADIAH (DEMO)\n` +
-        `User ID: ${win.userId}\n` +
-        `Hadiah: ${win.prize.label}\n` +
-        `Kode: ${win.code}\n` +
-        `Waktu: ${win.stamp}\n`
-      );
-
-      // placeholder: buka tab baru (ganti sesuai kebutuhan)
-      window.open("about:blank", "_blank");
-      alert("Ini hanya demo. Silakan ganti link CS di kode JS (lihat komentar).");
-    });
-
-    btnResetDemo.addEventListener("click", () => {
-      localStorage.removeItem(STORAGE.USER);
-      localStorage.removeItem(STORAGE.USERS);
-      localStorage.removeItem(STORAGE.HISTORY);
-      localStorage.removeItem(STORAGE.JACKPOT);
+    $("btnResetAll").addEventListener("click", ()=>{
+      localStorage.removeItem(STORE_KEY);
       location.reload();
     });
 
-    /* =========================
-      BLOK 28 — INIT
-    ========================== */
-    function init(){
-      resizeFx();
-      loadJackpot();
+    async function csApprove(claimId){
+      const claim = state.claims.find(c=>c.id===claimId);
+      if(!claim) return;
+      // approve only if still pending
+      if(claim.status !== "pending"){
+        toast("Claim ini sudah diproses.", "warn");
+        return;
+      }
+      const expMin = Number($("cs_expiry").value||20);
+      const len = Number($("cs_len").value||8);
 
-      // load history
-      const hist = loadHistory();
-      renderHistory(hist);
+      // create code (plaintext only to show CS for demo; store hash in db)
+      const codePlain = randCode(len);
+      const codeHash = await sha256Hex(codePlain);
 
-      // load saved user
-      const saved = (localStorage.getItem(STORAGE.USER) || "").replace(/^"|"$/g,"");
-      if (saved && typeof saved === "string"){
-        setUser(saved);
-      }else{
-        refreshSpinAvailability();
+      // One-time code tied to username + trx_ref
+      const expires_at = now() + clamp(expMin, 15, 30) * 60 * 1000;
+
+      state.codes.unshift({
+        id: uid("cd"),
+        username: claim.username,
+        trx_ref: claim.trx_ref,
+        code_hash: codeHash,
+        // demo-only display:
+        code_preview: codePlain,
+        expires_at,
+        attempts_left: 3,
+        used_at: null,
+        created_at: now(),
+      });
+
+      claim.status = "approved";
+      claim.reviewed_at = now();
+
+      // Create locked box (will be activated after code used)
+      if(!hasBox(claim.username, claim.trx_ref)){
+        state.boxes.unshift({
+          id: uid("bx"),
+          username: claim.username,
+          trx_ref: claim.trx_ref,
+          nominal: claim.nominal,
+          status: "locked", // becomes active when code used
+          created_at: now(),
+          activated_at: null,
+          opened_at: null
+        });
       }
 
-      // initial draw
-      resizeWheel();
-      setTimeout(() => drawWheel(), 50);
+      addAudit(`CS approve + generate kode: ${claim.username} • ${claim.trx_ref} (exp ${expMin}m)`);
+      toast("Kode dibuat. Kirim ke member.", "good");
+      save();
     }
 
-    init();
+    function csReject(claimId){
+      const claim = state.claims.find(c=>c.id===claimId);
+      if(!claim) return;
+      if(claim.status !== "pending"){
+        toast("Claim ini sudah diproses.", "warn");
+        return;
+      }
+      claim.status = "rejected";
+      claim.reviewed_at = now();
+      addAudit(`CS reject: ${claim.username} • ${claim.trx_ref}`);
+      toast("Claim ditolak.", "warn");
+      save();
+    }
+
+    async function activateBox(){
+      const username = ($("a_username").value||"").trim();
+      const trx_ref  = ($("a_trx").value||"").trim();
+      const code     = ($("a_code").value||"").trim().toUpperCase();
+
+      if(!username || !trx_ref || !code){
+        toast("Username, TRX, dan kode wajib diisi.", "bad");
+        return;
+      }
+
+      // find latest valid code tied to username+trx
+      const allCodes = state.codes.filter(cd => cd.username===username && cd.trx_ref===trx_ref);
+      if(allCodes.length === 0){
+        toast("Tidak ada kode untuk username+TRX ini.", "bad");
+        return;
+      }
+
+      // Prefer unused & not expired
+      const activeCode = allCodes.find(cd => !cd.used_at && cd.expires_at > now());
+      if(!activeCode){
+        toast("Kode sudah expired / juga tidak ada yang aktif. Minta CS buat kode baru.", "warn");
+        return;
+      }
+
+      if(activeCode.attempts_left <= 0){
+        toast("Limit 3x salah tercapai. Minta CS buat kode baru.", "bad");
+        return;
+      }
+
+      const hash = await sha256Hex(code);
+      if(hash !== activeCode.code_hash){
+        activeCode.attempts_left = Math.max(0, activeCode.attempts_left - 1);
+        addAudit(`Gagal input kode: ${username} • ${trx_ref} (sisa ${activeCode.attempts_left}x)`);
+        save();
+        toast(`Kode salah. Sisa percobaan: ${activeCode.attempts_left}x`, activeCode.attempts_left ? "warn":"bad");
+        return;
+      }
+
+      // valid
+      activeCode.used_at = now();
+      addAudit(`Kode dipakai: ${username} • ${trx_ref}`);
+
+      // activate box
+      const box = state.boxes.find(b=>b.username===username && b.trx_ref===trx_ref);
+      if(!box){
+        // should exist if CS followed flow, but keep safe
+        state.boxes.unshift({
+          id: uid("bx"),
+          username, trx_ref, nominal: 20000,
+          status:"active", created_at:now(), activated_at:now(), opened_at:null
+        });
+      }else{
+        box.status = "active";
+        box.activated_at = now();
+      }
+
+      toast("Box aktif ✅ Silakan buka box kamu.", "good");
+      $("a_code").value = "";
+      save();
+    }
+
+    $("btnActivate").addEventListener("click", activateBox);
+
+    function openBox(boxId){
+      const box = state.boxes.find(b=>b.id===boxId);
+      if(!box) return;
+
+      if(box.status !== "active"){
+        toast("Box belum aktif. Aktivasi pakai kode dulu.", "warn");
+        return;
+      }
+      if(box.opened_at){
+        toast("Box ini sudah dibuka.", "warn");
+        return;
+      }
+
+      // pick reward by odds
+      const pick = weightedPick();
+
+      const reward = {
+        id: uid("rw"),
+        username: box.username,
+        trx_ref: box.trx_ref,
+        created_at: now(),
+        type: pick.type,
+        title: pick.label,
+        // reward validity: 24h for spin and voucher (cashback can be immediate, but we keep expiry too for transparency)
+        expires_at: now() + 24*60*60*1000,
+        status: "granted",
+        payload: {
+          ...pick.data,
+          provider: null,
+          // for spin tracking (demo)
+          spins_done: 0
+        }
+      };
+
+      // compute cashback nominal for demo
+      if(reward.type === "cashback"){
+        const amountRaw = Math.floor((box.nominal * (reward.payload.percent/100)));
+        reward.payload.amount = Math.min(amountRaw, reward.payload.cap);
+      }
+
+      // mark box opened
+      box.opened_at = now();
+      box.status = "opened";
+
+      state.rewards.unshift(reward);
+      addAudit(`Box dibuka: ${box.username} • ${box.trx_ref} → ${rewardLabel(reward)}`);
+      toast("🎁 Selamat! Hadiah keluar.", "good");
+      save();
+    }
+
+    function setProvider(rewardId, provider){
+      const r = state.rewards.find(x=>x.id===rewardId);
+      if(!r || r.type !== "spin") return;
+      if(r.expires_at <= now()){
+        toast("Reward sudah expired (24 jam).", "bad");
+        return;
+      }
+      r.payload.provider = provider;
+      addAudit(`Provider dipilih: ${r.username} • ${r.trx_ref} → ${provider}`);
+      toast(`Provider dipilih: ${provider}`, "good");
+      save();
+    }
+
+    // Demo-only: simulate spins progress (no money calc)
+    function simulateSpin(rewardId){
+      const r = state.rewards.find(x=>x.id===rewardId);
+      if(!r || r.type !== "spin") return;
+      if(r.expires_at <= now()){
+        toast("Reward sudah expired (24 jam).", "bad");
+        return;
+      }
+      if(!r.payload.provider){
+        toast("Pilih provider dulu (Pragmatic / PGSoft).", "warn");
+        return;
+      }
+
+      const total = r.payload.spins;
+      const step = Math.min(5, total - r.payload.spins_done);
+      r.payload.spins_done += step;
+
+      if(r.payload.spins_done >= total){
+        r.payload.spins_done = total;
+        r.status = "completed";
+        addAudit(`Spin selesai: ${r.username} • ${r.trx_ref} (${total}x)`);
+        toast("Spin selesai ✅ (demo)", "good");
+      }else{
+        toast(`Progress spin: ${r.payload.spins_done}/${total}`, "good");
+      }
+      save();
+    }
+
+    function copyText(text){
+      navigator.clipboard?.writeText(text).then(()=>{
+        toast("Disalin ke clipboard.", "good");
+      }).catch(()=>{
+        toast("Gagal copy (browser).", "warn");
+      });
+    }
+
+    function purgeExpired(){
+      // In demo we keep history; only filter render states.
+      // You can implement actual deletion if needed.
+    }
+
+    /* =========================
+      BLOK 20 — RENDER
+    ========================== */
+    function renderOdds(){
+      const tb = $("oddsTbody");
+      tb.innerHTML = "";
+      const total = ODDS.reduce((s,x)=>s+x.pct,0);
+      for(const o of ODDS){
+        const tr = document.createElement("tr");
+        const td1 = document.createElement("td");
+        const td2 = document.createElement("td");
+        td1.textContent = o.label;
+        td2.className = "pct";
+        td2.textContent = (o.pct % 1 === 0 ? o.pct.toFixed(0) : o.pct.toFixed(2)) + "%";
+        tr.appendChild(td1); tr.appendChild(td2);
+        tb.appendChild(tr);
+      }
+      const tr = document.createElement("tr");
+      const td1 = document.createElement("td");
+      const td2 = document.createElement("td");
+      td1.innerHTML = "<b>Total</b>";
+      td2.className = "pct";
+      td2.innerHTML = "<b>" + (total % 1 === 0 ? total.toFixed(0) : total.toFixed(2)) + "%</b>";
+      tr.appendChild(td1); tr.appendChild(td2);
+      tb.appendChild(tr);
+    }
+
+    function renderMember(){
+      // Boxes
+      const myBoxes = $("myBoxes");
+      myBoxes.innerHTML = "";
+      const username = ($("m_username").value||$("a_username").value||"").trim();
+      const boxes = state.boxes.filter(b => !username || b.username === username);
+
+      if(boxes.length === 0){
+        myBoxes.innerHTML = `<div class="note">Belum ada box. Ajukan claim dulu, lalu aktivasi pakai kode.</div>`;
+      }else{
+        for(const b of boxes){
+          const st = b.status;
+          const tag = st==="active" ? `<span class="tag good">ACTIVE</span>` :
+                      st==="locked"? `<span class="tag warn">LOCKED</span>` :
+                      `<span class="tag">OPENED</span>`;
+
+          const el = document.createElement("div");
+          el.className = "item";
+          el.innerHTML = `
+            <div class="left">
+              <p class="title">Box • <span class="mono">${b.trx_ref}</span></p>
+              <p class="meta">User: <b>${b.username}</b> • Nominal: <b>${fmtMoney(b.nominal)}</b><br>
+              Dibuat: ${fmtTime(b.created_at)}${b.activated_at?` • Aktif: ${fmtTime(b.activated_at)}`:""}${b.opened_at?` • Dibuka: ${fmtTime(b.opened_at)}`:""}</p>
+            </div>
+            <div class="right">
+              ${tag}
+              ${st==="active" ? `<button class="btn primary" data-open="${b.id}"><span class="k">🎁</span> Buka Box</button>` : ``}
+            </div>
+          `;
+          myBoxes.appendChild(el);
+        }
+        myBoxes.querySelectorAll("[data-open]").forEach(btn=>{
+          btn.addEventListener("click", ()=> openBox(btn.getAttribute("data-open")));
+        });
+      }
+
+      // Rewards
+      const myRewards = $("myRewards");
+      myRewards.innerHTML = "";
+      const rewards = state.rewards.filter(r => !username || r.username === username);
+
+      if(rewards.length === 0){
+        myRewards.innerHTML = `<div class="note">Belum ada hadiah. Buka box untuk mendapatkan hadiah.</div>`;
+      }else{
+        for(const r of rewards){
+          const expired = r.expires_at <= now();
+          const left = msLeft(r.expires_at);
+          const badge = expired ? `<span class="tag bad">EXPIRED</span>` : `<span class="tag good">AKTIF ${fmtLeftHours(left)}</span>`;
+
+          let detail = "";
+          let actions = "";
+
+          if(r.type === "cashback"){
+            detail = `Cashback: <b>${fmtMoney(r.payload.amount)}</b> (dari ${r.payload.percent}% • cap ${fmtMoney(r.payload.cap)})`;
+            actions = `<span class="tag">Instant</span>`;
+          }
+
+          if(r.type === "voucher"){
+            detail = `Voucher: <b>${fmtMoney(r.payload.amount)}</b>`;
+            actions = expired ? `` : `<button class="btn ghost" data-copy="${r.payload.amount}"><span class="k">⧉</span> Copy nominal</button>`;
+          }
+
+          if(r.type === "spin"){
+            detail = `Spin manual: <b>${r.payload.spins}x</b> — ${fmtMoney(r.payload.bet)}/spin • Provider: <b>${r.payload.provider || "Belum dipilih"}</b><br>
+                      Progress (demo): <b>${r.payload.spins_done || 0}/${r.payload.spins}</b>`;
+            const disabled = expired ? "disabled" : "";
+            actions = `
+              <button class="btn ghost" ${disabled} data-prov="${r.id}" data-p="PRAGMATIC PLAY"><span class="k">PP</span> Pragmatic</button>
+              <button class="btn ghost" ${disabled} data-prov="${r.id}" data-p="PGSOFT"><span class="k">PG</span> PGSoft</button>
+              <button class="btn primary" ${disabled} data-spin="${r.id}"><span class="k">▶</span> Simulasi Spin</button>
+            `;
+          }
+
+          const el = document.createElement("div");
+          el.className = "item";
+          el.innerHTML = `
+            <div class="left">
+              <p class="title">${rewardLabel(r)}</p>
+              <p class="meta">User: <b>${r.username}</b> • TRX: <span class="mono">${r.trx_ref}</span><br>
+              Didapat: ${fmtTime(r.created_at)} • ${detail}</p>
+            </div>
+            <div class="right">
+              ${badge}
+              ${actions}
+            </div>
+          `;
+          myRewards.appendChild(el);
+        }
+
+        myRewards.querySelectorAll("[data-copy]").forEach(btn=>{
+          btn.addEventListener("click", ()=> copyText(btn.getAttribute("data-copy")));
+        });
+        myRewards.querySelectorAll("[data-prov]").forEach(btn=>{
+          btn.addEventListener("click", ()=> setProvider(btn.getAttribute("data-prov"), btn.getAttribute("data-p")));
+        });
+        myRewards.querySelectorAll("[data-spin]").forEach(btn=>{
+          btn.addEventListener("click", ()=> simulateSpin(btn.getAttribute("data-spin")));
+        });
+      }
+    }
+
+    function renderCS(){
+      // Pending claims
+      const pending = state.claims.filter(c=>c.status==="pending");
+      const csPending = $("csPending");
+      csPending.innerHTML = "";
+      if(pending.length === 0){
+        csPending.innerHTML = `<div class="note">Tidak ada claim pending.</div>`;
+      }else{
+        for(const c of pending){
+          const el = document.createElement("div");
+          el.className = "item";
+          el.innerHTML = `
+            <div class="left">
+              <p class="title">Claim Pending • <span class="mono">${c.trx_ref}</span></p>
+              <p class="meta">User: <b>${c.username}</b> • Nominal: <b>${fmtMoney(c.nominal)}</b><br>
+              Masuk: ${fmtTime(c.created_at)}${c.proof?`<br>Proof: <span class="mono">${escapeHtml(c.proof)}</span>`:""}</p>
+            </div>
+            <div class="right">
+              <button class="btn good" data-approve="${c.id}"><span class="k">✓</span> Approve</button>
+              <button class="btn danger" data-reject="${c.id}"><span class="k">✕</span> Reject</button>
+            </div>
+          `;
+          csPending.appendChild(el);
+        }
+        csPending.querySelectorAll("[data-approve]").forEach(btn=>{
+          btn.addEventListener("click", ()=> csApprove(btn.getAttribute("data-approve")));
+        });
+        csPending.querySelectorAll("[data-reject]").forEach(btn=>{
+          btn.addEventListener("click", ()=> csReject(btn.getAttribute("data-reject")));
+        });
+      }
+
+      // Active codes (unused)
+      const csCodes = $("csCodes");
+      csCodes.innerHTML = "";
+      const activeCodes = state.codes.filter(cd => !cd.used_at);
+      if(activeCodes.length === 0){
+        csCodes.innerHTML = `<div class="note">Belum ada kode aktif.</div>`;
+      }else{
+        for(const cd of activeCodes){
+          const expired = cd.expires_at <= now();
+          const left = msLeft(cd.expires_at);
+          const badge = expired ? `<span class="tag bad">EXPIRED</span>` : `<span class="tag good">Sisa ${fmtLeft(left)}</span>`;
+          const el = document.createElement("div");
+          el.className = "item";
+          el.innerHTML = `
+            <div class="left">
+              <p class="title">Kode Voucher • <span class="mono">${cd.trx_ref}</span></p>
+              <p class="meta">User: <b>${cd.username}</b> • Exp: ${fmtTime(cd.expires_at)} • Attempts: <b>${cd.attempts_left}x</b><br>
+              <span class="mono"><b>${cd.code_preview || "••••••••"}</b></span> <span class="faint">(demo-only tampilkan)</span></p>
+            </div>
+            <div class="right">
+              ${badge}
+              ${expired ? "" : `<button class="btn ghost" data-copycode="${cd.code_preview}"><span class="k">⧉</span> Copy kode</button>`}
+            </div>
+          `;
+          csCodes.appendChild(el);
+        }
+        csCodes.querySelectorAll("[data-copycode]").forEach(btn=>{
+          btn.addEventListener("click", ()=> copyText(btn.getAttribute("data-copycode")));
+        });
+      }
+
+      // Audit
+      const csAudit = $("csAudit");
+      csAudit.innerHTML = "";
+      if(state.audit.length === 0){
+        csAudit.innerHTML = `<div class="note">Belum ada aktivitas.</div>`;
+      }else{
+        for(const a of state.audit.slice(0, 18)){
+          const el = document.createElement("div");
+          el.className = "item";
+          el.innerHTML = `
+            <div class="left">
+              <p class="title">${escapeHtml(a.text)}</p>
+              <p class="meta">${fmtTime(a.ts)}</p>
+            </div>
+            <div class="right">
+              <span class="tag">LOG</span>
+            </div>
+          `;
+          csAudit.appendChild(el);
+        }
+      }
+    }
+
+    function escapeHtml(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function renderAll(){
+      purgeExpired();
+      renderOdds();
+      renderMember();
+      renderCS();
+      // pill status quick hint
+      const pending = state.claims.filter(c=>c.status==="pending").length;
+      const activeCodes = state.codes.filter(cd=>!cd.used_at && cd.expires_at>now()).length;
+      $("pillStatus").textContent = pending ? `${pending} claim pending` : (activeCodes ? `${activeCodes} kode aktif` : "Siap digunakan");
+    }
+
+    /* =========================
+      BLOK 21 — LIVE TICK (COUNTDOWNS)
+    ========================== */
+    setInterval(()=> {
+      // re-render lightweight for countdown labels
+      renderMember();
+      renderCS();
+      const pending = state.claims.filter(c=>c.status==="pending").length;
+      const activeCodes = state.codes.filter(cd=>!cd.used_at && cd.expires_at>now()).length;
+      $("pillStatus").textContent = pending ? `${pending} claim pending` : (activeCodes ? `${activeCodes} kode aktif` : "Siap digunakan");
+    }, 1000);
+
+    /* =========================
+      BLOK 22 — INIT
+    ========================== */
+    renderAll();
+
+    // Small UX: if user types username in claim, mirror to activate
+    $("m_username").addEventListener("input", ()=>{
+      const v = $("m_username").value.trim();
+      if(v && !$("a_username").value.trim()) $("a_username").value = v;
+      renderMember();
+    });
+    $("a_username").addEventListener("input", renderMember);
+    $("a_trx").addEventListener("input", renderMember);
   </script>
 </body>
 </html>
